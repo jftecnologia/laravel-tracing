@@ -1,0 +1,66 @@
+name: Tests
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  verify_changes:
+    runs-on: ubuntu-latest
+    environment: testing
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      php: ${{ steps.filter.outputs.php }}
+      tests: ${{ steps.filter.outputs.tests }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            php:
+              - '**/*.php'
+              - 'composer.json'
+              - 'composer.lock'
+            tests:
+              - 'tests/**'
+              - 'phpunit.xml'
+              - 'pest.*'
+
+  run_tests:
+    needs: verify_changes
+    if: needs.verify_changes.outputs.php == 'true' || needs.verify_changes.outputs.tests == 'true'
+    runs-on: ubuntu-latest
+    environment: testing
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.4
+          tools: composer:v2
+          coverage: xdebug
+
+      - name: Cache composer packages
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-composer-packages
+        with:
+          path: ~/.composer/cache/files
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - name: Install Dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Run Tests
+        run: composer test
