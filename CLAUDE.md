@@ -47,15 +47,21 @@ If no SKILL exists, ask before proceeding.
   - Search `docs/` before asking questions
   - Prefer existing documents over assumptions
   - Write new documentation only inside `docs/`
-  - Update and maintain documentation updated after a change, inclusion or excusion in the requirements or architecture
+  - Update and maintain documentation updated after a change, inclusion or exclusion in the requirements or architecture
 
-Common locations:
+### Documentation Structure
 
-- `docs/PRD.md` and `docs/prd/*` – Product requirements
-- `docs/ARCHITECTURE.md` – Architecture decisions
-- `docs/CODING_STANDARDS.md` – Coding standard
-- `docs/STACK_DEFINITION.md` – Product stack definition
-- `docs/UI_UX.md` - UI/UX definitions
+**Product Requirements:**
+- `docs/PRD.md` – Complete product requirements document (features, scope, requirements)
+
+**Engineering Documentation:**
+- `docs/engineering/STACK.md` – Tech stack, dependencies, available scripts
+- `docs/engineering/CODE_STANDARDS.md` – Code quality, development philosophy, tooling
+- `docs/engineering/WORKFLOW.md` – Git workflow, commits, PRs, development cycle
+- `docs/engineering/TESTING.md` – Testing guidelines and practices
+
+**General:**
+- `README.md` – Installation, usage, configuration (user-facing documentation)
 
 ---
 
@@ -69,7 +75,7 @@ Common locations:
 - Extensible and plugable by default
 - Fluent classes
 
-Detailed rules belong in SKILL files.
+**For complete standards and tooling, see:** `docs/engineering/CODE_STANDARDS.md`
 
 ---
 
@@ -100,6 +106,21 @@ Claude Code must NOT:
 - Introduce design patterns by default
 
 When in doubt, ask.
+
+---
+
+## 8. Quick Reference
+
+For specific guidance on:
+
+| Topic | See |
+|-------|-----|
+| **What to build** | `docs/PRD.md` |
+| **Tech stack & dependencies** | `docs/engineering/STACK.md` |
+| **Code quality & standards** | `docs/engineering/CODE_STANDARDS.md` |
+| **Git workflow & commits** | `docs/engineering/WORKFLOW.md` |
+| **Testing practices** | `docs/engineering/TESTING.md` |
+| **Installation & usage** | `README.md` |
 
 ---
 
