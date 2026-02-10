@@ -53,9 +53,13 @@ If no SKILL exists, ask before proceeding.
 
 **Product Requirements:**
 - `docs/PRD.md` – Complete product requirements document (features, scope, requirements)
+- `docs/use-cases/*.md` – Optional detailed scenarios and integration patterns
 
 **Architecture:**
 - `docs/architecture/*.md` – System architecture, component design, data flows, extension points
+
+**Task Breakdown:**
+- `docs/tasks/*.md` – Executable development tasks organized by epics with acceptance criteria
 
 **Engineering Documentation:**
 - `docs/engineering/STACK.md` – Tech stack, dependencies, available scripts
@@ -120,6 +124,7 @@ For specific guidance on:
 |-------|-----|
 | **What to build** | `docs/PRD.md` |
 | **System architecture** | `docs/architecture/` |
+| **Development tasks** | `docs/tasks/` |
 | **Tech stack & dependencies** | `docs/engineering/STACK.md` |
 | **Code quality & standards** | `docs/engineering/CODE_STANDARDS.md` |
 | **Git workflow & commits** | `docs/engineering/WORKFLOW.md` |
