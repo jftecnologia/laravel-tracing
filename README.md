@@ -1,9 +1,9 @@
-# package_description
+# A Laravel package by Junior Fontenele
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/vendor_slug/package_slug.svg?style=flat-square)](https://packagist.org/packages/vendor_slug/package_slug)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/vendor_slug/package_slug/tests.yml?branch=master&label=tests&style=flat-square)](https://github.com/vendor_slug/package_slug/actions?query=workflow%3Atests+branch%3Amaster)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/vendor_slug/package_slug/fix-php-code-style.yml?branch=master&label=code%20style&style=flat-square)](https://github.com/vendor_slug/package_slug/actions?query=workflow%3A"fix-php-code-style-issues"+branch%3Amaster)
-[![Total Downloads](https://img.shields.io/packagist/dt/vendor_slug/package_slug.svg?style=flat-square)](https://packagist.org/packages/vendor_slug/package_slug)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/jftecnologia/laravel-tracing.svg?style=flat-square)](https://packagist.org/packages/jftecnologia/laravel-tracing)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/jftecnologia/laravel-tracing/tests.yml?branch=master&label=tests&style=flat-square)](https://github.com/jftecnologia/laravel-tracing/actions?query=workflow%3Atests+branch%3Amaster)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/jftecnologia/laravel-tracing/fix-php-code-style.yml?branch=master&label=code%20style&style=flat-square)](https://github.com/jftecnologia/laravel-tracing/actions?query=workflow%3A"fix-php-code-style-issues"+branch%3Amaster)
+[![Total Downloads](https://img.shields.io/packagist/dt/jftecnologia/laravel-tracing.svg?style=flat-square)](https://packagist.org/packages/jftecnologia/laravel-tracing)
 <!--delete-->
 ---
 This repo can be used to scaffold a Laravel package. Follow these steps to get started:
@@ -20,20 +20,20 @@ This is where your description should go. Limit it to a paragraph or two. Consid
 You can install the package via composer:
 
 ```bash
-composer require vendor_slug/package_slug
+composer require jftecnologia/laravel-tracing
 ```
 
 You can publish and run the migrations with:
 
 ```bash
-php artisan vendor:publish --tag="package_slug-migrations"
+php artisan vendor:publish --tag="laravel-tracing-migrations"
 php artisan migrate
 ```
 
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag="package_slug-config"
+php artisan vendor:publish --tag="laravel-tracing-config"
 ```
 
 This is the contents of the published config file:
@@ -46,14 +46,14 @@ return [
 Optionally, you can publish the views using
 
 ```bash
-php artisan vendor:publish --tag="package_slug-views"
+php artisan vendor:publish --tag="laravel-tracing-views"
 ```
 
 ## Usage
 
 ```php
-$variable = new VendorName\PackageName();
-echo $variable->echoPhrase('Hello, VendorName!');
+$variable = new JuniorFontenele\LaravelTracing();
+echo $variable->echoPhrase('Hello, JuniorFontenele!');
 ```
 
 ## Testing
@@ -64,7 +64,7 @@ composer test
 
 ## Credits
 
-- [author_name](https://github.com/vendor_slug)
+- [Junior Fontenele](https://github.com/jftecnologia)
 - [All Contributors](../../contributors)
 
 ## License

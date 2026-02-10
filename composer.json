@@ -1,19 +1,19 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "vendor_slug/package_slug",
-    "description": "package_description",
-    "homepage": "https://github.com/vendor_slug/package_slug",
+    "name": "jftecnologia/laravel-tracing",
+    "description": "A Laravel package by Junior Fontenele",
+    "homepage": "https://github.com/jftecnologia/laravel-tracing",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "VendorName\\PackageName\\": "src/"
+            "JuniorFontenele\\LaravelTracing\\": "src/"
         }
     },
     "authors": [
         {
-            "name": "author_name",
-            "email": "author_email@authordomain.com"
+            "name": "Junior Fontenele",
+            "email": "git@juniorfontenele.com.br"
         }
     ],
     "require": {
@@ -24,10 +24,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\PackageName\\PackageNameServiceProvider"
+                "JuniorFontenele\\LaravelTracing\\LaravelTracingServiceProvider"
             ],
             "aliases": {
-                "PackageName": "VendorName\\PackageName\\Facades\\PackageName"
+                "LaravelTracing": "JuniorFontenele\\LaravelTracing\\Facades\\LaravelTracing"
             },
             "branch-alias": {
                 "dev-main": "1.x-dev",

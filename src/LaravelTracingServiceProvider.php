@@ -2,11 +2,11 @@
 
 declare(strict_types = 1);
 
-namespace VendorName\PackageName;
+namespace JuniorFontenele\LaravelTracing;
 
 use Illuminate\Support\ServiceProvider;
 
-class PackageNameServiceProvider extends ServiceProvider
+class LaravelTracingServiceProvider extends ServiceProvider
 {
     /**
      * Perform post-registration booting of services.
@@ -16,8 +16,8 @@ class PackageNameServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../config/package_slug.php' => config_path('package_slug.php'),
-        ], 'package_slug-config');
+            __DIR__ . '/../config/laravel-tracing.php' => config_path('laravel-tracing.php'),
+        ], 'laravel-tracing-config');
     }
 
     /**
@@ -27,6 +27,6 @@ class PackageNameServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/package_slug.php', 'package_slug');
+        $this->mergeConfigFrom(__DIR__ . '/../config/laravel-tracing.php', 'laravel-tracing');
     }
 }
