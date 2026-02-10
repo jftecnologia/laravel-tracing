@@ -54,6 +54,9 @@ If no SKILL exists, ask before proceeding.
 **Product Requirements:**
 - `docs/PRD.md` – Complete product requirements document (features, scope, requirements)
 
+**Architecture:**
+- `docs/architecture/*.md` – System architecture, component design, data flows, extension points
+
 **Engineering Documentation:**
 - `docs/engineering/STACK.md` – Tech stack, dependencies, available scripts
 - `docs/engineering/CODE_STANDARDS.md` – Code quality, development philosophy, tooling
@@ -116,6 +119,7 @@ For specific guidance on:
 | Topic | See |
 |-------|-----|
 | **What to build** | `docs/PRD.md` |
+| **System architecture** | `docs/architecture/` |
 | **Tech stack & dependencies** | `docs/engineering/STACK.md` |
 | **Code quality & standards** | `docs/engineering/CODE_STANDARDS.md` |
 | **Git workflow & commits** | `docs/engineering/WORKFLOW.md` |
