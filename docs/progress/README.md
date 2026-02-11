@@ -14,21 +14,21 @@
 | [Request ID Management](request-id-management.md) | RIM | 2 | 0 | 0 | 2 | 0 | 0 | 100% |
 | [Middleware Integration](middleware-integration.md) | MI | 5 | 0 | 0 | 5 | 0 | 0 | 100% |
 | [Service Provider Bootstrap](service-provider-bootstrap.md) | SPB | 4 | 0 | 0 | 4 | 0 | 0 | 100% |
-| [Job Propagation](job-propagation.md) | JP | 5 | 5 | 0 | 0 | 0 | 0 | 0% |
+| [Job Propagation](job-propagation.md) | JP | 5 | 4 | 1 | 0 | 0 | 0 | 0% |
 | [HTTP Client Integration](http-client-integration.md) | HCI | 4 | 4 | 0 | 0 | 0 | 0 | 0% |
 | [Custom Tracing Sources](custom-tracing-sources.md) | CTS | 4 | 4 | 0 | 0 | 0 | 0 | 0% |
 | [Documentation](documentation.md) | DOC | 6 | 6 | 0 | 0 | 0 | 0 | 0% |
-| **Total** | - | **43** | **18** | **0** | **25** | **0** | **0** | **58%** |
+| **Total** | - | **43** | **17** | **1** | **25** | **0** | **0** | **58%** |
 
 ---
 
 ## Current Focus
 
-**Active Task**: (none)
-**Epic**: -
-**Started**: -
+**Active Task**: JP-01 (Implement TracingJobDispatcher)
+**Epic**: Job Propagation
+**Started**: 2026-02-11
 
-**Recommended Next Task**: JP-01 (Implement job dispatching listener)
+**Recommended Next Task**: JP-02 (Register job event listeners)
 **Epic**: Job Propagation
 
 ---

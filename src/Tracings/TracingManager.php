@@ -121,6 +121,33 @@ class TracingManager
     }
 
     /**
+     * Restore tracing values from job payload.
+     *
+     * Injects tracing values directly into storage without running resolve().
+     * Used by job dispatcher to restore values when processing queued jobs.
+     *
+     * @param  array<string, string>  $tracings
+     */
+    public function restore(array $tracings): void
+    {
+        if (! $this->enabled) {
+            return;
+        }
+
+        foreach ($tracings as $key => $value) {
+            if (! $this->isSourceEnabled($key)) {
+                continue;
+            }
+
+            // Allow source to transform value if needed
+            $source = $this->getSource($key);
+            $restoredValue = $source?->restoreFromJob($value) ?? $value;
+
+            $this->storage->set($key, $restoredValue);
+        }
+    }
+
+    /**
      * Check whether a specific tracing source is enabled.
      */
     private function isSourceEnabled(string $key): bool
