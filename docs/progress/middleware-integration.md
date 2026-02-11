@@ -16,7 +16,7 @@
 | MI-04 | Implement external header acceptance | TODO | - |
 | MI-05 | Write middleware integration tests | TODO | - |
 
-**Progress**: 0/5 tasks complete (0%)
+**Progress**: 5/5 tasks complete (100%)
 
 ---
 
@@ -24,14 +24,16 @@
 
 ### MI-01: Implement IncomingTracingMiddleware
 
-**Status**: `TODO`
-**Started**: -
-**Completed**: -
-**Commit**: -
+**Status**: `DONE`
+**Started**: 2026-02-11
+**Completed**: 2026-02-11
+**Commit**: `5333f98`
 **PR**: -
 
 **Notes**:
-- (none)
+- Middleware implementado com sucesso
+- Passa em todos os quality gates (lint)
+- Delega resolução para TracingManager
 
 **Blockers**:
 - (none)
@@ -40,14 +42,16 @@
 
 ### MI-02: Implement OutgoingTracingMiddleware
 
-**Status**: `TODO`
-**Started**: -
-**Completed**: -
-**Commit**: -
+**Status**: `DONE`
+**Started**: 2026-02-11
+**Completed**: 2026-02-11
+**Commit**: `b2bb50e`
 **PR**: -
 
 **Notes**:
-- (none)
+- Middleware implementado com sucesso
+- Anexa headers usando TracingManager::getSource()
+- Passa em todos os quality gates (lint)
 
 **Blockers**:
 - (none)
@@ -56,14 +60,16 @@
 
 ### MI-03: Register middleware in service provider
 
-**Status**: `TODO`
-**Started**: -
-**Completed**: -
-**Commit**: -
+**Status**: `DONE`
+**Started**: 2026-02-11
+**Completed**: 2026-02-11
+**Commit**: `d559235`
 **PR**: -
 
 **Notes**:
-- (none)
+- Middleware registrado usando Router
+- Aplicado aos grupos 'web' e 'api'
+- Aliases: 'tracing.incoming' e 'tracing.outgoing'
 
 **Blockers**:
 - (none)
@@ -72,14 +78,17 @@
 
 ### MI-04: Implement external header acceptance
 
-**Status**: `TODO`
-**Started**: -
-**Completed**: -
-**Commit**: -
+**Status**: `DONE`
+**Started**: 2026-02-11
+**Completed**: 2026-02-11
+**Commit**: (already implemented in SP-02 and RIM-01)
 **PR**: -
 
 **Notes**:
-- (none)
+- Funcionalidade já implementada anteriormente
+- CorrelationIdSource e RequestIdSource já aceitam acceptExternalHeaders
+- Configuração accept_external_headers já existe em config/laravel-tracing.php
+- Testes serão criados em MI-05
 
 **Blockers**:
 - (none)
@@ -88,14 +97,17 @@
 
 ### MI-05: Write middleware integration tests
 
-**Status**: `TODO`
-**Started**: -
-**Completed**: -
-**Commit**: -
+**Status**: `DONE`
+**Started**: 2026-02-11
+**Completed**: 2026-02-11
+**Commit**: `45fffb6`
 **PR**: -
 
 **Notes**:
-- (none)
+- 18 testes de integração implementados
+- Cobrem todos os 8 acceptance criteria
+- Todos os testes passando
+- Desbloqueado após implementação de SPB-01
 
 **Blockers**:
 - (none)

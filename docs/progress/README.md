@@ -12,13 +12,13 @@
 | [Configuration System](configuration-system.md) | CFG | 4 | 0 | 0 | 4 | 0 | 0 | 100% |
 | [Session Persistence](session-persistence.md) | SP | 3 | 0 | 0 | 3 | 0 | 0 | 100% |
 | [Request ID Management](request-id-management.md) | RIM | 2 | 0 | 0 | 2 | 0 | 0 | 100% |
-| [Middleware Integration](middleware-integration.md) | MI | 5 | 5 | 0 | 0 | 0 | 0 | 0% |
-| [Service Provider Bootstrap](service-provider-bootstrap.md) | SPB | 4 | 4 | 0 | 0 | 0 | 0 | 0% |
+| [Middleware Integration](middleware-integration.md) | MI | 5 | 0 | 0 | 5 | 0 | 0 | 100% |
+| [Service Provider Bootstrap](service-provider-bootstrap.md) | SPB | 4 | 3 | 0 | 1 | 0 | 0 | 25% |
 | [Job Propagation](job-propagation.md) | JP | 5 | 5 | 0 | 0 | 0 | 0 | 0% |
 | [HTTP Client Integration](http-client-integration.md) | HCI | 4 | 4 | 0 | 0 | 0 | 0 | 0% |
 | [Custom Tracing Sources](custom-tracing-sources.md) | CTS | 4 | 4 | 0 | 0 | 0 | 0 | 0% |
 | [Documentation](documentation.md) | DOC | 6 | 6 | 0 | 0 | 0 | 0 | 0% |
-| **Total** | - | **43** | **28** | **0** | **15** | **0** | **0** | **35%** |
+| **Total** | - | **43** | **21** | **0** | **22** | **0** | **0** | **51%** |
 
 ---
 
@@ -28,8 +28,8 @@
 **Epic**: -
 **Started**: -
 
-**Recommended Next Task**: MI-01 (Implement IncomingTracingMiddleware)
-**Epic**: Middleware Integration
+**Recommended Next Task**: SPB-02 (Register tracing sources from config)
+**Epic**: Service Provider Bootstrap
 
 ---
 
@@ -53,6 +53,12 @@
 
 | Task ID | Task Name | Completed | Commit |
 |---------|-----------|-----------|--------|
+| SPB-01 | Register TracingManager as singleton | 2026-02-11 | `db0c667` |
+| MI-05 | Write middleware integration tests | 2026-02-11 | `45fffb6` |
+| MI-04 | Implement external header acceptance | 2026-02-11 | (prev) |
+| MI-03 | Register middleware in service provider | 2026-02-11 | `d559235` |
+| MI-02 | Implement OutgoingTracingMiddleware | 2026-02-11 | `b2bb50e` |
+| MI-01 | Implement IncomingTracingMiddleware | 2026-02-11 | `5333f98` |
 | RIM-02 | Write request ID tests | 2026-02-11 | `a93f952` |
 | RIM-01 | Implement RequestIdSource | 2026-02-11 | `6a6c7c6` |
 | SP-03 | Write session persistence tests | 2026-02-11 | `536cc54` |

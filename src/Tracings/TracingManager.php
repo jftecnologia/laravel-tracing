@@ -113,6 +113,14 @@ class TracingManager
     }
 
     /**
+     * Get a specific tracing source by key.
+     */
+    public function getSource(string $key): ?TracingSource
+    {
+        return $this->sources[$key] ?? null;
+    }
+
+    /**
      * Check whether a specific tracing source is enabled.
      */
     private function isSourceEnabled(string $key): bool
