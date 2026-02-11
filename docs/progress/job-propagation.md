@@ -42,14 +42,16 @@
 
 ### JP-02: Register job event listeners
 
-**Status**: `IN_PROGRESS`
+**Status**: `DONE`
 **Started**: 2026-02-11
-**Completed**: -
-**Commit**: -
+**Completed**: 2026-02-11
+**Commit**: `d90b4c5`
 **PR**: -
 
 **Notes**:
-- Starting implementation
+- Registered JobQueueing and JobProcessing event listeners in service provider
+- Listeners only registered when package is enabled
+- Dispatcher resolved from container for proper dependency injection
 
 **Blockers**:
 - (none)
@@ -58,14 +60,16 @@
 
 ### JP-03: Implement job payload serialization
 
-**Status**: `TODO`
-**Started**: -
-**Completed**: -
-**Commit**: -
+**Status**: `DONE`
+**Started**: 2026-02-11
+**Completed**: 2026-02-11
+**Commit**: `b5c825b`
 **PR**: -
 
 **Notes**:
-- (none)
+- Implemented as part of JP-01 in TracingJobDispatcher::handleJobQueueing()
+- Serializes all tracings to job payload under 'tracings' key
+- Compatible with all Laravel queue drivers
 
 **Blockers**:
 - (none)
@@ -74,14 +78,16 @@
 
 ### JP-04: Implement job execution restoration
 
-**Status**: `TODO`
-**Started**: -
-**Completed**: -
-**Commit**: -
+**Status**: `DONE`
+**Started**: 2026-02-11
+**Completed**: 2026-02-11
+**Commit**: `b5c825b`
 **PR**: -
 
 **Notes**:
-- (none)
+- Implemented as part of JP-01 in TracingJobDispatcher::handleJobProcessing()
+- Restores tracings from job payload into TracingManager
+- Original request ID is preserved (not regenerated)
 
 **Blockers**:
 - (none)
@@ -90,14 +96,14 @@
 
 ### JP-05: Write job propagation tests
 
-**Status**: `TODO`
-**Started**: -
+**Status**: `IN_PROGRESS`
+**Started**: 2026-02-11
 **Completed**: -
 **Commit**: -
 **PR**: -
 
 **Notes**:
-- (none)
+- Starting test implementation
 
 **Blockers**:
 - (none)
