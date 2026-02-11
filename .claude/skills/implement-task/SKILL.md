@@ -376,11 +376,13 @@ When implementing multiple tasks together:
 
 1. **BEFORE starting task N:**
     - Update `docs/progress/<epic-slug>.md` with `IN_PROGRESS` status
+    - Update `docs/progress/README.md` table and totals
     - This must happen BEFORE writing any code for that task
 
 2. **AFTER completing task N:**
     - Update progress with `DONE` status and commit hash
     - Update `docs/progress/README.md` table and totals
+    - Update `docs/progress/README.md` progress status, decisions made, and next steps
     - Commit the progress update
 
 **DO NOT batch progress updates.** Each task's progress must be updated individually as you work through them.
