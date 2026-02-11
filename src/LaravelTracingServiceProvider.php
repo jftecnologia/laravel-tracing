@@ -9,6 +9,11 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use JuniorFontenele\LaravelTracing\Middleware\IncomingTracingMiddleware;
 use JuniorFontenele\LaravelTracing\Middleware\OutgoingTracingMiddleware;
+use JuniorFontenele\LaravelTracing\Storage\RequestStorage;
+use JuniorFontenele\LaravelTracing\Storage\SessionStorage;
+use JuniorFontenele\LaravelTracing\Tracings\Sources\CorrelationIdSource;
+use JuniorFontenele\LaravelTracing\Tracings\Sources\RequestIdSource;
+use JuniorFontenele\LaravelTracing\Tracings\TracingManager;
 
 class LaravelTracingServiceProvider extends ServiceProvider
 {
@@ -35,17 +40,11 @@ class LaravelTracingServiceProvider extends ServiceProvider
      */
     private function registerMiddleware(): void
     {
-        $router = $this->app->make(Router::class);
+        $kernel = $this->app->make(Kernel::class);
 
-        // Register incoming middleware (early in stack)
-        $router->aliasMiddleware('tracing.incoming', IncomingTracingMiddleware::class);
-        $router->prependMiddlewareToGroup('web', 'tracing.incoming');
-        $router->prependMiddlewareToGroup('api', 'tracing.incoming');
-
-        // Register outgoing middleware (late in stack)
-        $router->aliasMiddleware('tracing.outgoing', OutgoingTracingMiddleware::class);
-        $router->pushMiddlewareToGroup('web', 'tracing.outgoing');
-        $router->pushMiddlewareToGroup('api', 'tracing.outgoing');
+        // Register middlewares globally
+        $kernel->pushMiddleware(IncomingTracingMiddleware::class);
+        $kernel->pushMiddleware(OutgoingTracingMiddleware::class);
     }
 
     /**
@@ -56,5 +55,110 @@ class LaravelTracingServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/laravel-tracing.php', 'laravel-tracing');
+
+        $this->registerStorage();
+        $this->registerTracingManager();
+        $this->registerLaravelTracing();
+    }
+
+    /**
+     * Register storage classes as singletons.
+     */
+    private function registerStorage(): void
+    {
+        $this->app->singleton(function (): \JuniorFontenele\LaravelTracing\Storage\RequestStorage {
+            return new RequestStorage();
+        });
+
+        $this->app->singleton(function (): \JuniorFontenele\LaravelTracing\Storage\SessionStorage {
+            return new SessionStorage();
+        });
+    }
+
+    /**
+     * Register TracingManager as singleton with all tracing sources.
+     */
+    private function registerTracingManager(): void
+    {
+        $this->app->singleton(function ($app): \JuniorFontenele\LaravelTracing\Tracings\TracingManager {
+            $config = config('laravel-tracing');
+            $tracingsConfig = $config['tracings'] ?? [];
+            $acceptExternalHeaders = $config['accept_external_headers'] ?? true;
+            $enabled = $config['enabled'] ?? true;
+
+            $sources = [];
+            $enabledMap = [];
+
+            foreach ($tracingsConfig as $key => $tracingConfig) {
+                $isEnabled = $tracingConfig['enabled'] ?? true;
+                $enabledMap[$key] = $isEnabled;
+
+                if (! $isEnabled) {
+                    continue;
+                }
+
+                $sourceClass = $tracingConfig['source'] ?? null;
+                $headerName = $tracingConfig['header'] ?? '';
+
+                if (! $sourceClass || ! class_exists($sourceClass)) {
+                    continue;
+                }
+
+                $sources[$key] = $this->instantiateSource(
+                    $sourceClass,
+                    $headerName,
+                    $acceptExternalHeaders,
+                    $app
+                );
+            }
+
+            return new TracingManager(
+                sources: $sources,
+                storage: $app->make(RequestStorage::class),
+                enabled: $enabled,
+                enabledMap: $enabledMap
+            );
+        });
+    }
+
+    /**
+     * Instantiate a tracing source with its dependencies.
+     */
+    private function instantiateSource(
+        string $sourceClass,
+        string $headerName,
+        bool $acceptExternalHeaders,
+        $app
+    ) {
+        // Handle built-in sources with known dependencies
+        if ($sourceClass === CorrelationIdSource::class) {
+            return new CorrelationIdSource(
+                sessionStorage: $app->make(SessionStorage::class),
+                acceptExternalHeaders: $acceptExternalHeaders,
+                headerName: $headerName
+            );
+        }
+
+        if ($sourceClass === RequestIdSource::class) {
+            return new RequestIdSource(
+                acceptExternalHeaders: $acceptExternalHeaders,
+                headerName: $headerName
+            );
+        }
+
+        // For custom sources, attempt to resolve from container
+        return $app->make($sourceClass);
+    }
+
+    /**
+     * Register LaravelTracing facade binding.
+     */
+    private function registerLaravelTracing(): void
+    {
+        $this->app->singleton(function ($app): \JuniorFontenele\LaravelTracing\LaravelTracing {
+            return new LaravelTracing(
+                manager: $app->make(TracingManager::class)
+            );
+        });
     }
 }
