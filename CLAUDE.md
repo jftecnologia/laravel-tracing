@@ -58,8 +58,9 @@ If no SKILL exists, ask before proceeding.
 **Architecture:**
 - `docs/architecture/*.md` – System architecture, component design, data flows, extension points
 
-**Task Breakdown:**
+**Task Breakdown & Progress:**
 - `docs/tasks/*.md` – Executable development tasks organized by epics with acceptance criteria
+- `docs/progress/*.md` – Progress tracking with status, commits, notes, and blockers
 
 **Engineering Documentation:**
 - `docs/engineering/STACK.md` – Tech stack, dependencies, available scripts
@@ -125,6 +126,7 @@ For specific guidance on:
 | **What to build** | `docs/PRD.md` |
 | **System architecture** | `docs/architecture/` |
 | **Development tasks** | `docs/tasks/` |
+| **Progress tracking** | `docs/progress/` |
 | **Tech stack & dependencies** | `docs/engineering/STACK.md` |
 | **Code quality & standards** | `docs/engineering/CODE_STANDARDS.md` |
 | **Git workflow & commits** | `docs/engineering/WORKFLOW.md` |
