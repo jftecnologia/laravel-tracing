@@ -13,6 +13,23 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     use WithWorkbench;
 
     /**
+     * Define environment setup.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return void
+     */
+    protected function defineEnvironment($app)
+    {
+        // Get the kernel and add middleware to the web group
+        /** @var \Illuminate\Foundation\Http\Kernel $kernel */
+        $kernel = $app->make(\Illuminate\Contracts\Http\Kernel::class);
+
+        // Register the middleware in web group
+        $kernel->appendMiddlewareToGroup('web', IncomingTracingMiddleware::class);
+        $kernel->appendMiddlewareToGroup('web', OutgoingTracingMiddleware::class);
+    }
+
+    /**
      * Define routes setup.
      *
      * @param  \Illuminate\Routing\Router  $router
@@ -20,13 +37,6 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
      */
     protected function defineRoutes($router)
     {
-        // Register middleware for testing
-        $router->middlewareGroup('web', [
-            \Illuminate\Session\Middleware\StartSession::class,
-            IncomingTracingMiddleware::class,
-            OutgoingTracingMiddleware::class,
-        ]);
-
         // Root test endpoint
         $router->get('/', function () {
             return response()->json(['status' => 'ok']);
