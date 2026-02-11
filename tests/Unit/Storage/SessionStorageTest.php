@@ -84,42 +84,22 @@ describe('SessionStorage', function () {
             ->and($thirdAccess)->toBe('persistent-123');
     });
 
-    it('automatically starts session if not started before accessing storage', function () {
-        // Close any existing session to simulate middleware running before StartSession
-        if (session()->isStarted()) {
-            session()->save();
-        }
-
-        // Create new storage instance (session not started)
-        $storage = new SessionStorage();
-
-        // Session should not be started yet
-        expect(session()->isStarted())->toBeFalse();
-
-        // Setting a value should automatically start the session
-        $storage->set('correlation_id', 'auto-start-123');
-
-        // Session should now be started
-        expect(session()->isStarted())->toBeTrue()
-            ->and($storage->get('correlation_id'))->toBe('auto-start-123');
-    });
-
-    it('automatically starts session when getting values if not started', function () {
-        // Close any existing session
+    it('returns null when getting values if session not started', function () {
+        // Close any existing session to simulate running before StartSession
         if (session()->isStarted()) {
             session()->save();
         }
 
         $storage = new SessionStorage();
 
-        // Getting a value should automatically start the session
+        // Getting a value should return null without starting session
         $value = $storage->get('some_key');
 
-        expect(session()->isStarted())->toBeTrue()
-            ->and($value)->toBeNull(); // Key doesn't exist, but session is started
+        expect(session()->isStarted())->toBeFalse()
+            ->and($value)->toBeNull();
     });
 
-    it('automatically starts session when checking key existence if not started', function () {
+    it('silently fails when setting values if session not started', function () {
         // Close any existing session
         if (session()->isStarted()) {
             session()->save();
@@ -127,10 +107,46 @@ describe('SessionStorage', function () {
 
         $storage = new SessionStorage();
 
-        // Checking key existence should automatically start the session
+        // Setting should fail gracefully without starting session
+        $storage->set('correlation_id', 'test-value');
+
+        expect(session()->isStarted())->toBeFalse();
+
+        // Start session manually to verify value was not stored
+        session()->start();
+        expect($storage->get('correlation_id'))->toBeNull();
+    });
+
+    it('returns false when checking key existence if session not started', function () {
+        // Close any existing session
+        if (session()->isStarted()) {
+            session()->save();
+        }
+
+        $storage = new SessionStorage();
+
+        // Checking key existence should return false without starting session
         $exists = $storage->has('some_key');
 
-        expect(session()->isStarted())->toBeTrue()
+        expect(session()->isStarted())->toBeFalse()
             ->and($exists)->toBeFalse();
+    });
+
+    it('works correctly when session is already started', function () {
+        // Ensure session is started (simulates normal flow with StartSession middleware)
+        if (! session()->isStarted()) {
+            session()->start();
+        }
+
+        $storage = new SessionStorage();
+
+        // All operations should work normally
+        $storage->set('test_key', 'test_value');
+        expect($storage->get('test_key'))->toBe('test_value')
+            ->and($storage->has('test_key'))->toBeTrue();
+
+        $storage->flush();
+        expect($storage->get('test_key'))->toBeNull()
+            ->and($storage->has('test_key'))->toBeFalse();
     });
 });

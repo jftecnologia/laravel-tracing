@@ -12,6 +12,16 @@ use JuniorFontenele\LaravelTracing\Tracings\Contracts\TracingStorage;
  * Uses Laravel's session driver to persist correlation IDs and other tracing values
  * for the duration of a user's session. Values are stored under the `laravel_tracing.*`
  * namespace to avoid conflicts with application session data.
+ *
+ * IMPORTANT: This storage only works when session is available (started by Laravel's
+ * StartSession middleware). If session is not available, operations fail gracefully:
+ * - get() returns null
+ * - set() does nothing
+ * - has() returns false
+ *
+ * This ensures the package doesn't force session initialization before Laravel's
+ * session middleware runs, avoiding potential conflicts with session configuration,
+ * CSRF tokens, cookies, and database/redis drivers.
  */
 class SessionStorage implements TracingStorage
 {
@@ -19,27 +29,42 @@ class SessionStorage implements TracingStorage
 
     public function set(string $key, string $value): void
     {
-        $this->ensureSessionStarted();
+        // Only store if session is available
+        // Avoids forcing session start before Laravel's StartSession middleware
+        if (! $this->isSessionAvailable()) {
+            return;
+        }
+
         session()->put($this->namespaced($key), $value);
     }
 
     public function get(string $key): ?string
     {
-        $this->ensureSessionStarted();
+        // Return null if session is not available yet
+        if (! $this->isSessionAvailable()) {
+            return null;
+        }
 
         return session()->get($this->namespaced($key));
     }
 
     public function has(string $key): bool
     {
-        $this->ensureSessionStarted();
+        // Return false if session is not available yet
+        if (! $this->isSessionAvailable()) {
+            return false;
+        }
 
         return session()->has($this->namespaced($key));
     }
 
     public function flush(): void
     {
-        $this->ensureSessionStarted();
+        // Only flush if session is available
+        if (! $this->isSessionAvailable()) {
+            return;
+        }
+
         session()->forget(self::NAMESPACE);
     }
 
@@ -49,15 +74,19 @@ class SessionStorage implements TracingStorage
     }
 
     /**
-     * Ensure the session is started before accessing it.
+     * Check if session is available for use.
      *
-     * This is necessary because the package middleware may run before
-     * Laravel's StartSession middleware in some configurations.
+     * Session must be started by Laravel's StartSession middleware before
+     * we can safely use it. This prevents issues with:
+     * - Session configuration not being applied
+     * - CSRF token validation
+     * - Cookie encryption
+     * - Database/Redis connection not ready
+     *
+     * @return bool True if session is started and safe to use
      */
-    private function ensureSessionStarted(): void
+    private function isSessionAvailable(): bool
     {
-        if (! session()->isStarted()) {
-            session()->start();
-        }
+        return session()->isStarted();
     }
 }
