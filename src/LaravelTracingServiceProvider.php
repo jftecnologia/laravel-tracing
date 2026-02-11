@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace JuniorFontenele\LaravelTracing;
 
-use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Queue\Events\JobQueueing;
 use Illuminate\Support\Facades\Event;
@@ -13,8 +12,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use JuniorFontenele\LaravelTracing\Http\HttpClientTracing;
 use JuniorFontenele\LaravelTracing\Jobs\TracingJobDispatcher;
-use JuniorFontenele\LaravelTracing\Middleware\IncomingTracingMiddleware;
-use JuniorFontenele\LaravelTracing\Middleware\OutgoingTracingMiddleware;
 use JuniorFontenele\LaravelTracing\Storage\RequestStorage;
 use JuniorFontenele\LaravelTracing\Storage\SessionStorage;
 use JuniorFontenele\LaravelTracing\Tracings\Sources\CorrelationIdSource;
@@ -39,25 +36,8 @@ class LaravelTracingServiceProvider extends ServiceProvider
             return;
         }
 
-        $this->registerMiddleware();
         $this->registerJobEventListeners();
         $this->registerHttpClientMacro();
-    }
-
-    /**
-     * Register tracing middleware in the HTTP kernel.
-     *
-     * Both incoming and outgoing middleware are registered globally to apply
-     * to all HTTP requests. The middleware checks the global enabled toggle
-     * internally, so registration is unconditional.
-     */
-    private function registerMiddleware(): void
-    {
-        $kernel = $this->app->make(Kernel::class);
-
-        // Register middlewares globally
-        $kernel->pushMiddleware(IncomingTracingMiddleware::class);
-        $kernel->pushMiddleware(OutgoingTracingMiddleware::class);
     }
 
     /**

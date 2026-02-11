@@ -41,7 +41,7 @@ In distributed and monolithic Laravel applications, tracking the origin and flow
 
 ### Why Use Laravel Tracing?
 
-- ✅ **Zero Configuration**: Works out of the box after `composer require` (Laravel auto-discovery)
+- ✅ **Easy Setup**: Simple middleware registration in `bootstrap/app.php`
 - ✅ **Session Persistence**: Correlation IDs survive across multiple requests from the same user
 - ✅ **Job Propagation**: Tracing context automatically flows into queued jobs
 - ✅ **HTTP Client Integration**: Forward tracing headers to external APIs with `Http::withTracing()`
@@ -88,14 +88,55 @@ In distributed and monolithic Laravel applications, tracking the origin and flow
 composer require jftecnologia/laravel-tracing
 ```
 
-### Step 2: Auto-Discovery (No Manual Setup Required)
+### Step 2: Register Middleware
 
-Laravel Tracing uses Laravel's package auto-discovery feature. The service provider and facade are automatically registered.
+**Laravel 12 requires manual middleware registration.** Add the tracing middleware to your `bootstrap/app.php` file:
 
-**That's it!** The package is now active and will automatically:
-- Resolve correlation IDs and request IDs on every incoming request
-- Attach tracing headers to all outgoing responses
-- Propagate tracing context into queued jobs
+```php
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+use JuniorFontenele\LaravelTracing\Middleware\IncomingTracingMiddleware;
+use JuniorFontenele\LaravelTracing\Middleware\OutgoingTracingMiddleware;
+
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__.'/../routes/web.php',
+        commands: __DIR__.'/../routes/console.php',
+        health: '/up',
+    )
+    ->withMiddleware(function (Middleware $middleware) {
+        // Register tracing middleware to web group (for session-based correlation ID persistence)
+        $middleware->appendToGroup('web', IncomingTracingMiddleware::class);
+        $middleware->appendToGroup('web', OutgoingTracingMiddleware::class);
+        
+        // Optional: Register to api group if you want tracing on API routes
+        // Note: API routes won't have session persistence, so correlation ID will be generated per request
+        $middleware->appendToGroup('api', IncomingTracingMiddleware::class);
+        $middleware->appendToGroup('api', OutgoingTracingMiddleware::class);
+    })
+    ->withExceptions(function (Exceptions $exceptions) {
+        //
+    })->create();
+```
+
+**Important**: The middleware must be registered to the `web` middleware group (or after Laravel's `StartSession` middleware) to ensure session persistence for correlation IDs. If registered globally or before `StartSession`, correlation IDs will not persist across requests.
+
+### Alternative: Route-Specific Registration
+
+If you prefer to apply tracing only to specific routes:
+
+```php
+// In routes/web.php
+Route::middleware([
+    IncomingTracingMiddleware::class,
+    OutgoingTracingMiddleware::class,
+])->group(function () {
+    Route::get('/traced', function () {
+        return response()->json(['status' => 'traced']);
+    });
+});
+```
 
 ### Step 3: Publish Configuration (Optional)
 

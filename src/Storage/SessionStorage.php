@@ -12,6 +12,10 @@ use JuniorFontenele\LaravelTracing\Tracings\Contracts\TracingStorage;
  * Uses Laravel's session driver to persist correlation IDs and other tracing values
  * for the duration of a user's session. Values are stored under the `laravel_tracing.*`
  * namespace to avoid conflicts with application session data.
+ *
+ * IMPORTANT: This storage requires Laravel's session to be started. The package
+ * middleware must be registered AFTER Laravel's StartSession middleware to ensure
+ * session is available. See installation documentation for proper middleware registration.
  */
 class SessionStorage implements TracingStorage
 {
@@ -19,26 +23,60 @@ class SessionStorage implements TracingStorage
 
     public function set(string $key, string $value): void
     {
+        // Only store if session is available
+        if (! $this->isSessionAvailable()) {
+            return;
+        }
+
         session()->put($this->namespaced($key), $value);
     }
 
     public function get(string $key): ?string
     {
+        // Return null if session is not available
+        if (! $this->isSessionAvailable()) {
+            return null;
+        }
+
         return session()->get($this->namespaced($key));
     }
 
     public function has(string $key): bool
     {
+        // Return false if session is not available
+        if (! $this->isSessionAvailable()) {
+            return false;
+        }
+
         return session()->has($this->namespaced($key));
     }
 
     public function flush(): void
     {
+        // Only flush if session is available
+        if (! $this->isSessionAvailable()) {
+            return;
+        }
+
         session()->forget(self::NAMESPACE);
     }
 
     private function namespaced(string $key): string
     {
         return self::NAMESPACE . '.' . $key;
+    }
+
+    /**
+     * Check if session is available for use.
+     *
+     * Session must be started by Laravel's StartSession middleware before
+     * we can safely use it. This method checks if session has been started
+     * without forcing initialization.
+     *
+     * @return bool True if session is started and safe to use
+     */
+    private function isSessionAvailable(): bool
+    {
+        return session()->isStarted();
     }
 }
