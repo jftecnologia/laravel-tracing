@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace JuniorFontenele\LaravelTracing;
 
 use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use JuniorFontenele\LaravelTracing\Middleware\IncomingTracingMiddleware;
 use JuniorFontenele\LaravelTracing\Middleware\OutgoingTracingMiddleware;
@@ -66,11 +65,11 @@ class LaravelTracingServiceProvider extends ServiceProvider
      */
     private function registerStorage(): void
     {
-        $this->app->singleton(function (): \JuniorFontenele\LaravelTracing\Storage\RequestStorage {
+        $this->app->singleton(function (): RequestStorage {
             return new RequestStorage();
         });
 
-        $this->app->singleton(function (): \JuniorFontenele\LaravelTracing\Storage\SessionStorage {
+        $this->app->singleton(function (): SessionStorage {
             return new SessionStorage();
         });
     }
@@ -80,7 +79,7 @@ class LaravelTracingServiceProvider extends ServiceProvider
      */
     private function registerTracingManager(): void
     {
-        $this->app->singleton(function ($app): \JuniorFontenele\LaravelTracing\Tracings\TracingManager {
+        $this->app->singleton(function ($app): TracingManager {
             $config = config('laravel-tracing');
             $tracingsConfig = $config['tracings'] ?? [];
             $acceptExternalHeaders = $config['accept_external_headers'] ?? true;
@@ -155,7 +154,7 @@ class LaravelTracingServiceProvider extends ServiceProvider
      */
     private function registerLaravelTracing(): void
     {
-        $this->app->singleton(function ($app): \JuniorFontenele\LaravelTracing\LaravelTracing {
+        $this->app->singleton(function ($app): LaravelTracing {
             return new LaravelTracing(
                 manager: $app->make(TracingManager::class)
             );
