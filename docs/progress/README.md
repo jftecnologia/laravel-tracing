@@ -16,9 +16,9 @@
 | [Service Provider Bootstrap](service-provider-bootstrap.md) | SPB | 4 | 0 | 0 | 4 | 0 | 0 | 100% |
 | [Job Propagation](job-propagation.md) | JP | 5 | 0 | 0 | 5 | 0 | 0 | 100% |
 | [HTTP Client Integration](http-client-integration.md) | HCI | 4 | 0 | 0 | 4 | 0 | 0 | 100% |
-| [Custom Tracing Sources](custom-tracing-sources.md) | CTS | 4 | 1 | 0 | 3 | 0 | 0 | 75% |
+| [Custom Tracing Sources](custom-tracing-sources.md) | CTS | 4 | 0 | 0 | 4 | 0 | 0 | 100% |
 | [Documentation](documentation.md) | DOC | 6 | 6 | 0 | 0 | 0 | 0 | 0% |
-| **Total** | - | **43** | **6** | **0** | **37** | **0** | **0** | **86%** |
+| **Total** | - | **43** | **5** | **0** | **38** | **0** | **0** | **88%** |
 
 ---
 
@@ -28,8 +28,8 @@
 **Epic**: -
 **Started**: -
 
-**Recommended Next Task**: CTS-04 (Write extension tests)
-**Epic**: Custom Tracing Sources
+**Recommended Next Task**: DOC-01 (Write installation guide)
+**Epic**: Documentation (DOC)
 
 ---
 
@@ -53,6 +53,7 @@
 
 | Task ID | Task Name | Completed | Commit |
 |---------|-----------|-----------|--------|
+| CTS-04 | Write extension tests | 2026-02-11 | `6d5d733` |
 | CTS-03 | Create example custom tracing source | 2026-02-11 | `4396c97` |
 | CTS-02 | Document extension points | 2026-02-11 | `eeb176a` |
 | CTS-01 | Implement runtime extension | 2026-02-11 | `03a3722` |
