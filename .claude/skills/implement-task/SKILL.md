@@ -85,9 +85,11 @@ Branch types from WORKFLOW.md:
 - `docs/` - Documentation only
 - `test/` - Test additions
 
-### Step 3: Update Progress Status
+### Step 3: Update Progress Status (CRITICAL)
 
-Before starting implementation, update `docs/progress/<epic-slug>.md`:
+**This step is MANDATORY and must happen BEFORE writing any code.**
+
+Update `docs/progress/<epic-slug>.md` immediately:
 
 ```markdown
 ### [TASK-ID] Task Name
@@ -96,6 +98,12 @@ Before starting implementation, update `docs/progress/<epic-slug>.md`:
 **Started**: YYYY-MM-DD
 **Notes**: Starting implementation
 ```
+
+> ⚠️ **DO NOT skip or defer this step.** Progress tracking provides:
+>
+> - Visibility into current work
+> - Recovery point if implementation fails
+> - Accurate timestamps for reporting
 
 ---
 
@@ -345,7 +353,40 @@ When implementing multiple tasks together:
 3. **Separate commits** - One commit per task completion
 4. **Single PR** - Batch related tasks in one PR
 
-Progress tracking should reflect individual task statuses.
+### Progress Tracking (CRITICAL)
+
+**For each task in the batch, follow this exact sequence:**
+
+1. **BEFORE starting task N:**
+    - Update `docs/progress/<epic-slug>.md` with `IN_PROGRESS` status
+    - This must happen BEFORE writing any code for that task
+
+2. **AFTER completing task N:**
+    - Update progress with `DONE` status and commit hash
+    - Update README.md table if needed
+    - Commit the progress update
+
+**DO NOT batch progress updates.** Each task's progress must be updated individually as you work through them.
+
+Example sequence for tasks CTI-01, CTI-02, CTI-03:
+
+```
+1. Update CTI-01 → IN_PROGRESS
+2. Implement CTI-01
+3. Update CTI-01 → DONE
+4. Update CTI-02 → IN_PROGRESS  ← happens immediately after CTI-01 done
+5. Implement CTI-02
+6. Update CTI-02 → DONE
+7. Update CTI-03 → IN_PROGRESS
+8. Implement CTI-03
+9. Update CTI-03 → DONE
+```
+
+This ensures:
+
+- Visibility into which task is being worked on
+- Recovery point if implementation fails mid-epic
+- Accurate timestamps for start/completion
 
 ---
 
