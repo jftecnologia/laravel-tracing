@@ -27,12 +27,12 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
             OutgoingTracingMiddleware::class,
         ]);
 
-        // Simple test route
+        // Root test endpoint
         $router->get('/', function () {
             return response()->json(['status' => 'ok']);
         })->middleware('web');
 
-        // Test route
+        // Secondary test endpoint
         $router->get('/test', function () {
             return response()->json(['status' => 'test']);
         })->middleware('web');

@@ -111,7 +111,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->appendToGroup('web', OutgoingTracingMiddleware::class);
         
         // Optional: Register to api group if you want tracing on API routes
-        // Note: API routes won't have session persistence, so correlation ID will be generated per-request
+        // Note: API routes won't have session persistence, so correlation ID will be generated per request
         $middleware->appendToGroup('api', IncomingTracingMiddleware::class);
         $middleware->appendToGroup('api', OutgoingTracingMiddleware::class);
     })
