@@ -12,10 +12,10 @@
 |---------|-----------|--------|-----------|
 | CTS-01 | Implement runtime extension | DONE | `03a3722` |
 | CTS-02 | Document extension points | DONE | `eeb176a` |
-| CTS-03 | Create example custom tracing source | TODO | - |
+| CTS-03 | Create example custom tracing source | DONE | `4396c97` |
 | CTS-04 | Write extension tests | TODO | - |
 
-**Progress**: 2/4 tasks complete (50%)
+**Progress**: 3/4 tasks complete (75%)
 
 ---
 
@@ -63,14 +63,17 @@
 
 ### CTS-03: Create example custom tracing source
 
-**Status**: `TODO`
-**Started**: -
-**Completed**: -
-**Commit**: -
+**Status**: `DONE`
+**Started**: 2026-02-11
+**Completed**: 2026-02-11
+**Commit**: `4396c97`
 **PR**: -
 
 **Notes**:
-- (none)
+- Created UserIdSource.php in tests/Fixtures/
+- Added 12 unit tests covering all acceptance criteria
+- Updated EXTENSIONS.md to reference the example
+- All 185 tests passing
 
 **Blockers**:
 - (none)
