@@ -83,4 +83,54 @@ describe('SessionStorage', function () {
             ->and($secondAccess)->toBe('persistent-123')
             ->and($thirdAccess)->toBe('persistent-123');
     });
+
+    it('automatically starts session if not started before accessing storage', function () {
+        // Close any existing session to simulate middleware running before StartSession
+        if (session()->isStarted()) {
+            session()->save();
+        }
+
+        // Create new storage instance (session not started)
+        $storage = new SessionStorage();
+
+        // Session should not be started yet
+        expect(session()->isStarted())->toBeFalse();
+
+        // Setting a value should automatically start the session
+        $storage->set('correlation_id', 'auto-start-123');
+
+        // Session should now be started
+        expect(session()->isStarted())->toBeTrue()
+            ->and($storage->get('correlation_id'))->toBe('auto-start-123');
+    });
+
+    it('automatically starts session when getting values if not started', function () {
+        // Close any existing session
+        if (session()->isStarted()) {
+            session()->save();
+        }
+
+        $storage = new SessionStorage();
+
+        // Getting a value should automatically start the session
+        $value = $storage->get('some_key');
+
+        expect(session()->isStarted())->toBeTrue()
+            ->and($value)->toBeNull(); // Key doesn't exist, but session is started
+    });
+
+    it('automatically starts session when checking key existence if not started', function () {
+        // Close any existing session
+        if (session()->isStarted()) {
+            session()->save();
+        }
+
+        $storage = new SessionStorage();
+
+        // Checking key existence should automatically start the session
+        $exists = $storage->has('some_key');
+
+        expect(session()->isStarted())->toBeTrue()
+            ->and($exists)->toBeFalse();
+    });
 });
