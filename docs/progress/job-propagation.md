@@ -2,7 +2,7 @@
 
 **Epic ID**: JP
 **Task Definition**: [../tasks/job-propagation.md](../tasks/job-propagation.md)
-**Last Updated**: 2026-02-10
+**Last Updated**: 2026-02-11
 
 ---
 
@@ -16,7 +16,7 @@
 | JP-04 | Implement job execution restoration | TODO | - |
 | JP-05 | Write job propagation tests | TODO | - |
 
-**Progress**: 0/5 tasks complete (0%)
+**Progress**: 5/5 tasks complete (100%)
 
 ---
 
@@ -96,14 +96,17 @@
 
 ### JP-05: Write job propagation tests
 
-**Status**: `IN_PROGRESS`
+**Status**: `DONE`
 **Started**: 2026-02-11
-**Completed**: -
-**Commit**: -
+**Completed**: 2026-02-11
+**Commit**: `b06bc8e`
 **PR**: -
 
 **Notes**:
-- Starting test implementation
+- Created comprehensive integration tests for job propagation lifecycle
+- Created CaptureTracingJob fixture to capture tracing values during execution
+- Created MockJob fixture for reusable Job interface implementation
+- All 9 tests passing, covering serialization, restoration, and edge cases
 
 **Blockers**:
 - (none)
@@ -112,4 +115,21 @@
 
 ## Epic Notes
 
-(General notes about this epic's progress, decisions made, issues encountered)
+**Epic Status**: ✅ COMPLETED
+
+**Summary**:
+- All 5 tasks completed successfully
+- Job propagation fully implemented with event listeners
+- TracingManager::restore() method added for job context restoration
+- Comprehensive test coverage with 9 integration tests
+- All quality gates passed (lint, test, security)
+
+**Key Decisions**:
+- Used JobQueueing and JobProcessing events for propagation
+- Tracings stored in job payload under 'tracings' key
+- Original request ID is preserved (not regenerated) in jobs
+- Sources' restoreFromJob() method allows custom transformation
+- MockJob fixture created for reusable Job interface mocking
+
+**Next Steps**:
+- Ready for PR or continue with next epic (HTTP Client Integration)
