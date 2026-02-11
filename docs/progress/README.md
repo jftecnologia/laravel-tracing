@@ -11,14 +11,14 @@
 | [Core Tracing Infrastructure](core-tracing-infrastructure.md) | CTI | 6 | 0 | 0 | 6 | 0 | 0 | 100% |
 | [Configuration System](configuration-system.md) | CFG | 4 | 0 | 0 | 4 | 0 | 0 | 100% |
 | [Session Persistence](session-persistence.md) | SP | 3 | 0 | 0 | 3 | 0 | 0 | 100% |
-| [Request ID Management](request-id-management.md) | RIM | 2 | 2 | 0 | 0 | 0 | 0 | 0% |
+| [Request ID Management](request-id-management.md) | RIM | 2 | 0 | 0 | 2 | 0 | 0 | 100% |
 | [Middleware Integration](middleware-integration.md) | MI | 5 | 5 | 0 | 0 | 0 | 0 | 0% |
 | [Service Provider Bootstrap](service-provider-bootstrap.md) | SPB | 4 | 4 | 0 | 0 | 0 | 0 | 0% |
 | [Job Propagation](job-propagation.md) | JP | 5 | 5 | 0 | 0 | 0 | 0 | 0% |
 | [HTTP Client Integration](http-client-integration.md) | HCI | 4 | 4 | 0 | 0 | 0 | 0 | 0% |
 | [Custom Tracing Sources](custom-tracing-sources.md) | CTS | 4 | 4 | 0 | 0 | 0 | 0 | 0% |
 | [Documentation](documentation.md) | DOC | 6 | 6 | 0 | 0 | 0 | 0 | 0% |
-| **Total** | - | **43** | **30** | **0** | **13** | **0** | **0** | **30%** |
+| **Total** | - | **43** | **28** | **0** | **15** | **0** | **0** | **35%** |
 
 ---
 
@@ -28,8 +28,8 @@
 **Epic**: -
 **Started**: -
 
-**Recommended Next Task**: RIM-01 (Implement RequestIdSource)
-**Epic**: Request ID Management
+**Recommended Next Task**: MI-01 (Implement IncomingTracingMiddleware)
+**Epic**: Middleware Integration
 
 ---
 
@@ -53,6 +53,8 @@
 
 | Task ID | Task Name | Completed | Commit |
 |---------|-----------|-----------|--------|
+| RIM-02 | Write request ID tests | 2026-02-11 | `a93f952` |
+| RIM-01 | Implement RequestIdSource | 2026-02-11 | `6a6c7c6` |
 | SP-03 | Write session persistence tests | 2026-02-11 | `536cc54` |
 | SP-02 | Implement CorrelationIdSource | 2026-02-11 | `43636e2` |
 | SP-01 | Implement SessionStorage | 2026-02-11 | `46083a0` |

@@ -2,7 +2,7 @@
 
 **Epic ID**: RIM
 **Task Definition**: [../tasks/request-id-management.md](../tasks/request-id-management.md)
-**Last Updated**: 2026-02-10
+**Last Updated**: 2026-02-11
 
 ---
 
@@ -10,10 +10,10 @@
 
 | Task ID | Task Name | Status | Commit/PR |
 |---------|-----------|--------|-----------|
-| RIM-01 | Implement RequestIdSource | TODO | - |
-| RIM-02 | Write request ID tests | TODO | - |
+| RIM-01 | Implement RequestIdSource | DONE | `6a6c7c6` |
+| RIM-02 | Write request ID tests | DONE | `a93f952` |
 
-**Progress**: 0/2 tasks complete (0%)
+**Progress**: 2/2 tasks complete (100%)
 
 ---
 
@@ -21,14 +21,16 @@
 
 ### RIM-01: Implement RequestIdSource
 
-**Status**: `TODO`
-**Started**: -
-**Completed**: -
-**Commit**: -
+**Status**: `DONE`
+**Started**: 2026-02-11
+**Completed**: 2026-02-11
+**Commit**: `6a6c7c6`
 **PR**: -
 
 **Notes**:
-- (none)
+- Implemented request-scoped tracing source
+- Does not persist in session storage (request-scoped)
+- Preserves original request ID in job payloads
 
 **Blockers**:
 - (none)
@@ -37,14 +39,17 @@
 
 ### RIM-02: Write request ID tests
 
-**Status**: `TODO`
-**Started**: -
-**Completed**: -
-**Commit**: -
+**Status**: `DONE`
+**Started**: 2026-02-11
+**Completed**: 2026-02-11
+**Commit**: `a93f952`
 **PR**: -
 
 **Notes**:
-- (none)
+- Created comprehensive unit and integration tests
+- 18 new tests added (9 unit + 9 integration)
+- All tests passing (105 total)
+- Covers all acceptance criteria (AC-1 through AC-7)
 
 **Blockers**:
 - (none)
