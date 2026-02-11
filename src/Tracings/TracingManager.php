@@ -99,9 +99,11 @@ class TracingManager
     /**
      * Register a custom tracing source at runtime.
      */
-    public function extend(string $key, TracingSource $source): void
+    public function extend(string $key, TracingSource $source): self
     {
         $this->sources[$key] = $source;
+
+        return $this;
     }
 
     /**
