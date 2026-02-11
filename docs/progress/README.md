@@ -53,12 +53,12 @@
 
 | Task ID | Task Name | Completed | Commit |
 |---------|-----------|-----------|--------|
-| DOC-06 | Add troubleshooting section | 2026-02-11 | TBD |
-| DOC-05 | Add custom tracing guide | 2026-02-11 | TBD |
-| DOC-04 | Add usage examples | 2026-02-11 | TBD |
-| DOC-03 | Add configuration reference | 2026-02-11 | TBD |
-| DOC-02 | Add installation guide | 2026-02-11 | TBD |
-| DOC-01 | Write comprehensive README | 2026-02-11 | TBD |
+| DOC-06 | Add troubleshooting section | 2026-02-11 | `b2400ec` |
+| DOC-05 | Add custom tracing guide | 2026-02-11 | `b2400ec` |
+| DOC-04 | Add usage examples | 2026-02-11 | `b2400ec` |
+| DOC-03 | Add configuration reference | 2026-02-11 | `b2400ec` |
+| DOC-02 | Add installation guide | 2026-02-11 | `b2400ec` |
+| DOC-01 | Write comprehensive README | 2026-02-11 | `b2400ec` |
 | CTS-04 | Write extension tests | 2026-02-11 | `6d5d733` |
 | CTS-03 | Create example custom tracing source | 2026-02-11 | `4396c97` |
 | CTS-02 | Document extension points | 2026-02-11 | `eeb176a` |

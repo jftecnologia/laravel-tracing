@@ -10,12 +10,12 @@
 
 | Task ID | Task Name | Status | Commit/PR |
 |---------|-----------|--------|-----------|
-| DOC-01 | Write comprehensive README | DONE | TBD |
-| DOC-02 | Add installation guide | DONE | TBD |
-| DOC-03 | Add configuration reference | DONE | TBD |
-| DOC-04 | Add usage examples | DONE | TBD |
-| DOC-05 | Add custom tracing guide | DONE | TBD |
-| DOC-06 | Add troubleshooting section | DONE | TBD |
+| DOC-01 | Write comprehensive README | DONE | `b2400ec` |
+| DOC-02 | Add installation guide | DONE | `b2400ec` |
+| DOC-03 | Add configuration reference | DONE | `b2400ec` |
+| DOC-04 | Add usage examples | DONE | `b2400ec` |
+| DOC-05 | Add custom tracing guide | DONE | `b2400ec` |
+| DOC-06 | Add troubleshooting section | DONE | `b2400ec` |
 
 **Progress**: 6/6 tasks complete (100%)
 
@@ -28,7 +28,7 @@
 **Status**: `DONE`
 **Started**: 2026-02-11
 **Completed**: 2026-02-11
-**Commit**: TBD
+**Commit**: `b2400ec`
 **PR**: -
 
 **Notes**:
@@ -45,7 +45,7 @@
 **Status**: `DONE`
 **Started**: 2026-02-11
 **Completed**: 2026-02-11
-**Commit**: TBD
+**Commit**: `b2400ec`
 **PR**: -
 
 **Notes**:
@@ -63,7 +63,7 @@
 **Status**: `DONE`
 **Started**: 2026-02-11
 **Completed**: 2026-02-11
-**Commit**: TBD
+**Commit**: `b2400ec`
 **PR**: -
 
 **Notes**:
@@ -82,7 +82,7 @@
 **Status**: `DONE`
 **Started**: 2026-02-11
 **Completed**: 2026-02-11
-**Commit**: TBD
+**Commit**: `b2400ec`
 **PR**: -
 
 **Notes**:
@@ -100,7 +100,7 @@
 **Status**: `DONE`
 **Started**: 2026-02-11
 **Completed**: 2026-02-11
-**Commit**: TBD
+**Commit**: `b2400ec`
 **PR**: -
 
 **Notes**:
@@ -119,7 +119,7 @@
 **Status**: `DONE`
 **Started**: 2026-02-11
 **Completed**: 2026-02-11
-**Commit**: TBD
+**Commit**: `b2400ec`
 **PR**: -
 
 **Notes**:
