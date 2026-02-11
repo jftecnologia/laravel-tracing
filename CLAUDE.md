@@ -1,4 +1,4 @@
-# Claude Code – Project Guidelines (v3)
+# Claude Code – Project Guidelines
 
 This file defines **general directions only**.
 All detailed behavior must be loaded from **SKILL** and **docs/** files.
