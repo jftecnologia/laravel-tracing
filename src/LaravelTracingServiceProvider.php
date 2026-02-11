@@ -12,8 +12,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use JuniorFontenele\LaravelTracing\Http\HttpClientTracing;
 use JuniorFontenele\LaravelTracing\Jobs\TracingJobDispatcher;
-use JuniorFontenele\LaravelTracing\Middleware\IncomingTracingMiddleware;
-use JuniorFontenele\LaravelTracing\Middleware\OutgoingTracingMiddleware;
 use JuniorFontenele\LaravelTracing\Storage\RequestStorage;
 use JuniorFontenele\LaravelTracing\Storage\SessionStorage;
 use JuniorFontenele\LaravelTracing\Tracings\Sources\CorrelationIdSource;
