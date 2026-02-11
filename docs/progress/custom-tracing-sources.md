@@ -11,11 +11,11 @@
 | Task ID | Task Name | Status | Commit/PR |
 |---------|-----------|--------|-----------|
 | CTS-01 | Implement runtime extension | DONE | `03a3722` |
-| CTS-02 | Document extension points | TODO | - |
+| CTS-02 | Document extension points | DONE | `eeb176a` |
 | CTS-03 | Create example custom tracing source | TODO | - |
 | CTS-04 | Write extension tests | TODO | - |
 
-**Progress**: 1/4 tasks complete (25%)
+**Progress**: 2/4 tasks complete (50%)
 
 ---
 
@@ -43,14 +43,18 @@
 
 ### CTS-02: Document extension points
 
-**Status**: `TODO`
-**Started**: -
-**Completed**: -
-**Commit**: -
+**Status**: `DONE`
+**Started**: 2026-02-11
+**Completed**: 2026-02-11
+**Commit**: `eeb176a`
 **PR**: -
 
 **Notes**:
-- (none)
+- Created comprehensive EXTENSIONS.md (398 new lines)
+- Updated README with extension section
+- Documented TracingSource contract, registration methods, and examples
+- Included complete UserIdSource example with tests
+- All 8 acceptance criteria met
 
 **Blockers**:
 - (none)
