@@ -425,7 +425,7 @@ This ensures:
 - **Commits**: English
 - **PR descriptions**: English
 - **Conversation with user**: Portuguese (pt-BR)
-- **Progress notes**: Portuguese ok, English ok
+- **Progress notes**: English
 
 ---
 
