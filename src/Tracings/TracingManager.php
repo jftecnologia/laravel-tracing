@@ -19,22 +19,40 @@ class TracingManager
     /** @var array<string, TracingSource> */
     private array $sources;
 
+    /** @var array<string, bool> */
+    private array $enabledMap;
+
+    /**
+     * @param  array<string, TracingSource>  $sources
+     * @param  array<string, bool>  $enabledMap  Per-source enabled state (defaults to true if not specified)
+     */
     public function __construct(
         array $sources,
         private readonly TracingStorage $storage,
+        private readonly bool $enabled = true,
+        array $enabledMap = [],
     ) {
         $this->sources = $sources;
+        $this->enabledMap = $enabledMap;
     }
 
     /**
      * Resolve all tracing sources from the current request.
      *
-     * Iterates all registered sources, calls resolve() on each,
-     * and stores the results in storage for fast subsequent access.
+     * Skips resolution entirely when globally disabled.
+     * Skips individual sources that are disabled via enabledMap.
      */
     public function resolveAll(Request $request): void
     {
+        if (! $this->enabled) {
+            return;
+        }
+
         foreach ($this->sources as $key => $source) {
+            if (! $this->isSourceEnabled($key)) {
+                continue;
+            }
+
             $value = $source->resolve($request);
             $this->storage->set($key, $value);
         }
@@ -43,6 +61,8 @@ class TracingManager
     /**
      * Get all resolved tracing values.
      *
+     * Only returns values for enabled sources.
+     *
      * @return array<string, string|null>
      */
     public function all(): array
@@ -50,6 +70,10 @@ class TracingManager
         $result = [];
 
         foreach (array_keys($this->sources) as $key) {
+            if (! $this->isSourceEnabled($key)) {
+                continue;
+            }
+
             $result[$key] = $this->storage->get($key);
         }
 
@@ -78,5 +102,21 @@ class TracingManager
     public function extend(string $key, TracingSource $source): void
     {
         $this->sources[$key] = $source;
+    }
+
+    /**
+     * Check whether the global tracing is enabled.
+     */
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * Check whether a specific tracing source is enabled.
+     */
+    private function isSourceEnabled(string $key): bool
+    {
+        return $this->enabledMap[$key] ?? true;
     }
 }
