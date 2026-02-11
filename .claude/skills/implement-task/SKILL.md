@@ -162,20 +162,47 @@ This runs Pint (formatting), Rector (refactoring), and PHPStan (analysis).
 
 ### Gate 2: Tests
 
-```bash
-composer test
+Check the task definition for testing requirements:
+
+```markdown
+**Testing**:
+
+- [ ] Unit tests for ClassName
+- [ ] Feature tests for behavior
 ```
 
 **If tests are required by task:**
 
-1. Write tests before marking complete
-2. Ensure all tests pass
-3. Commit tests: `test(scope): add tests for [feature]`
+1. Invoke **generate-test** skill:
 
-**If no tests required:**
+    > Gere testes para os arquivos implementados nesta task
+
+2. generate-test will:
+    - Analyze implemented code
+    - Create appropriate test files
+    - Run tests
+    - Report results
+
+3. Tests MUST pass before proceeding
+
+4. Commit tests: `test(scope): add tests for [feature]`
+
+**If tests are NOT required:**
+
+```bash
+composer test
+```
 
 - Existing tests must still pass
-- Consider adding tests for complex logic
+- Consider invoking generate-test for complex logic
+
+**If tests fail:**
+
+1. Analyze failure (test wrong or code wrong?)
+2. Fix appropriately
+3. Re-run until passing
+
+See [references/gate-checklist.md](references/gate-checklist.md) for detailed test gate steps.
 
 ### Gate 3: Security Analysis
 

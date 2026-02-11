@@ -53,17 +53,42 @@ composer lint
 
 ## Gate 2: Tests
 
-### What It Runs
+### Check Task Definition
+
+First, check if tests are required in the task definition:
+
+```markdown
+**Testing**:
+- [ ] Unit tests for TracingResolver
+- [ ] Feature tests for middleware
+```
+
+### If Tests Are Required
+
+**Invoke generate-test skill:**
+
+> Gere testes para os arquivos implementados nesta task
+
+Or be specific:
+
+> Crie testes unitários para src/TracingResolver.php
+
+The generate-test skill will:
+1. Analyze implemented code
+2. Determine test type (Unit vs Feature)
+3. Create test file(s)
+4. Run tests
+5. Report pass/fail
+
+### If Tests Are NOT Required
+
+Run existing tests to ensure nothing broke:
 
 ```bash
 composer test
 ```
 
-Executes PestPHP test suite including:
-- Unit tests (`tests/Unit/`)
-- Feature tests (`tests/Feature/`)
-
-### Expected Output
+### Expected Output (Passing)
 
 ```
 PASS  Tests\Unit\ExampleTest
@@ -76,7 +101,7 @@ Tests:    2 passed
 Duration: 0.15s
 ```
 
-### When Tests Are Required
+### When to Write Tests
 
 **Always write tests for:**
 - New public API methods
@@ -89,29 +114,34 @@ Duration: 0.15s
 - Simple value objects
 - Pass-through methods
 
-### Test Structure
+### Recovery (Test Failures)
 
-```php
-// tests/Unit/TracingTest.php
-test('generates unique correlation id', function () {
-    $id1 = LaravelTracing::correlationId();
-    $id2 = LaravelTracing::correlationId();
-    
-    expect($id1)->not->toBe($id2);
-});
-```
+1. **Analyze failure output**:
+   ```bash
+   composer test -- --verbose
+   ```
 
-### Recovery
+2. **Determine cause**:
+   - Is the test wrong? → Fix test logic
+   - Is the code wrong? → Fix implementation
+
+3. **Run specific failing test**:
+   ```bash
+   ./vendor/bin/pest tests/Unit/SpecificTest.php --filter="test name"
+   ```
+
+4. **Re-run full suite** when fixed:
+   ```bash
+   composer test
+   ```
+
+### Test Commit
+
+After tests pass:
 
 ```bash
-# Run tests with verbose output
-composer test -- --verbose
-
-# Run specific test file
-./vendor/bin/pest tests/Unit/SpecificTest.php
-
-# Run specific test
-./vendor/bin/pest --filter="test name"
+git add tests/
+git commit -m "test(scope): add tests for [feature]"
 ```
 
 ---
@@ -203,18 +233,19 @@ Execute gates in this order:
 ### Rationale
 
 - **Lint first**: Catches syntax/style issues that would affect other gates
-- **Tests second**: Validates code actually works
+- **Tests second**: Validates code actually works (invoke generate-test if required)
 - **Security last**: Analyzes working, clean code
 
 ---
 
 ## Quick Reference
 
-| Gate | Command | Blocking Criteria |
-|------|---------|-------------------|
+| Gate | Command/Skill | Blocking Criteria |
+|------|---------------|-------------------|
 | Lint | `composer lint` | Any error |
-| Tests | `composer test` | Any test failure |
-| Security | security-analyst | CRITICAL or HIGH findings |
+| Tests (required) | generate-test skill | Any test failure |
+| Tests (existing) | `composer test` | Any test failure |
+| Security | security-analyst skill | CRITICAL or HIGH findings |
 
 ---
 
