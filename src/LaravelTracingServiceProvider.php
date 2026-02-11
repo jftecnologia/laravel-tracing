@@ -101,11 +101,7 @@ class LaravelTracingServiceProvider extends ServiceProvider
 
         // Global mode (opt-in via config)
         if (config('laravel-tracing.http_client.enabled', false)) {
-            Http::globalRequestMiddleware(function ($request) {
-                $tracing = app(HttpClientTracing::class);
-
-                return $tracing->attachTracings($request);
-            });
+            Http::globalRequestMiddleware(fn ($request) => app(HttpClientTracing::class)->attachTracings($request));
         }
     }
 

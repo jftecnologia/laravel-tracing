@@ -26,9 +26,12 @@ class HttpClientTracing
      *
      * Reads all enabled tracings from the manager and attaches them as
      * headers using each source's configured header name. Returns the
-     * modified PendingRequest instance for method chaining.
+     * modified request instance for method chaining.
+     *
+     * @param  PendingRequest|\Illuminate\Http\Client\Factory  $request
+     * @return PendingRequest|\Illuminate\Http\Client\Factory
      */
-    public function attachTracings(PendingRequest $request): PendingRequest
+    public function attachTracings($request)
     {
         $headers = [];
 

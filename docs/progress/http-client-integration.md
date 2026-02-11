@@ -61,14 +61,17 @@
 
 ### HCI-03: Implement global vs per-request config
 
-**Status**: `IN_PROGRESS`
+**Status**: `DONE`
 **Started**: 2026-02-11
-**Completed**: -
-**Commit**: -
+**Completed**: 2026-02-11
+**Commit**: `b36c912`
 **PR**: -
 
 **Notes**:
-- Starting implementation
+- Implemented global HTTP client tracing mode
+- Config key http_client.enabled controls global mode (default: false)
+- Global mode uses Http::globalRequestMiddleware()
+- Per-request mode works regardless of global setting
 
 **Blockers**:
 - (none)
@@ -77,14 +80,14 @@
 
 ### HCI-04: Write HTTP client integration tests
 
-**Status**: `TODO`
-**Started**: -
+**Status**: `IN_PROGRESS`
+**Started**: 2026-02-11
 **Completed**: -
 **Commit**: -
 **PR**: -
 
 **Notes**:
-- (none)
+- Starting test generation
 
 **Blockers**:
 - (none)
