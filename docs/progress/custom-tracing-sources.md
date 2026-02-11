@@ -2,7 +2,7 @@
 
 **Epic ID**: CTS
 **Task Definition**: [../tasks/custom-tracing-sources.md](../tasks/custom-tracing-sources.md)
-**Last Updated**: 2026-02-10
+**Last Updated**: 2026-02-11
 
 ---
 
@@ -10,12 +10,12 @@
 
 | Task ID | Task Name | Status | Commit/PR |
 |---------|-----------|--------|-----------|
-| CTS-01 | Implement runtime extension | TODO | - |
+| CTS-01 | Implement runtime extension | DONE | `03a3722` |
 | CTS-02 | Document extension points | TODO | - |
 | CTS-03 | Create example custom tracing source | TODO | - |
 | CTS-04 | Write extension tests | TODO | - |
 
-**Progress**: 0/4 tasks complete (0%)
+**Progress**: 1/4 tasks complete (25%)
 
 ---
 
@@ -23,14 +23,18 @@
 
 ### CTS-01: Implement runtime extension
 
-**Status**: `TODO`
-**Started**: -
-**Completed**: -
-**Commit**: -
+**Status**: `DONE`
+**Started**: 2026-02-11
+**Completed**: 2026-02-11
+**Commit**: `03a3722`
 **PR**: -
 
 **Notes**:
-- (none)
+- Modified extend() to return $this for method chaining
+- Added 6 unit tests covering all acceptance criteria
+- Added 7 feature tests for end-to-end runtime extension
+- Created CustomTracingSource fixture for testing
+- All 173 tests passing
 
 **Blockers**:
 - (none)

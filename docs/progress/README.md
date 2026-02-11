@@ -16,9 +16,9 @@
 | [Service Provider Bootstrap](service-provider-bootstrap.md) | SPB | 4 | 0 | 0 | 4 | 0 | 0 | 100% |
 | [Job Propagation](job-propagation.md) | JP | 5 | 0 | 0 | 5 | 0 | 0 | 100% |
 | [HTTP Client Integration](http-client-integration.md) | HCI | 4 | 0 | 0 | 4 | 0 | 0 | 100% |
-| [Custom Tracing Sources](custom-tracing-sources.md) | CTS | 4 | 4 | 0 | 0 | 0 | 0 | 0% |
+| [Custom Tracing Sources](custom-tracing-sources.md) | CTS | 4 | 3 | 0 | 1 | 0 | 0 | 25% |
 | [Documentation](documentation.md) | DOC | 6 | 6 | 0 | 0 | 0 | 0 | 0% |
-| **Total** | - | **43** | **9** | **0** | **34** | **0** | **0** | **79%** |
+| **Total** | - | **43** | **8** | **0** | **35** | **0** | **0** | **81%** |
 
 ---
 
@@ -28,7 +28,7 @@
 **Epic**: -
 **Started**: -
 
-**Recommended Next Task**: CTS-01 (Implement runtime extension)
+**Recommended Next Task**: CTS-02 (Document extension points)
 **Epic**: Custom Tracing Sources
 
 ---
@@ -53,6 +53,7 @@
 
 | Task ID | Task Name | Completed | Commit |
 |---------|-----------|-----------|--------|
+| CTS-01 | Implement runtime extension | 2026-02-11 | `03a3722` |
 | HCI-04 | Write HTTP client integration tests | 2026-02-11 | `56a12ef` |
 | HCI-03 | Implement global vs per-request config | 2026-02-11 | `b36c912` |
 | HCI-02 | Register HTTP client macro | 2026-02-11 | `425be48` |
