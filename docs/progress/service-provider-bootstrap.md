@@ -10,12 +10,12 @@
 
 | Task ID | Task Name | Status | Commit/PR |
 |---------|-----------|--------|-----------|
-| SPB-01 | Register TracingManager as singleton | TODO | - |
+| SPB-01 | Register TracingManager as singleton | DONE | `db0c667` |
 | SPB-02 | Register tracing sources from config | TODO | - |
 | SPB-03 | Implement package enable/disable check | TODO | - |
 | SPB-04 | Write service provider tests | TODO | - |
 
-**Progress**: 0/4 tasks complete (0%)
+**Progress**: 1/4 tasks complete (25%)
 
 ---
 
@@ -23,14 +23,19 @@
 
 ### SPB-01: Register TracingManager as singleton
 
-**Status**: `TODO`
-**Started**: -
-**Completed**: -
-**Commit**: -
+**Status**: `DONE`
+**Started**: 2026-02-11
+**Completed**: 2026-02-11
+**Commit**: `db0c667`
 **PR**: -
 
 **Notes**:
-- (none)
+- Registra RequestStorage e SessionStorage como singletons
+- Registra TracingManager com sources configurados
+- Instancia CorrelationIdSource e RequestIdSource com dependências
+- Registra LaravelTracing facade binding
+- Suporta custom sources da configuração
+- Filtra sources desabilitados
 
 **Blockers**:
 - (none)
