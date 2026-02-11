@@ -21,7 +21,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     protected function defineRoutes($router)
     {
         // Register middleware for testing
-        $router->middleware('web', [
+        $router->middlewareGroup('web', [
             \Illuminate\Session\Middleware\StartSession::class,
             IncomingTracingMiddleware::class,
             OutgoingTracingMiddleware::class,
