@@ -84,6 +84,8 @@ interface TracingSource
 
 **Scenario**: Track the authenticated user's ID across all requests and jobs.
 
+**Reference Implementation**: See `tests/Fixtures/UserIdSource.php` in the package repository for a complete, production-ready example of this pattern.
+
 #### Step 1: Create Custom Source Class
 
 ```php
@@ -680,6 +682,8 @@ class AcmeServiceProvider extends ServiceProvider
 ## Complete Example: UserIdSource (Step-by-Step)
 
 This section provides a complete, production-ready example of implementing and registering a custom tracing source that tracks authenticated user IDs across requests, queued jobs, and HTTP calls.
+
+> **Reference Implementation**: A complete, tested example of `UserIdSource` is available at `tests/Fixtures/UserIdSource.php` in the package repository. You can use this as a reference when creating your own custom tracing sources.
 
 ### Step 1: Create the Custom Source Class
 
