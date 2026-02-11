@@ -759,52 +759,23 @@ Task breakdown is complete when:
 
 ## Next Steps After Task Breakdown
 
-Once tasks and progress tracking are generated, development can begin:
+Once tasks and progress tracking are generated, use the **implement-task** skill to begin development:
 
-### Starting Development
+> "Implemente a task CTI-01"
 
-1. Review `docs/progress/README.md` for overall status
-2. Select first `TODO` task from highest priority epic
-3. Update task status to `IN_PROGRESS` in progress file
-4. Implement according to acceptance criteria in task definition
-5. Follow workflow from `docs/engineering/WORKFLOW.md`
+Or ask for implementation of the first task:
 
-### Completing a Task
+> "Qual a primeira task a ser implementada?"
 
-1. Verify all acceptance criteria pass
-2. Run `composer lint` and `composer test`
-3. Commit with semantic message referencing Task ID
-4. Update progress file:
-    - Set status to `DONE`
-    - Add commit hash
-    - Add PR number (if applicable)
-    - Update timestamps
-5. Update `docs/progress/README.md` percentages
-6. Move to next task
+The implement-task skill will:
 
-### Handling Failures
-
-1. Update task status to `FAILED`
-2. Document what went wrong in **Notes**
-3. Identify if it's retryable or needs architecture change
-4. Reset to `TODO` when ready to retry
-
-### Handling Blockers
-
-1. Update task status to `BLOCKED`
-2. Document blocker in **Blockers** section with ⚠️
-3. Add to Blocked Items table in `docs/progress/README.md`
-4. Ask user for decision/clarification
-5. Reset to `TODO` when blocker is resolved
-
-### Resuming Development
-
-When resuming after a break:
-
-1. Check `docs/progress/README.md` for current state
-2. Look for any `IN_PROGRESS` tasks (may need to continue or reset)
-3. Check `BLOCKED` and `FAILED` items for pending issues
-4. Continue with next appropriate task
+1. Read task definition and acceptance criteria
+2. Create semantic branch
+3. Update progress to `IN_PROGRESS`
+4. Implement following CODE_STANDARDS.md
+5. Run quality gates (lint, test, security)
+6. Update progress to `DONE`
+7. Ask about opening Pull Request
 
 ---
 
