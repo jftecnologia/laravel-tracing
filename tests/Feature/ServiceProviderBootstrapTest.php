@@ -25,7 +25,6 @@ describe('Service Provider Bootstrap', function () {
             $response->assertHeader('X-Correlation-Id');
             $response->assertHeader('X-Request-Id');
         });
-
     });
 
     describe('config publishing', function () {
@@ -76,7 +75,6 @@ describe('Service Provider Bootstrap', function () {
             $response->assertHeader('X-Correlation-Id');
             $response->assertHeader('X-Request-Id');
         });
-
 
         it('respects LARAVEL_TRACING_ENABLED environment variable', function () {
             putenv('LARAVEL_TRACING_ENABLED=false');
