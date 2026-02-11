@@ -28,6 +28,11 @@ class LaravelTracingServiceProvider extends ServiceProvider
             __DIR__ . '/../config/laravel-tracing.php' => config_path('laravel-tracing.php'),
         ], 'laravel-tracing-config');
 
+        // Early return if package is disabled
+        if (! config('laravel-tracing.enabled', true)) {
+            return;
+        }
+
         $this->registerMiddleware();
     }
 
