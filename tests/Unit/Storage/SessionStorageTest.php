@@ -132,7 +132,7 @@ describe('SessionStorage', function () {
             ->and($exists)->toBeFalse();
     });
 
-    it('works correctly when session is already started', function () {
+    it('performs all operations successfully when session is available', function () {
         // Ensure session is started (simulates normal flow with StartSession middleware)
         if (! session()->isStarted()) {
             session()->start();
