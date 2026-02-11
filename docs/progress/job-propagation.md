@@ -24,14 +24,16 @@
 
 ### JP-01: Implement TracingJobDispatcher
 
-**Status**: `IN_PROGRESS`
+**Status**: `DONE`
 **Started**: 2026-02-11
-**Completed**: -
-**Commit**: -
+**Completed**: 2026-02-11
+**Commit**: `b5c825b`
 **PR**: -
 
 **Notes**:
-- Starting implementation
+- Implemented TracingJobDispatcher with handleJobQueueing and handleJobProcessing methods
+- Added restore() method to TracingManager for job payload restoration
+- Added illuminate/queue dependency for event type hints
 
 **Blockers**:
 - (none)
@@ -40,14 +42,14 @@
 
 ### JP-02: Register job event listeners
 
-**Status**: `TODO`
-**Started**: -
+**Status**: `IN_PROGRESS`
+**Started**: 2026-02-11
 **Completed**: -
 **Commit**: -
 **PR**: -
 
 **Notes**:
-- (none)
+- Starting implementation
 
 **Blockers**:
 - (none)

@@ -14,21 +14,21 @@
 | [Request ID Management](request-id-management.md) | RIM | 2 | 0 | 0 | 2 | 0 | 0 | 100% |
 | [Middleware Integration](middleware-integration.md) | MI | 5 | 0 | 0 | 5 | 0 | 0 | 100% |
 | [Service Provider Bootstrap](service-provider-bootstrap.md) | SPB | 4 | 0 | 0 | 4 | 0 | 0 | 100% |
-| [Job Propagation](job-propagation.md) | JP | 5 | 4 | 1 | 0 | 0 | 0 | 0% |
+| [Job Propagation](job-propagation.md) | JP | 5 | 3 | 1 | 1 | 0 | 0 | 20% |
 | [HTTP Client Integration](http-client-integration.md) | HCI | 4 | 4 | 0 | 0 | 0 | 0 | 0% |
 | [Custom Tracing Sources](custom-tracing-sources.md) | CTS | 4 | 4 | 0 | 0 | 0 | 0 | 0% |
 | [Documentation](documentation.md) | DOC | 6 | 6 | 0 | 0 | 0 | 0 | 0% |
-| **Total** | - | **43** | **17** | **1** | **25** | **0** | **0** | **58%** |
+| **Total** | - | **43** | **16** | **1** | **26** | **0** | **0** | **60%** |
 
 ---
 
 ## Current Focus
 
-**Active Task**: JP-01 (Implement TracingJobDispatcher)
+**Active Task**: JP-02 (Register job event listeners)
 **Epic**: Job Propagation
 **Started**: 2026-02-11
 
-**Recommended Next Task**: JP-02 (Register job event listeners)
+**Recommended Next Task**: JP-03 (Implement job payload serialization)
 **Epic**: Job Propagation
 
 ---
@@ -53,6 +53,7 @@
 
 | Task ID | Task Name | Completed | Commit |
 |---------|-----------|-----------|--------|
+| JP-01 | Implement TracingJobDispatcher | 2026-02-11 | `b5c825b` |
 | SPB-04 | Write service provider tests | 2026-02-11 | `8c38e28` |
 | SPB-03 | Implement package enable/disable check | 2026-02-11 | `b57b2f3` |
 | SPB-02 | Register tracing sources from config | 2026-02-11 | `2cc71a3` |
