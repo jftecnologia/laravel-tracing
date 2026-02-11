@@ -13,15 +13,9 @@ use JuniorFontenele\LaravelTracing\Tracings\Contracts\TracingStorage;
  * for the duration of a user's session. Values are stored under the `laravel_tracing.*`
  * namespace to avoid conflicts with application session data.
  *
- * IMPORTANT: This storage only works when session is available (started by Laravel's
- * StartSession middleware). If session is not available, operations fail gracefully:
- * - get() returns null
- * - set() does nothing
- * - has() returns false
- *
- * This ensures the package doesn't force session initialization before Laravel's
- * session middleware runs, avoiding potential conflicts with session configuration,
- * CSRF tokens, cookies, and database/redis drivers.
+ * IMPORTANT: This storage requires Laravel's session to be started. The package
+ * middleware must be registered AFTER Laravel's StartSession middleware to ensure
+ * session is available. See installation documentation for proper middleware registration.
  */
 class SessionStorage implements TracingStorage
 {
@@ -30,7 +24,6 @@ class SessionStorage implements TracingStorage
     public function set(string $key, string $value): void
     {
         // Only store if session is available
-        // Avoids forcing session start before Laravel's StartSession middleware
         if (! $this->isSessionAvailable()) {
             return;
         }
@@ -40,7 +33,7 @@ class SessionStorage implements TracingStorage
 
     public function get(string $key): ?string
     {
-        // Return null if session is not available yet
+        // Return null if session is not available
         if (! $this->isSessionAvailable()) {
             return null;
         }
@@ -50,7 +43,7 @@ class SessionStorage implements TracingStorage
 
     public function has(string $key): bool
     {
-        // Return false if session is not available yet
+        // Return false if session is not available
         if (! $this->isSessionAvailable()) {
             return false;
         }
@@ -77,11 +70,8 @@ class SessionStorage implements TracingStorage
      * Check if session is available for use.
      *
      * Session must be started by Laravel's StartSession middleware before
-     * we can safely use it. This prevents issues with:
-     * - Session configuration not being applied
-     * - CSRF token validation
-     * - Cookie encryption
-     * - Database/Redis connection not ready
+     * we can safely use it. This method checks if session has been started
+     * without forcing initialization.
      *
      * @return bool True if session is started and safe to use
      */

@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace JuniorFontenele\LaravelTracing;
 
-use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Queue\Events\JobQueueing;
 use Illuminate\Support\Facades\Event;
@@ -39,35 +38,8 @@ class LaravelTracingServiceProvider extends ServiceProvider
             return;
         }
 
-        $this->registerMiddleware();
         $this->registerJobEventListeners();
         $this->registerHttpClientMacro();
-    }
-
-    /**
-     * Register tracing middleware in the HTTP kernel.
-     *
-     * Middleware is registered to the 'web' middleware group to ensure it runs
-     * after Laravel's StartSession middleware. This guarantees session is available
-     * for correlation ID persistence. The middleware checks the global enabled toggle
-     * internally, so registration is unconditional.
-     *
-     * For API routes without sessions, correlation IDs are generated per-request
-     * (similar to request IDs) since session persistence is not available.
-     */
-    private function registerMiddleware(): void
-    {
-        $router = $this->app->make('router');
-
-        // Register middlewares to 'web' group (after StartSession)
-        // This ensures session is available for correlation ID persistence
-        $router->pushMiddlewareToGroup('web', IncomingTracingMiddleware::class);
-        $router->pushMiddlewareToGroup('web', OutgoingTracingMiddleware::class);
-
-        // Also register to 'api' group for API routes
-        // Note: API routes won't have session persistence by default
-        $router->pushMiddlewareToGroup('api', IncomingTracingMiddleware::class);
-        $router->pushMiddlewareToGroup('api', OutgoingTracingMiddleware::class);
     }
 
     /**
