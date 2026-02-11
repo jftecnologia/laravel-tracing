@@ -5,8 +5,12 @@ declare(strict_types = 1);
 namespace JuniorFontenele\LaravelTracing;
 
 use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Queue\Events\JobProcessing;
+use Illuminate\Queue\Events\JobQueueing;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
+use JuniorFontenele\LaravelTracing\Jobs\TracingJobDispatcher;
 use JuniorFontenele\LaravelTracing\Middleware\IncomingTracingMiddleware;
 use JuniorFontenele\LaravelTracing\Middleware\OutgoingTracingMiddleware;
 use JuniorFontenele\LaravelTracing\Storage\RequestStorage;
@@ -34,6 +38,7 @@ class LaravelTracingServiceProvider extends ServiceProvider
         }
 
         $this->registerMiddleware();
+        $this->registerJobEventListeners();
     }
 
     /**
@@ -50,6 +55,25 @@ class LaravelTracingServiceProvider extends ServiceProvider
         // Register middlewares globally
         $kernel->pushMiddleware(IncomingTracingMiddleware::class);
         $kernel->pushMiddleware(OutgoingTracingMiddleware::class);
+    }
+
+    /**
+     * Register job event listeners for tracing propagation.
+     *
+     * Listens to Laravel's job lifecycle events to propagate tracing values
+     * from request context to queued jobs and restore them during execution.
+     */
+    private function registerJobEventListeners(): void
+    {
+        Event::listen(JobQueueing::class, function (JobQueueing $event) {
+            $dispatcher = $this->app->make(TracingJobDispatcher::class);
+            $dispatcher->handleJobQueueing($event);
+        });
+
+        Event::listen(JobProcessing::class, function (JobProcessing $event) {
+            $dispatcher = $this->app->make(TracingJobDispatcher::class);
+            $dispatcher->handleJobProcessing($event);
+        });
     }
 
     /**
