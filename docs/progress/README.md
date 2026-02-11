@@ -15,20 +15,20 @@
 | [Middleware Integration](middleware-integration.md) | MI | 5 | 0 | 0 | 5 | 0 | 0 | 100% |
 | [Service Provider Bootstrap](service-provider-bootstrap.md) | SPB | 4 | 0 | 0 | 4 | 0 | 0 | 100% |
 | [Job Propagation](job-propagation.md) | JP | 5 | 0 | 0 | 5 | 0 | 0 | 100% |
-| [HTTP Client Integration](http-client-integration.md) | HCI | 4 | 4 | 0 | 0 | 0 | 0 | 0% |
+| [HTTP Client Integration](http-client-integration.md) | HCI | 4 | 3 | 1 | 0 | 0 | 0 | 0% |
 | [Custom Tracing Sources](custom-tracing-sources.md) | CTS | 4 | 4 | 0 | 0 | 0 | 0 | 0% |
 | [Documentation](documentation.md) | DOC | 6 | 6 | 0 | 0 | 0 | 0 | 0% |
-| **Total** | - | **43** | **13** | **0** | **30** | **0** | **0** | **70%** |
+| **Total** | - | **43** | **12** | **1** | **30** | **0** | **0** | **70%** |
 
 ---
 
 ## Current Focus
 
-**Active Task**: (none)
-**Epic**: -
-**Started**: -
+**Active Task**: HCI-01 (Implement HttpClientTracing)
+**Epic**: HTTP Client Integration
+**Started**: 2026-02-11
 
-**Recommended Next Task**: HCI-01 (Implement HTTP client tracing)
+**Recommended Next Task**: HCI-02 (Register HTTP client macro)
 **Epic**: HTTP Client Integration
 
 ---

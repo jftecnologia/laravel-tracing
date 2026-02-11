@@ -23,14 +23,14 @@
 
 ### HCI-01: Implement HttpClientTracing
 
-**Status**: `TODO`
-**Started**: -
+**Status**: `IN_PROGRESS`
+**Started**: 2026-02-11
 **Completed**: -
 **Commit**: -
 **PR**: -
 
 **Notes**:
-- (none)
+- Starting implementation
 
 **Blockers**:
 - (none)
