@@ -19,26 +19,45 @@ class SessionStorage implements TracingStorage
 
     public function set(string $key, string $value): void
     {
+        $this->ensureSessionStarted();
         session()->put($this->namespaced($key), $value);
     }
 
     public function get(string $key): ?string
     {
+        $this->ensureSessionStarted();
+
         return session()->get($this->namespaced($key));
     }
 
     public function has(string $key): bool
     {
+        $this->ensureSessionStarted();
+
         return session()->has($this->namespaced($key));
     }
 
     public function flush(): void
     {
+        $this->ensureSessionStarted();
         session()->forget(self::NAMESPACE);
     }
 
     private function namespaced(string $key): string
     {
         return self::NAMESPACE . '.' . $key;
+    }
+
+    /**
+     * Ensure the session is started before accessing it.
+     *
+     * This is necessary because the package middleware may run before
+     * Laravel's StartSession middleware in some configurations.
+     */
+    private function ensureSessionStarted(): void
+    {
+        if (! session()->isStarted()) {
+            session()->start();
+        }
     }
 }
