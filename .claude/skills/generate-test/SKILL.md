@@ -280,9 +280,9 @@ composer test
 
 Check that tests cover:
 
-- [ ] Happy path (expected behavior)
+- [ ] Happy path (valid inputs, expected behavior)
+- [ ] Unhappy path (invalid inputs, error handling)
 - [ ] Edge cases (null, empty, boundaries)
-- [ ] Error conditions (exceptions)
 - [ ] Configuration variations (if applicable)
 
 ---

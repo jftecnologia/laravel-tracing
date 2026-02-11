@@ -155,6 +155,43 @@ it('test case 1')
 - **Integration points**: Middleware, service providers, HTTP client integration
 - **Custom tracing sources**: If extensibility is used
 
+### Happy Path vs Unhappy Path
+
+Every feature should be tested for both scenarios:
+
+**Happy Path** (expected behavior):
+- Valid inputs produce expected outputs
+- Normal flow works correctly
+- Configuration is respected
+
+**Unhappy Path** (failure scenarios):
+- Invalid inputs throw appropriate exceptions
+- Missing required data is handled gracefully
+- Edge cases don't break the system
+- Error messages are meaningful
+
+```php
+// ✅ Happy path: valid input
+it('resolves correlation ID from valid header', function () {
+    $response = get('/', ['X-Correlation-Id' => 'valid-123']);
+    
+    expect($response->header('X-Correlation-Id'))->toBe('valid-123');
+});
+
+// ✅ Unhappy path: missing header
+it('generates new ID when header is missing', function () {
+    $response = get('/');
+    
+    expect($response->header('X-Correlation-Id'))->not->toBeEmpty();
+});
+
+// ✅ Unhappy path: invalid input
+it('throws exception for empty header name', function () {
+    expect(fn () => $resolver->resolve('', 'value'))
+        ->toThrow(InvalidArgumentException::class);
+});
+```
+
 ### ❌ DO NOT Test
 
 - **Laravel framework internals**: Don't test Eloquent, routing, sessions, etc.
