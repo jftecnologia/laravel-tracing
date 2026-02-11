@@ -1,7 +1,7 @@
 laravel: '@testbench'
 
 providers:
-  # - Workbench\App\Providers\WorkbenchServiceProvider
+  - JuniorFontenele\LaravelTracing\LaravelTracingServiceProvider
 
 migrations:
   - workbench/database/migrations
