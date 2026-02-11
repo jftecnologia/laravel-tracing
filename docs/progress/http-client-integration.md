@@ -42,14 +42,17 @@
 
 ### HCI-02: Register HTTP client macro
 
-**Status**: `IN_PROGRESS`
+**Status**: `DONE`
 **Started**: 2026-02-11
-**Completed**: -
-**Commit**: -
+**Completed**: 2026-02-11
+**Commit**: `425be48`
 **PR**: -
 
 **Notes**:
-- Starting implementation
+- Registered withTracing() macro on Http facade
+- Macro resolves HttpClientTracing from container
+- Chainable: Http::withTracing()->get(...)
+- Added PHPDoc annotation for $this type hint
 
 **Blockers**:
 - (none)
@@ -58,14 +61,14 @@
 
 ### HCI-03: Implement global vs per-request config
 
-**Status**: `TODO`
-**Started**: -
+**Status**: `IN_PROGRESS`
+**Started**: 2026-02-11
 **Completed**: -
 **Commit**: -
 **PR**: -
 
 **Notes**:
-- (none)
+- Starting implementation
 
 **Blockers**:
 - (none)

@@ -85,15 +85,28 @@ class LaravelTracingServiceProvider extends ServiceProvider
      * Registers a macro that attaches tracing headers to outgoing HTTP
      * requests. The macro resolves HttpClientTracing from the container
      * and calls attachTracings() on the current PendingRequest instance.
+     *
+     * Additionally, if global HTTP client tracing is enabled via config,
+     * registers a global middleware that attaches tracings to all requests.
      */
     private function registerHttpClientMacro(): void
     {
+        // Per-request macro (always available)
         Http::macro('withTracing', function () {
             /** @var \Illuminate\Http\Client\PendingRequest $this */
             $tracing = app(HttpClientTracing::class);
 
             return $tracing->attachTracings($this);
         });
+
+        // Global mode (opt-in via config)
+        if (config('laravel-tracing.http_client.enabled', false)) {
+            Http::globalRequestMiddleware(function ($request) {
+                $tracing = app(HttpClientTracing::class);
+
+                return $tracing->attachTracings($request);
+            });
+        }
     }
 
     /**
