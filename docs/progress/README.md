@@ -15,20 +15,20 @@
 | [Middleware Integration](middleware-integration.md) | MI | 5 | 0 | 0 | 5 | 0 | 0 | 100% |
 | [Service Provider Bootstrap](service-provider-bootstrap.md) | SPB | 4 | 0 | 0 | 4 | 0 | 0 | 100% |
 | [Job Propagation](job-propagation.md) | JP | 5 | 0 | 0 | 5 | 0 | 0 | 100% |
-| [HTTP Client Integration](http-client-integration.md) | HCI | 4 | 3 | 1 | 0 | 0 | 0 | 0% |
+| [HTTP Client Integration](http-client-integration.md) | HCI | 4 | 2 | 1 | 1 | 0 | 0 | 25% |
 | [Custom Tracing Sources](custom-tracing-sources.md) | CTS | 4 | 4 | 0 | 0 | 0 | 0 | 0% |
 | [Documentation](documentation.md) | DOC | 6 | 6 | 0 | 0 | 0 | 0 | 0% |
-| **Total** | - | **43** | **12** | **1** | **30** | **0** | **0** | **70%** |
+| **Total** | - | **43** | **11** | **1** | **31** | **0** | **0** | **72%** |
 
 ---
 
 ## Current Focus
 
-**Active Task**: HCI-01 (Implement HttpClientTracing)
+**Active Task**: HCI-02 (Register HTTP client macro)
 **Epic**: HTTP Client Integration
 **Started**: 2026-02-11
 
-**Recommended Next Task**: HCI-02 (Register HTTP client macro)
+**Recommended Next Task**: HCI-03 (Implement global vs per-request config)
 **Epic**: HTTP Client Integration
 
 ---
@@ -53,6 +53,7 @@
 
 | Task ID | Task Name | Completed | Commit |
 |---------|-----------|-----------|--------|
+| HCI-01 | Implement HttpClientTracing | 2026-02-11 | `f544db4` |
 | JP-05 | Write job propagation tests | 2026-02-11 | `b06bc8e` |
 | JP-04 | Implement job execution restoration | 2026-02-11 | `b5c825b` |
 | JP-03 | Implement job payload serialization | 2026-02-11 | `b5c825b` |

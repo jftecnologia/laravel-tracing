@@ -23,14 +23,17 @@
 
 ### HCI-01: Implement HttpClientTracing
 
-**Status**: `IN_PROGRESS`
+**Status**: `DONE`
 **Started**: 2026-02-11
-**Completed**: -
-**Commit**: -
+**Completed**: 2026-02-11
+**Commit**: `f544db4`
 **PR**: -
 
 **Notes**:
-- Starting implementation
+- Implemented HttpClientTracing with attachTracings() method
+- Reads all enabled tracings from TracingManager
+- Attaches headers using withHeaders() for chaining
+- Rector applied instanceof check for type safety
 
 **Blockers**:
 - (none)
@@ -39,14 +42,14 @@
 
 ### HCI-02: Register HTTP client macro
 
-**Status**: `TODO`
-**Started**: -
+**Status**: `IN_PROGRESS`
+**Started**: 2026-02-11
 **Completed**: -
 **Commit**: -
 **PR**: -
 
 **Notes**:
-- (none)
+- Starting implementation
 
 **Blockers**:
 - (none)

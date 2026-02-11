@@ -8,8 +8,10 @@ use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Queue\Events\JobQueueing;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
+use JuniorFontenele\LaravelTracing\Http\HttpClientTracing;
 use JuniorFontenele\LaravelTracing\Jobs\TracingJobDispatcher;
 use JuniorFontenele\LaravelTracing\Middleware\IncomingTracingMiddleware;
 use JuniorFontenele\LaravelTracing\Middleware\OutgoingTracingMiddleware;
@@ -39,6 +41,7 @@ class LaravelTracingServiceProvider extends ServiceProvider
 
         $this->registerMiddleware();
         $this->registerJobEventListeners();
+        $this->registerHttpClientMacro();
     }
 
     /**
@@ -73,6 +76,23 @@ class LaravelTracingServiceProvider extends ServiceProvider
         Event::listen(JobProcessing::class, function (JobProcessing $event) {
             $dispatcher = $this->app->make(TracingJobDispatcher::class);
             $dispatcher->handleJobProcessing($event);
+        });
+    }
+
+    /**
+     * Register withTracing() macro on Http facade.
+     *
+     * Registers a macro that attaches tracing headers to outgoing HTTP
+     * requests. The macro resolves HttpClientTracing from the container
+     * and calls attachTracings() on the current PendingRequest instance.
+     */
+    private function registerHttpClientMacro(): void
+    {
+        Http::macro('withTracing', function () {
+            /** @var \Illuminate\Http\Client\PendingRequest $this */
+            $tracing = app(HttpClientTracing::class);
+
+            return $tracing->attachTracings($this);
         });
     }
 

@@ -39,7 +39,7 @@ class HttpClientTracing
 
             $source = $this->manager->getSource($key);
 
-            if (!$source instanceof \JuniorFontenele\LaravelTracing\Tracings\Contracts\TracingSource) {
+            if (! $source instanceof \JuniorFontenele\LaravelTracing\Tracings\Contracts\TracingSource) {
                 continue;
             }
 
