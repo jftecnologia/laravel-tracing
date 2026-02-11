@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace JuniorFontenele\LaravelTracing;
 
 use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use JuniorFontenele\LaravelTracing\Middleware\IncomingTracingMiddleware;
 use JuniorFontenele\LaravelTracing\Middleware\OutgoingTracingMiddleware;
@@ -26,6 +27,11 @@ class LaravelTracingServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../config/laravel-tracing.php' => config_path('laravel-tracing.php'),
         ], 'laravel-tracing-config');
+
+        // Early return if package is disabled
+        if (! config('laravel-tracing.enabled', true)) {
+            return;
+        }
 
         $this->registerMiddleware();
     }
@@ -99,7 +105,15 @@ class LaravelTracingServiceProvider extends ServiceProvider
                 $sourceClass = $tracingConfig['source'] ?? null;
                 $headerName = $tracingConfig['header'] ?? '';
 
-                if (! $sourceClass || ! class_exists($sourceClass)) {
+                if (! $sourceClass) {
+                    Log::warning("Tracing source '{$key}' is missing 'source' class definition");
+
+                    continue;
+                }
+
+                if (! class_exists($sourceClass)) {
+                    Log::warning("Tracing source class '{$sourceClass}' for '{$key}' does not exist");
+
                     continue;
                 }
 

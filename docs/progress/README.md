@@ -13,12 +13,12 @@
 | [Session Persistence](session-persistence.md) | SP | 3 | 0 | 0 | 3 | 0 | 0 | 100% |
 | [Request ID Management](request-id-management.md) | RIM | 2 | 0 | 0 | 2 | 0 | 0 | 100% |
 | [Middleware Integration](middleware-integration.md) | MI | 5 | 0 | 0 | 5 | 0 | 0 | 100% |
-| [Service Provider Bootstrap](service-provider-bootstrap.md) | SPB | 4 | 3 | 0 | 1 | 0 | 0 | 25% |
+| [Service Provider Bootstrap](service-provider-bootstrap.md) | SPB | 4 | 0 | 0 | 4 | 0 | 0 | 100% |
 | [Job Propagation](job-propagation.md) | JP | 5 | 5 | 0 | 0 | 0 | 0 | 0% |
 | [HTTP Client Integration](http-client-integration.md) | HCI | 4 | 4 | 0 | 0 | 0 | 0 | 0% |
 | [Custom Tracing Sources](custom-tracing-sources.md) | CTS | 4 | 4 | 0 | 0 | 0 | 0 | 0% |
 | [Documentation](documentation.md) | DOC | 6 | 6 | 0 | 0 | 0 | 0 | 0% |
-| **Total** | - | **43** | **21** | **0** | **22** | **0** | **0** | **51%** |
+| **Total** | - | **43** | **18** | **0** | **25** | **0** | **0** | **58%** |
 
 ---
 
@@ -28,8 +28,8 @@
 **Epic**: -
 **Started**: -
 
-**Recommended Next Task**: SPB-02 (Register tracing sources from config)
-**Epic**: Service Provider Bootstrap
+**Recommended Next Task**: JP-01 (Implement job dispatching listener)
+**Epic**: Job Propagation
 
 ---
 
@@ -53,6 +53,9 @@
 
 | Task ID | Task Name | Completed | Commit |
 |---------|-----------|-----------|--------|
+| SPB-04 | Write service provider tests | 2026-02-11 | `8c38e28` |
+| SPB-03 | Implement package enable/disable check | 2026-02-11 | `b57b2f3` |
+| SPB-02 | Register tracing sources from config | 2026-02-11 | `2cc71a3` |
 | SPB-01 | Register TracingManager as singleton | 2026-02-11 | `db0c667` |
 | MI-05 | Write middleware integration tests | 2026-02-11 | `45fffb6` |
 | MI-04 | Implement external header acceptance | 2026-02-11 | (prev) |
