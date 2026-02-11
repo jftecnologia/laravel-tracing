@@ -237,6 +237,10 @@ See [references/gate-checklist.md](references/gate-checklist.md) for detailed va
 
 When all acceptance criteria are met and gates pass:
 
+**Step 1: Update Epic Progress File**
+
+Update `docs/progress/<epic-slug>.md`:
+
 ```markdown
 ### [TASK-ID] Task Name
 
@@ -249,6 +253,19 @@ When all acceptance criteria are met and gates pass:
 - `def5678` test(scope): add tests
   **Notes**: Implementation details or decisions made
 ```
+
+**Step 2: Update Progress README (MANDATORY)**
+
+Update `docs/progress/README.md` with:
+
+1. **Epic Progress table**: Update counts (TODO → Done) and percentage
+2. **Recent Completions table**: Add completed task at the top
+3. **Current Focus**: Update if epic changed or task in progress changed
+4. **Total row**: Recalculate totals across all epics
+5. **Last Updated date**: Update to current date
+
+> ⚠️ **The README.md is a dashboard derived from epic progress files.**
+> It MUST be updated after every task completion to maintain accuracy.
 
 ### Update Related Documentation
 
@@ -363,7 +380,7 @@ When implementing multiple tasks together:
 
 2. **AFTER completing task N:**
     - Update progress with `DONE` status and commit hash
-    - Update README.md table if needed
+    - Update `docs/progress/README.md` table and totals
     - Commit the progress update
 
 **DO NOT batch progress updates.** Each task's progress must be updated individually as you work through them.
@@ -419,5 +436,6 @@ Task implementation is complete when:
 3. ✅ `composer test` passes (or tests written if required)
 4. ✅ Security analysis shows no CRITICAL/HIGH issues
 5. ✅ Semantic commits made for each change
-6. ✅ Progress tracking updated with final status
-7. ✅ User asked about Pull Request
+6. ✅ Epic progress file updated (`docs/progress/<epic-slug>.md`)
+7. ✅ Progress README updated (`docs/progress/README.md`)
+8. ✅ User asked about Pull Request
