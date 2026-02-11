@@ -84,6 +84,8 @@ interface TracingSource
 
 **Scenario**: Track the authenticated user's ID across all requests and jobs.
 
+**Reference Implementation**: See `tests/Fixtures/UserIdSource.php` in the package repository for a complete, production-ready example of this pattern.
+
 #### Step 1: Create Custom Source Class
 
 ```php
@@ -586,8 +588,10 @@ Register custom tracings at runtime (in service providers) when:
 
 **Signature**:
 ```php
-public function extend(string $key, TracingSource $source): void
+public function extend(string $key, TracingSource $source): self
 ```
+
+**Returns**: `$this` (fluent interface for method chaining)
 
 ### Example: Register Tracing in Service Provider
 
@@ -601,16 +605,51 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use JuniorFontenele\LaravelTracing\Facades\LaravelTracing;
+use JuniorFontenele\LaravelTracing\Tracings\TracingManager;
 use App\Tracings\UserIdSource;
 
 class AppServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        // Register tracing only if feature flag is enabled
+        // Method 1: Using facade (most convenient)
         if (config('features.user_id_tracing')) {
             LaravelTracing::extend('user_id', app(UserIdSource::class));
         }
+
+        // Method 2: Using manager instance (useful for testing)
+        /** @var TracingManager $manager */
+        $manager = app(TracingManager::class);
+        $manager->extend('user_id', new UserIdSource());
+    }
+}
+```
+
+### Example: Method Chaining for Multiple Extensions
+
+**Scenario**: Register multiple custom tracings at once using fluent interface.
+
+#### Implementation
+
+```php
+// app/Providers/AppServiceProvider.php
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use JuniorFontenele\LaravelTracing\Tracings\TracingManager;
+use App\Tracings\UserIdSource;
+use App\Tracings\TenantIdSource;
+use App\Tracings\AppVersionSource;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function boot()
+    {
+        // Chain multiple extensions
+        app(TracingManager::class)
+            ->extend('user_id', new UserIdSource())
+            ->extend('tenant_id', new TenantIdSource())
+            ->extend('app_version', new AppVersionSource());
     }
 }
 ```
@@ -637,6 +676,325 @@ class AcmeServiceProvider extends ServiceProvider
     }
 }
 ```
+
+---
+
+## Complete Example: UserIdSource (Step-by-Step)
+
+This section provides a complete, production-ready example of implementing and registering a custom tracing source that tracks authenticated user IDs across requests, queued jobs, and HTTP calls.
+
+> **Reference Implementation**: A complete, tested example of `UserIdSource` is available at `tests/Fixtures/UserIdSource.php` in the package repository. You can use this as a reference when creating your own custom tracing sources.
+
+### Step 1: Create the Custom Source Class
+
+Create a new file in your application:
+
+```php
+// app/Tracings/UserIdSource.php
+<?php
+
+declare(strict_types = 1);
+
+namespace App\Tracings;
+
+use Illuminate\Http\Request;
+use JuniorFontenele\LaravelTracing\Tracings\Contracts\TracingSource;
+
+/**
+ * Custom tracing source that tracks the authenticated user's ID.
+ *
+ * This source resolves the user ID from the request's authenticated user,
+ * falling back to 'guest' if no user is authenticated.
+ */
+class UserIdSource implements TracingSource
+{
+    /**
+     * Resolve the user ID from the authenticated user in the request.
+     *
+     * Priority:
+     * 1. Authenticated user ID (if user is logged in)
+     * 2. 'guest' (if no user is authenticated)
+     *
+     * @param  Request  $request  The current HTTP request
+     * @return string The user ID or 'guest'
+     */
+    public function resolve(Request $request): string
+    {
+        // Get authenticated user ID, or return 'guest' if not authenticated
+        return (string) ($request->user()?->id ?? 'guest');
+    }
+
+    /**
+     * Get the HTTP header name for this tracing.
+     *
+     * Reads from config to allow environment-based customization.
+     *
+     * @return string The header name (default: 'X-User-Id')
+     */
+    public function headerName(): string
+    {
+        return config('laravel-tracing.tracings.user_id.header', 'X-User-Id');
+    }
+
+    /**
+     * Restore the user ID from a queued job payload.
+     *
+     * No transformation needed - return the value as-is.
+     * The original user ID from the request is preserved when the job executes.
+     *
+     * @param  string  $value  The serialized user ID from job payload
+     * @return string The restored user ID
+     */
+    public function restoreFromJob(string $value): string
+    {
+        return $value;
+    }
+}
+```
+
+### Step 2: Register via Configuration (Recommended)
+
+Add the custom tracing to your published configuration file:
+
+```bash
+# If you haven't already, publish the config
+php artisan vendor:publish --tag=laravel-tracing-config
+```
+
+Then edit `config/laravel-tracing.php`:
+
+```php
+// config/laravel-tracing.php
+return [
+    'enabled' => env('LARAVEL_TRACING_ENABLED', true),
+    'accept_external_headers' => env('LARAVEL_TRACING_ACCEPT_EXTERNAL_HEADERS', true),
+
+    'tracings' => [
+        'correlation_id' => [
+            'enabled' => true,
+            'header' => env('LARAVEL_TRACING_CORRELATION_ID_HEADER', 'X-Correlation-Id'),
+            'source' => 'JuniorFontenele\LaravelTracing\Tracings\Sources\CorrelationIdSource',
+        ],
+
+        'request_id' => [
+            'enabled' => true,
+            'header' => env('LARAVEL_TRACING_REQUEST_ID_HEADER', 'X-Request-Id'),
+            'source' => 'JuniorFontenele\LaravelTracing\Tracings\Sources\RequestIdSource',
+        ],
+
+        // Add custom user ID tracing
+        'user_id' => [
+            'enabled' => env('LARAVEL_TRACING_USER_ID_ENABLED', true),
+            'header' => env('LARAVEL_TRACING_USER_ID_HEADER', 'X-User-Id'),
+            'source' => \App\Tracings\UserIdSource::class,
+        ],
+    ],
+
+    'http_client' => [
+        'enabled' => env('LARAVEL_TRACING_HTTP_CLIENT_ENABLED', false),
+    ],
+];
+```
+
+### Step 3: Register via Runtime Extension (Alternative)
+
+Alternatively, register the source programmatically in a service provider:
+
+```php
+// app/Providers/AppServiceProvider.php
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use JuniorFontenele\LaravelTracing\Tracings\TracingManager;
+use App\Tracings\UserIdSource;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function boot(): void
+    {
+        // Register custom tracing at runtime
+        app(TracingManager::class)->extend('user_id', new UserIdSource());
+    }
+}
+```
+
+### Step 4: Add Environment Variables (Optional)
+
+Add environment variables to `.env` for easy customization:
+
+```env
+# .env
+
+# Enable/disable user ID tracing
+LARAVEL_TRACING_USER_ID_ENABLED=true
+
+# Customize header name
+LARAVEL_TRACING_USER_ID_HEADER=X-User-Id
+```
+
+### Step 5: Use in Your Application
+
+Once registered, the user ID tracing is automatically available throughout your application:
+
+#### In Controllers
+
+```php
+// app/Http/Controllers/OrderController.php
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Support\Facades\Log;
+use JuniorFontenele\LaravelTracing\Facades\LaravelTracing;
+
+class OrderController extends Controller
+{
+    public function store(Request $request)
+    {
+        // Get current user ID from tracing
+        $userId = LaravelTracing::get('user_id');
+
+        Log::info('Order created', [
+            'user_id' => $userId,
+            'correlation_id' => LaravelTracing::correlationId(),
+            'request_id' => LaravelTracing::requestId(),
+        ]);
+
+        // ... create order logic
+    }
+}
+```
+
+#### In Queued Jobs
+
+```php
+// app/Jobs/ProcessOrder.php
+<?php
+
+namespace App\Jobs;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Log;
+use JuniorFontenele\LaravelTracing\Facades\LaravelTracing;
+
+class ProcessOrder implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable;
+
+    public function handle(): void
+    {
+        // User ID from original request is automatically restored
+        $userId = LaravelTracing::get('user_id');
+
+        Log::info('Processing order in job', [
+            'user_id' => $userId, // Same user ID from when job was dispatched
+            'correlation_id' => LaravelTracing::correlationId(),
+        ]);
+
+        // ... process order logic
+    }
+}
+```
+
+#### In HTTP Responses
+
+All HTTP responses automatically include the `X-User-Id` header:
+
+```bash
+# Example response headers
+HTTP/1.1 200 OK
+X-Correlation-Id: 550e8400-e29b-41d4-a716-446655440000
+X-Request-Id: 123e4567-e89b-12d3-a456-426614174000
+X-User-Id: 42
+Content-Type: application/json
+```
+
+#### In Outgoing HTTP Requests
+
+When making HTTP requests to external services:
+
+```php
+use Illuminate\Support\Facades\Http;
+
+// Attach all tracing headers (including user_id) to outgoing request
+$response = Http::withTracing()
+    ->get('https://api.example.com/data');
+
+// The external service receives:
+// X-Correlation-Id: 550e8400-e29b-41d4-a716-446655440000
+// X-Request-Id: 123e4567-e89b-12d3-a456-426614174000
+// X-User-Id: 42
+```
+
+### Step 6: Test Your Custom Source
+
+Create tests to verify your custom tracing source works correctly:
+
+```php
+// tests/Unit/Tracings/UserIdSourceTest.php
+<?php
+
+use App\Tracings\UserIdSource;
+use App\Models\User;
+use Illuminate\Http\Request;
+
+it('resolves authenticated user id', function () {
+    // Arrange: Create a user
+    $user = User::factory()->create(['id' => 42]);
+
+    // Create request with authenticated user
+    $request = Request::create('/');
+    $request->setUserResolver(fn () => $user);
+
+    // Act: Resolve user ID
+    $source = new UserIdSource();
+    $result = $source->resolve($request);
+
+    // Assert
+    expect($result)->toBe('42');
+});
+
+it('returns guest when not authenticated', function () {
+    // Arrange: Request with no authenticated user
+    $request = Request::create('/');
+    $request->setUserResolver(fn () => null);
+
+    // Act
+    $source = new UserIdSource();
+    $result = $source->resolve($request);
+
+    // Assert
+    expect($result)->toBe('guest');
+});
+
+it('returns correct header name', function () {
+    $source = new UserIdSource();
+
+    expect($source->headerName())->toBe('X-User-Id');
+});
+
+it('restores value unchanged from job', function () {
+    $source = new UserIdSource();
+
+    expect($source->restoreFromJob('42'))->toBe('42');
+});
+```
+
+### Result
+
+After completing these steps, your application now:
+
+- ✅ Tracks user IDs across all HTTP requests
+- ✅ Includes `X-User-Id` header in all HTTP responses
+- ✅ Preserves user IDs when jobs are queued and executed
+- ✅ Forwards user IDs to external services via HTTP client
+- ✅ Provides easy access to user ID via `LaravelTracing::get('user_id')`
+- ✅ Logs user IDs alongside correlation and request IDs
 
 ---
 

@@ -101,6 +101,97 @@ describe('TracingManager', function () {
             ->and($manager->all())->toHaveKey('custom');
     });
 
+    it('makes extend() chainable for multiple extensions', function () {
+        $manager = new TracingManager([], $this->storage);
+
+        $source1 = Mockery::mock(TracingSource::class);
+        $source1->shouldReceive('resolve')->andReturn('value-1');
+
+        $source2 = Mockery::mock(TracingSource::class);
+        $source2->shouldReceive('resolve')->andReturn('value-2');
+
+        $result = $manager
+            ->extend('custom1', $source1)
+            ->extend('custom2', $source2);
+
+        expect($result)->toBe($manager);
+
+        $manager->resolveAll(Request::create('/'));
+
+        expect($manager->get('custom1'))->toBe('value-1')
+            ->and($manager->get('custom2'))->toBe('value-2');
+    });
+
+    it('includes extended source in getSource()', function () {
+        $manager = new TracingManager([], $this->storage);
+
+        $source = Mockery::mock(TracingSource::class);
+
+        $manager->extend('custom', $source);
+
+        expect($manager->getSource('custom'))->toBe($source);
+    });
+
+    it('resolves extended sources during resolveAll()', function () {
+        $initialSource = Mockery::mock(TracingSource::class);
+        $initialSource->shouldReceive('resolve')->once()->andReturn('initial-value');
+
+        $manager = new TracingManager(['initial' => $initialSource], $this->storage);
+
+        $extendedSource = Mockery::mock(TracingSource::class);
+        $extendedSource->shouldReceive('resolve')->once()->andReturn('extended-value');
+
+        $manager->extend('extended', $extendedSource);
+        $manager->resolveAll(Request::create('/'));
+
+        expect($manager->get('initial'))->toBe('initial-value')
+            ->and($manager->get('extended'))->toBe('extended-value');
+    });
+
+    it('includes extended sources in all()', function () {
+        $initialSource = Mockery::mock(TracingSource::class);
+        $initialSource->shouldReceive('resolve')->andReturn('initial-value');
+
+        $manager = new TracingManager(['initial' => $initialSource], $this->storage);
+
+        $extendedSource = Mockery::mock(TracingSource::class);
+        $extendedSource->shouldReceive('resolve')->andReturn('extended-value');
+
+        $manager->extend('extended', $extendedSource);
+        $manager->resolveAll(Request::create('/'));
+
+        $all = $manager->all();
+
+        expect($all)->toHaveKey('initial')
+            ->and($all)->toHaveKey('extended')
+            ->and($all['initial'])->toBe('initial-value')
+            ->and($all['extended'])->toBe('extended-value');
+    });
+
+    it('allows checking extended sources with has()', function () {
+        $manager = new TracingManager([], $this->storage);
+
+        $source = Mockery::mock(TracingSource::class);
+        $source->shouldReceive('resolve')->andReturn('value');
+
+        $manager->extend('custom', $source);
+        $manager->resolveAll(Request::create('/'));
+
+        expect($manager->has('custom'))->toBeTrue();
+    });
+
+    it('allows retrieving extended sources with get()', function () {
+        $manager = new TracingManager([], $this->storage);
+
+        $source = Mockery::mock(TracingSource::class);
+        $source->shouldReceive('resolve')->andReturn('custom-value');
+
+        $manager->extend('custom', $source);
+        $manager->resolveAll(Request::create('/'));
+
+        expect($manager->get('custom'))->toBe('custom-value');
+    });
+
     it('does not call resolve on sources until resolveAll() is triggered', function () {
         $source = Mockery::mock(TracingSource::class);
         $source->shouldNotReceive('resolve');

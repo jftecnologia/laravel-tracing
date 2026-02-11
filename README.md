@@ -52,9 +52,49 @@ php artisan vendor:publish --tag="laravel-tracing-views"
 ## Usage
 
 ```php
-$variable = new JuniorFontenele\LaravelTracing();
-echo $variable->echoPhrase('Hello, JuniorFontenele!');
+use JuniorFontenele\LaravelTracing\Facades\LaravelTracing;
+
+// Get correlation ID
+$correlationId = LaravelTracing::correlationId();
+
+// Get request ID
+$requestId = LaravelTracing::requestId();
+
+// Get all tracing values
+$allTracings = LaravelTracing::all();
+
+// Get specific tracing by key
+$value = LaravelTracing::get('user_id');
+
+// Check if tracing exists
+if (LaravelTracing::has('tenant_id')) {
+    // ...
+}
 ```
+
+## Extending the Package
+
+Laravel Tracing is designed to be fully extensible. You can add custom tracing sources to track additional context like user IDs, tenant IDs, or application versions.
+
+### Quick Example: Add User ID Tracing
+
+Register a custom tracing source at runtime in your service provider:
+
+```php
+use JuniorFontenele\LaravelTracing\Tracings\TracingManager;
+
+app(TracingManager::class)->extend('user_id', new UserIdSource());
+```
+
+**For complete documentation on extending the package, see:**
+- [Extension Architecture Documentation](docs/architecture/EXTENSIONS.md)
+
+The extension documentation covers:
+- Implementing custom tracing sources
+- Config-based vs runtime registration
+- Replacing built-in sources
+- Complete working examples
+- Best practices
 
 ## Testing
 
