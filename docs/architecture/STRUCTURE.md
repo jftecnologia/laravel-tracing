@@ -163,7 +163,7 @@ return [
     'enabled' => env('LARAVEL_TRACING_ENABLED', true),
 
     // Accept external tracing headers from incoming requests
-    'accept_external_headers' => env('LARAVEL_TRACING_ACCEPT_EXTERNAL', true),
+    'accept_external_headers' => env('LARAVEL_TRACING_ACCEPT_EXTERNAL', false),
 
     // Built-in tracing sources
     'tracings' => [

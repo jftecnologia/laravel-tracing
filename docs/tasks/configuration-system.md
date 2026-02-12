@@ -29,7 +29,7 @@ The config structure should mirror the architecture: a `tracings` array for indi
 **Acceptance Criteria**:
 - [ ] AC-1: Config file exists at `config/laravel-tracing.php`
 - [ ] AC-2: Top-level `enabled` key (boolean, default: true) for global enable/disable
-- [ ] AC-3: Top-level `accept_external_headers` key (boolean, default: true) for FR-19
+- [ ] AC-3: Top-level `accept_external_headers` key (boolean, default: false) for FR-19
 - [ ] AC-4: `tracings` array with entries for `correlation_id` and `request_id`
 - [ ] AC-5: Each tracing entry has `enabled`, `header`, and `source` keys
 - [ ] AC-6: Default headers: `X-Correlation-Id` and `X-Request-Id`
@@ -62,7 +62,7 @@ Use Laravel's `env()` helper to read environment variables with fallback to defa
 
 **Acceptance Criteria**:
 - [ ] AC-1: `LARAVEL_TRACING_ENABLED` environment variable maps to `enabled` config key (default: true)
-- [ ] AC-2: `LARAVEL_TRACING_ACCEPT_EXTERNAL_HEADERS` maps to `accept_external_headers` (default: true)
+- [ ] AC-2: `LARAVEL_TRACING_ACCEPT_EXTERNAL_HEADERS` maps to `accept_external_headers` (default: false)
 - [ ] AC-3: `LARAVEL_TRACING_CORRELATION_ID_HEADER` maps to `tracings.correlation_id.header` (default: 'X-Correlation-Id')
 - [ ] AC-4: `LARAVEL_TRACING_REQUEST_ID_HEADER` maps to `tracings.request_id.header` (default: 'X-Request-Id')
 - [ ] AC-5: `LARAVEL_TRACING_HTTP_CLIENT_ENABLED` maps to `http_client.enabled` (default: false)

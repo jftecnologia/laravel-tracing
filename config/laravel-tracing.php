@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'accept_external_headers' => env('LARAVEL_TRACING_ACCEPT_EXTERNAL_HEADERS', true),
+    'accept_external_headers' => env('LARAVEL_TRACING_ACCEPT_EXTERNAL_HEADERS', false),
 
     /*
     |--------------------------------------------------------------------------

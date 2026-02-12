@@ -767,7 +767,7 @@ Then edit `config/laravel-tracing.php`:
 // config/laravel-tracing.php
 return [
     'enabled' => env('LARAVEL_TRACING_ENABLED', true),
-    'accept_external_headers' => env('LARAVEL_TRACING_ACCEPT_EXTERNAL_HEADERS', true),
+    'accept_external_headers' => env('LARAVEL_TRACING_ACCEPT_EXTERNAL_HEADERS', false),
 
     'tracings' => [
         'correlation_id' => [

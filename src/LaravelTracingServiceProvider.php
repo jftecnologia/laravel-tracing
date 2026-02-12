@@ -121,7 +121,7 @@ class LaravelTracingServiceProvider extends ServiceProvider
         $this->app->singleton(function ($app): TracingManager {
             $config = config('laravel-tracing');
             $tracingsConfig = $config['tracings'] ?? [];
-            $acceptExternalHeaders = $config['accept_external_headers'] ?? true;
+            $acceptExternalHeaders = $config['accept_external_headers'] ?? false;
             $enabled = $config['enabled'] ?? true;
 
             $sources = [];

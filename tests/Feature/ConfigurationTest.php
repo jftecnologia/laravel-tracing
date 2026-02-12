@@ -20,8 +20,8 @@ describe('Configuration', function () {
             expect(config('laravel-tracing.enabled'))->toBeTrue();
         });
 
-        it('has accept_external_headers set to true by default', function () {
-            expect(config('laravel-tracing.accept_external_headers'))->toBeTrue();
+        it('has accept_external_headers set to false by default', function () {
+            expect(config('laravel-tracing.accept_external_headers'))->toBeFalse();
         });
 
         it('has correlation_id tracing configured by default', function () {
@@ -92,8 +92,8 @@ describe('Configuration', function () {
             expect(config('laravel-tracing.accept_external_headers'))->toBeFalse();
         });
 
-        it('is enabled by default', function () {
-            expect(config('laravel-tracing.accept_external_headers'))->toBeTrue();
+        it('is disabled by default', function () {
+            expect(config('laravel-tracing.accept_external_headers'))->toBeFalse();
         });
     });
 });

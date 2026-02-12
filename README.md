@@ -259,7 +259,7 @@ return [
     'enabled' => env('LARAVEL_TRACING_ENABLED', true),
 
     // Accept tracing headers from external requests
-    'accept_external_headers' => env('LARAVEL_TRACING_ACCEPT_EXTERNAL_HEADERS', true),
+    'accept_external_headers' => env('LARAVEL_TRACING_ACCEPT_EXTERNAL_HEADERS', false),
 
     // Define tracing sources
     'tracings' => [
@@ -289,7 +289,7 @@ return [
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | `enabled` | bool | `true` | Master switch for the entire package. When `false`, all tracing operations are skipped (zero overhead). |
-| `accept_external_headers` | bool | `true` | When `true`, tracing values are read from incoming request headers (forwarded by upstream services). When `false`, values are always generated fresh. |
+| `accept_external_headers` | bool | `false` | When `true`, tracing values are read from incoming request headers (forwarded by upstream services). When `false`, values are always generated fresh. |
 
 **Environment Variables:**
 - `LARAVEL_TRACING_ENABLED` - Enable/disable package globally

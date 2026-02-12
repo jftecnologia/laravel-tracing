@@ -57,7 +57,7 @@ return [
     |
     */
 
-    'accept_external_headers' => env('LARAVEL_TRACING_ACCEPT_EXTERNAL', true),
+    'accept_external_headers' => env('LARAVEL_TRACING_ACCEPT_EXTERNAL', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -152,7 +152,7 @@ return [
 | Config Key | Environment Variable | Default | Description |
 |------------|---------------------|---------|-------------|
 | `enabled` | `LARAVEL_TRACING_ENABLED` | `true` | Master enable/disable toggle |
-| `accept_external_headers` | `LARAVEL_TRACING_ACCEPT_EXTERNAL` | `true` | Accept tracing headers from incoming requests |
+| `accept_external_headers` | `LARAVEL_TRACING_ACCEPT_EXTERNAL` | `false` | Accept tracing headers from incoming requests |
 
 ### Built-In Tracing: Correlation ID
 
@@ -224,7 +224,7 @@ php artisan vendor:publish --tag=laravel-tracing-config
 
 **Defaults Chosen**:
 - ✅ **Enabled by default** (`enabled = true`) - Tracing active out of the box
-- ✅ **Accept external headers** (`accept_external_headers = true`) - Enables cross-service tracing
+- ✅ **Accept external headers** (`accept_external_headers = false`) - Must explicitly enable to accept tracing headers from incoming requests
 - ✅ **Both built-in tracings enabled** - Correlation ID and Request ID active
 - ✅ **Standard header names** - `X-Correlation-Id`, `X-Request-Id` (industry conventions)
 - ⚠️ **HTTP client opt-in** (`http_client.enabled = false`) - Must explicitly enable to avoid surprising behavior
@@ -234,7 +234,7 @@ php artisan vendor:publish --tag=laravel-tracing-config
 | Setting | Default | Reasoning |
 |---------|---------|-----------|
 | `enabled` | `true` | Package should work immediately after install |
-| `accept_external_headers` | `true` | Enable distributed tracing by default (most common use case) |
+| `accept_external_headers` | `false` | Must explicitly enable to accept tracing headers from incoming requests |
 | `correlation_id.enabled` | `true` | Core feature, should be active |
 | `request_id.enabled` | `true` | Core feature, should be active |
 | `http_client.enabled` | `false` | Opt-in to avoid unexpected behavior (could modify external API calls) |
@@ -388,7 +388,7 @@ Each entry in `tracings` must follow this schema:
 | external requests. When disabled, all external headers are ignored.
 |
 */
-'accept_external_headers' => env('LARAVEL_TRACING_ACCEPT_EXTERNAL', true),
+'accept_external_headers' => env('LARAVEL_TRACING_ACCEPT_EXTERNAL', false),
 ```
 
 **Rationale**: Developers reading the config file should understand what each option does.
@@ -440,7 +440,7 @@ class CorrelationIdSource implements TracingSource
 {
     public function resolve(Request $request): string
     {
-        $acceptExternal = config('laravel-tracing.accept_external_headers', true);
+        $acceptExternal = config('laravel-tracing.accept_external_headers', false);
         $header = config('laravel-tracing.tracings.correlation_id.header', 'X-Correlation-Id');
 
         if ($acceptExternal && $request->hasHeader($header)) {
