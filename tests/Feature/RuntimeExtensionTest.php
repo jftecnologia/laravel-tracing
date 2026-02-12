@@ -3,6 +3,7 @@
 declare(strict_types = 1);
 
 use Illuminate\Http\Request;
+use Illuminate\Queue\Queue;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use JuniorFontenele\LaravelTracing\Jobs\TracingJobDispatcher;
@@ -24,6 +25,9 @@ describe('Runtime Extension', function () {
     beforeEach(function () {
         // Reset captured tracings
         CaptureTracingJob::reset();
+
+        // Clear any registered payload callbacks
+        Queue::createPayloadUsing(null);
 
         // Use sync queue for synchronous testing
         config(['queue.default' => 'sync']);
@@ -54,6 +58,13 @@ describe('Runtime Extension', function () {
 
         // Bind manager to container for facade access
         $this->app->instance(TracingManager::class, $this->manager);
+
+        // Register Queue::createPayloadUsing hook (simulating ServiceProvider)
+        Queue::createPayloadUsing(function ($connection, $queue, $payload) {
+            $tracings = $this->manager->all();
+
+            return empty($tracings) ? [] : ['tracings' => $tracings];
+        });
     });
 
     it('resolves extended sources from request headers', function () {
@@ -105,25 +116,21 @@ describe('Runtime Extension', function () {
         ]);
         $this->manager->resolveAll($request);
 
-        // Create job queuing event
-        $job = new CaptureTracingJob();
-        $event = new class ('sync', null, $job, '{"data":"test"}', null) extends Illuminate\Queue\Events\JobQueueing
-        {
-            public function payload(): array
-            {
-                return json_decode($this->payload, true);
-            }
-        };
+        // Simulate queue payload creation
+        $queue = app('queue.connection');
+        $reflection = new ReflectionClass($queue);
+        $method = $reflection->getMethod('createPayload');
+        $method->setAccessible(true);
 
-        // Handle job queuing
-        $this->dispatcher->handleJobQueueing($event);
+        $job = new CaptureTracingJob();
+        $payload = $method->invoke($queue, $job, 'default');
+        $decodedPayload = json_decode($payload, true);
 
         // Verify custom tracing was added to payload
-        $payload = $event->payload();
-        expect($payload)->toHaveKey('tracings')
-            ->and($payload['tracings'])->toHaveKey('correlation_id')
-            ->and($payload['tracings'])->toHaveKey('custom_trace')
-            ->and($payload['tracings']['custom_trace'])->toBe('test-custom-456');
+        expect($decodedPayload)->toHaveKey('tracings')
+            ->and($decodedPayload['tracings'])->toHaveKey('correlation_id')
+            ->and($decodedPayload['tracings'])->toHaveKey('custom_trace')
+            ->and($decodedPayload['tracings']['custom_trace'])->toBe('test-custom-456');
     });
 
     it('attaches extended sources to HTTP responses', function () {

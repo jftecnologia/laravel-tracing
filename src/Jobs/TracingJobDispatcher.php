@@ -6,15 +6,16 @@ namespace JuniorFontenele\LaravelTracing\Jobs;
 
 use Illuminate\Contracts\Queue\Job;
 use Illuminate\Queue\Events\JobProcessing;
-use Illuminate\Queue\Events\JobQueueing;
 use JuniorFontenele\LaravelTracing\Tracings\TracingManager;
 
 /**
- * Propagates tracing values from request context to queued jobs.
+ * Restores tracing values from queued job payloads.
  *
- * Listens to Laravel's job lifecycle events and handles tracing propagation:
- * - On JobQueueing: serializes all current tracing values and attaches to job payload
- * - On JobProcessing: restores tracing values from job payload into TracingManager
+ * Handles the JobProcessing event to restore tracing values from the job
+ * payload back into TracingManager during job execution.
+ *
+ * Tracing values are injected into payloads via Queue::createPayloadUsing()
+ * hook registered in LaravelTracingServiceProvider.
  *
  * This enables full tracing continuity across asynchronous job execution.
  */
@@ -23,30 +24,6 @@ class TracingJobDispatcher
     public function __construct(
         private readonly TracingManager $manager
     ) {
-    }
-
-    /**
-     * Handle job queuing event - serialize tracings to job payload.
-     *
-     * Reads all current tracing values from the manager and attaches them
-     * to the job payload under the 'tracings' key.
-     */
-    public function handleJobQueueing(JobQueueing $event): void
-    {
-        if (! $this->manager->isEnabled()) {
-            return;
-        }
-
-        $tracings = $this->manager->all();
-
-        // Decode existing payload
-        $payload = $event->payload();
-
-        // Attach tracings to payload
-        $payload['tracings'] = $tracings;
-
-        // Re-encode payload
-        $event->payload = json_encode($payload, JSON_THROW_ON_ERROR);
     }
 
     /**

@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace JuniorFontenele\LaravelTracing;
 
 use Illuminate\Queue\Events\JobProcessing;
-use Illuminate\Queue\Events\JobQueueing;
+use Illuminate\Queue\Queue;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -36,23 +36,40 @@ class LaravelTracingServiceProvider extends ServiceProvider
             return;
         }
 
-        $this->registerJobEventListeners();
+        $this->registerJobTracingPropagation();
+        $this->registerJobProcessingListener();
         $this->registerHttpClientMacro();
     }
 
     /**
-     * Register job event listeners for tracing propagation.
+     * Register payload hook to propagate tracings to queued jobs.
      *
-     * Listens to Laravel's job lifecycle events to propagate tracing values
-     * from request context to queued jobs and restore them during execution.
+     * Uses Laravel's Queue::createPayloadUsing() to inject tracing values
+     * into the job payload during serialization (before JobQueueing event).
+     * This is the official Laravel approach for payload modification.
      */
-    private function registerJobEventListeners(): void
+    private function registerJobTracingPropagation(): void
     {
-        Event::listen(JobQueueing::class, function (JobQueueing $event) {
-            $dispatcher = $this->app->make(TracingJobDispatcher::class);
-            $dispatcher->handleJobQueueing($event);
-        });
+        Queue::createPayloadUsing(function ($connection, $queue, $payload) {
+            if (! config('laravel-tracing.enabled', true)) {
+                return [];
+            }
 
+            $manager = $this->app->make(TracingManager::class);
+            $tracings = $manager->all();
+
+            return empty($tracings) ? [] : ['tracings' => $tracings];
+        });
+    }
+
+    /**
+     * Register job processing listener to restore tracings.
+     *
+     * Listens to JobProcessing event to restore tracing values from
+     * the job payload back into the TracingManager during execution.
+     */
+    private function registerJobProcessingListener(): void
+    {
         Event::listen(JobProcessing::class, function (JobProcessing $event) {
             $dispatcher = $this->app->make(TracingJobDispatcher::class);
             $dispatcher->handleJobProcessing($event);
