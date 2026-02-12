@@ -4,7 +4,7 @@
 **Epic Goal**: Bootstrap the package via the service provider, registering all services and components in Laravel's container.
 
 **Requirements Addressed**:
-- FR-01: Auto-discovery and automatic registration
+- FR-01: Service provider auto-discovery (middleware requires manual registration)
 - FR-14: Config file publishing
 
 **Architecture Areas**:
@@ -135,7 +135,7 @@ Use Orchestra Testbench to simulate package boot process. Test with different co
 - [ ] AC-5: Test package disabled (no middleware registered)
 - [ ] AC-6: Test config is merged from package defaults
 - [ ] AC-7: Test config is publishable
-- [ ] AC-8: Test Laravel auto-discovery registers provider
+- [ ] AC-8: Test Laravel auto-discovery registers service provider (note: middleware requires manual registration in Laravel 12)
 
 **Technical Notes**:
 - Use `app()->make(TracingManager::class)` to resolve manager

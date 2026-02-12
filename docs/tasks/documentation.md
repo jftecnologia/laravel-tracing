@@ -26,7 +26,7 @@ Follow standard Laravel package README structure: badges, installation, basic us
 - [ ] AC-1: Overview section explaining what the package does and why it's useful
 - [ ] AC-2: Features list highlighting key capabilities (session persistence, job propagation, HTTP integration, custom sources)
 - [ ] AC-3: Requirements section (Laravel 12, PHP 8.4+)
-- [ ] AC-4: Quick start guide with installation and zero-config usage example
+- [ ] AC-4: Quick start guide with installation and middleware registration example
 - [ ] AC-5: Links to detailed sections (installation, configuration, usage, custom sources)
 - [ ] AC-6: Badges for build status, coverage, version, license
 - [ ] AC-7: Clear table of contents for easy navigation
@@ -56,7 +56,7 @@ Cover common installation issues and how to verify the package is working correc
 
 **Acceptance Criteria**:
 - [ ] AC-1: Basic installation via `composer require jftecnologia/laravel-tracing`
-- [ ] AC-2: Explain Laravel auto-discovery (zero-config setup)
+- [ ] AC-2: Explain middleware registration requirement in `bootstrap/app.php` (required for Laravel 12)
 - [ ] AC-3: Config publishing instructions: `php artisan vendor:publish --tag=laravel-tracing-config`
 - [ ] AC-4: Environment variable setup (LARAVEL_TRACING_ENABLED, header names, etc.)
 - [ ] AC-5: Verification steps (make request, check response headers)
@@ -64,7 +64,7 @@ Cover common installation issues and how to verify the package is working correc
 - [ ] AC-7: Upgrading from previous versions (if applicable)
 
 **Technical Notes**:
-- Installation should work with zero configuration (sensible defaults)
+- Middleware registration is required (not automatic in Laravel 12)
 - Config publishing is optional (for customization)
 - Clear separation between required and optional steps
 

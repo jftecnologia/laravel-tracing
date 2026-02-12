@@ -23,7 +23,7 @@ There is no lightweight, plug-and-play Laravel package that:
 - Propagate tracing context seamlessly into queued jobs.
 - Enable forwarding and receiving tracing headers in external HTTP calls.
 - Allow developers to add, replace, or extend tracing sources.
-- Require zero mandatory configuration after installation (works via `composer require` + auto-discovery).
+- Minimize required configuration after installation (service provider auto-discovery, manual middleware registration).
 - Be fully configurable via config file and environment variables.
 
 ---
@@ -63,7 +63,7 @@ There is no lightweight, plug-and-play Laravel package that:
 - Global enable/disable toggle via config and environment variable.
 - Per-tracing enable/disable toggle via config and environment variable.
 - Configuration file publishable via `php artisan vendor:publish`.
-- Laravel 12 package auto-discovery (zero-config boot).
+- Laravel 12 package auto-discovery for service provider (middleware requires manual registration in `bootstrap/app.php`).
 - Comprehensive README with installation, configuration, and usage documentation.
 - Test suite using PestPHP with Orchestra Testbench.
 
@@ -84,7 +84,7 @@ There is no lightweight, plug-and-play Laravel package that:
 
 ## 5. Functional Requirements
 
-- **FR-01**: The package must automatically register its service provider and middleware via Laravel's package auto-discovery. No manual registration steps required after `composer require`.
+- **FR-01**: The package must automatically register its service provider via Laravel's package auto-discovery. Middleware must be manually registered by the developer in `bootstrap/app.php` as Laravel 12 does not support automatic middleware registration through package discovery.
 
 - **FR-02**: On every incoming HTTP request, the package must resolve the correlation ID using the following priority: (1) if accepting external headers is enabled, read from the configured request header (e.g., forwarded by an external service), (2) read from the user's session (persisted from a previous request), (3) generate a new unique correlation ID. The resolved correlation ID must be persisted in the user's session so it remains consistent across all requests within the same session.
 
@@ -140,15 +140,16 @@ There is no lightweight, plug-and-play Laravel package that:
 
 ## 7. User Flows (High-Level)
 
-### Flow 1: Basic Installation and Zero-Config Usage
+### Flow 1: Basic Installation and Setup
 
 1. Developer runs `composer require jftecnologia/laravel-tracing`.
 2. Laravel auto-discovers the service provider.
-3. On the first HTTP request from a user, the package generates a correlation ID and a request ID.
-4. The correlation ID is persisted in the user's session.
-5. Both IDs are attached to the response headers.
-6. Both IDs are available via the global accessor throughout the request lifecycle.
-7. On subsequent requests from the same session, the same correlation ID is reused; a new request ID is generated for each request.
+3. Developer manually registers the tracing middleware in `bootstrap/app.php` (required for Laravel 12).
+4. On the first HTTP request from a user, the package generates a correlation ID and a request ID.
+5. The correlation ID is persisted in the user's session.
+6. Both IDs are attached to the response headers.
+7. Both IDs are available via the global accessor throughout the request lifecycle.
+8. On subsequent requests from the same session, the same correlation ID is reused; a new request ID is generated for each request.
 
 ### Flow 2: Receiving Tracing Headers from External Service
 
@@ -196,7 +197,8 @@ There is no lightweight, plug-and-play Laravel package that:
 ### 8.1 Assumptions
 
 - The package skeleton (service provider, facade, config, testbench setup) is already in place.
-- Laravel 12 package auto-discovery is functional and the package is registered in `composer.json` `extra.laravel.providers`.
+- Laravel 12 package auto-discovery is functional for service providers (registered in `composer.json` `extra.laravel.providers`).
+- Middleware registration in Laravel 12 requires manual setup in `bootstrap/app.php`.
 - Developers using this package are familiar with Laravel conventions (config files, middleware, facades, queued jobs).
 - The host application uses Laravel's built-in HTTP client (`Illuminate\Support\Facades\Http`) for outgoing requests.
 - Queued jobs use Laravel's built-in queue system.
@@ -227,7 +229,7 @@ There is no lightweight, plug-and-play Laravel package that:
 
 ## 10. Success Metrics
 
-- **Zero-config boot**: After `composer require`, the package attaches `X-Correlation-Id` and `X-Request-Id` headers to responses without any additional setup.
+- **Simple setup**: After `composer require` and middleware registration in `bootstrap/app.php`, the package attaches `X-Correlation-Id` and `X-Request-Id` headers to responses.
 - **Session persistence**: The same correlation ID is returned across multiple requests from the same user session.
 - **Test coverage**: All functional requirements (FR-01 through FR-19) have corresponding passing tests.
 - **Documentation completeness**: The README covers all user flows described in section 7.

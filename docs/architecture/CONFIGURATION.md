@@ -6,10 +6,10 @@
 
 ## Overview
 
-Laravel Tracing uses a configuration file with sensible defaults and full environment variable support. The package works out of the box with zero configuration, but every aspect is customizable.
+Laravel Tracing uses a configuration file with sensible defaults and full environment variable support. The package provides sane defaults, requiring only middleware registration to get started.
 
 **Design Principles**:
-- **Zero-config by default** - Works immediately after `composer require`
+- **Minimal setup required** - Works after `composer require` and middleware registration in `bootstrap/app.php`
 - **Environment variable overrides** - All config values support `.env` overrides
 - **Explicit over implicit** - Configuration keys are clear and self-documenting
 - **Feature toggles** - Global and per-feature enable/disable toggles
@@ -212,15 +212,17 @@ php artisan vendor:publish --tag=laravel-tracing-config
 - To customize tracing sources
 - To add custom tracings
 - To document configuration in the application's codebase
-- **Not required for basic usage** (defaults work out of the box)
+- **Not required for basic usage** (defaults work out of the box after middleware registration)
 
 ---
 
 ## Default Values Strategy
 
-### Zero-Config Philosophy
+### Minimal Setup Philosophy
 
-**Goal**: Package works immediately after `composer require` with no required setup.
+**Goal**: Package works with minimal setup - `composer require` + middleware registration in `bootstrap/app.php`.
+
+**Note**: Laravel 12 does not support automatic middleware registration through package discovery. Manual registration is required.
 
 **Defaults Chosen**:
 - ✅ **Enabled by default** (`enabled = true`) - Tracing active out of the box

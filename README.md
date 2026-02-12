@@ -41,7 +41,7 @@ In distributed and monolithic Laravel applications, tracking the origin and flow
 
 ### Why Use Laravel Tracing?
 
-- ✅ **Easy Setup**: Simple middleware registration in `bootstrap/app.php`
+- ✅ **Simple Setup**: One-time middleware registration in `bootstrap/app.php`
 - ✅ **Session Persistence**: Correlation IDs survive across multiple requests from the same user
 - ✅ **Job Propagation**: Tracing context automatically flows into queued jobs
 - ✅ **HTTP Client Integration**: Forward tracing headers to external APIs with `Http::withTracing()`
@@ -90,7 +90,7 @@ composer require jftecnologia/laravel-tracing
 
 ### Step 2: Register Middleware
 
-**Laravel 12 requires manual middleware registration.** Add the tracing middleware to your `bootstrap/app.php` file:
+**Important**: Laravel 12 does not support automatic middleware registration via package discovery. You must manually register the tracing middleware in your `bootstrap/app.php` file:
 
 ```php
 use Illuminate\Foundation\Application;
@@ -120,7 +120,10 @@ return Application::configure(basePath: dirname(__DIR__))
     })->create();
 ```
 
-**Important**: The middleware must be registered to the `web` middleware group (or after Laravel's `StartSession` middleware) to ensure session persistence for correlation IDs. If registered globally or before `StartSession`, correlation IDs will not persist across requests.
+**Important Notes**:
+- The middleware must be registered to the `web` middleware group (or after Laravel's `StartSession` middleware) to ensure session persistence for correlation IDs
+- If registered globally or before `StartSession`, correlation IDs will not persist across requests
+- Unlike Laravel 11 and earlier versions, Laravel 12 does not support automatic middleware registration through package discovery
 
 ### Alternative: Route-Specific Registration
 
@@ -676,8 +679,9 @@ For comprehensive documentation on custom tracing sources, including:
    ```
 
 2. **Middleware not registered**
-   - Laravel Tracing uses auto-discovery. If you've customized your middleware stack, ensure the package's middleware is registered.
-   - Check `app/Http/Kernel.php` doesn't have conflicting middleware
+   - Verify that you manually registered the middleware in `bootstrap/app.php` (required for Laravel 12)
+   - Ensure the middleware is added to the correct middleware group (`web` for session-based apps)
+   - Check that no conflicting middleware is interfering
 
 3. **Response is a redirect or exception**
    - Tracing middleware runs on normal responses. If the response is an exception or early redirect, middleware may not execute.

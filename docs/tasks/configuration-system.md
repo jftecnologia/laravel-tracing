@@ -39,7 +39,7 @@ The config structure should mirror the architecture: a `tracings` array for indi
 
 **Technical Notes**:
 - Config is published via `php artisan vendor:publish --tag=laravel-tracing-config`
-- Defaults must work without any customization (zero-config usage)
+- Defaults work with minimal setup (middleware registration required)
 - Config structure supports runtime extension via `TracingManager::extend()`
 
 **Files to Create/Modify**:

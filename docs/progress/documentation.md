@@ -49,8 +49,9 @@
 **PR**: -
 
 **Notes**:
-- Added detailed installation section covering composer installation, auto-discovery, config publishing
+- Added detailed installation section covering composer installation, middleware registration requirement, config publishing
 - Included verification steps and environment variable setup
+- Clarified that middleware registration is required in Laravel 12 (not automatic)
 - All acceptance criteria met
 
 **Blockers**:

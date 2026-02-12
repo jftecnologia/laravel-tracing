@@ -173,12 +173,22 @@ docs/                       # Documentation
 
 ## Package Auto-Discovery
 
-This package uses Laravel's auto-discovery feature:
+This package uses Laravel's auto-discovery feature for the service provider:
 
-- **Service Provider**: `JuniorFontenele\LaravelTracing\LaravelTracingServiceProvider`
-- **Facade Alias**: `LaravelTracing` → `JuniorFontenele\LaravelTracing\Facades\LaravelTracing`
+- **Service Provider**: `JuniorFontenele\LaravelTracing\LaravelTracingServiceProvider` (automatically registered)
+- **Facade Alias**: `LaravelTracing` → `JuniorFontenele\LaravelTracing\Facades\LaravelTracing` (automatically registered)
 
-No manual registration required after `composer require`.
+**Important**: Middleware registration is **not** automatic in Laravel 12. Users must manually register the middleware in `bootstrap/app.php`:
+
+```php
+use JuniorFontenele\LaravelTracing\Middleware\IncomingTracingMiddleware;
+use JuniorFontenele\LaravelTracing\Middleware\OutgoingTracingMiddleware;
+
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->appendToGroup('web', IncomingTracingMiddleware::class);
+    $middleware->appendToGroup('web', OutgoingTracingMiddleware::class);
+})
+```
 
 ---
 
