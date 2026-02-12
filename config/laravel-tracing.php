@@ -57,13 +57,13 @@ return [
         'correlation_id' => [
             'enabled' => true,
             'header' => env('LARAVEL_TRACING_CORRELATION_ID_HEADER', 'X-Correlation-Id'),
-            'source' => 'JuniorFontenele\LaravelTracing\Tracings\Sources\CorrelationIdSource',
+            'source' => JuniorFontenele\LaravelTracing\Tracings\Sources\CorrelationIdSource::class,
         ],
 
         'request_id' => [
             'enabled' => true,
             'header' => env('LARAVEL_TRACING_REQUEST_ID_HEADER', 'X-Request-Id'),
-            'source' => 'JuniorFontenele\LaravelTracing\Tracings\Sources\RequestIdSource',
+            'source' => JuniorFontenele\LaravelTracing\Tracings\Sources\RequestIdSource::class,
         ],
 
     ],
