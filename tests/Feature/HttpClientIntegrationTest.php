@@ -64,11 +64,24 @@ describe('HTTP Client Integration', function () {
     });
 
     it('attaches tracings to all requests when global mode is enabled', function () {
-        // Refresh app with global mode enabled BEFORE Http::fake()
-        config(['laravel-tracing.http_client.enabled' => true]);
+        // Create a new test with global mode enabled from the start
+        $this->refreshApplication();
+
+        config([
+            'laravel-tracing.enabled' => true,
+            'laravel-tracing.http_client.enabled' => true,  // Enable global mode
+        ]);
+
+        // Force service provider to re-register with new config
         $this->app->register(JuniorFontenele\LaravelTracing\LaravelTracingServiceProvider::class, force: true);
 
+        // Now fake HTTP after middleware is registered
         Http::fake();
+
+        // Setup test route
+        Route::middleware('web')->get('/test-http', function () {
+            return response()->json(['ok' => true]);
+        });
 
         // Make a request to populate tracing values
         $this->get('/test-http');
@@ -84,7 +97,7 @@ describe('HTTP Client Integration', function () {
             return $request->hasHeader('X-Correlation-Id', $correlationId)
                 && $request->hasHeader('X-Request-Id', $requestId);
         });
-    })->skip('Global middleware integration requires Http client internals');
+    });
 
     it('does not attach disabled tracing sources to outgoing requests', function () {
         config([
@@ -237,7 +250,24 @@ describe('HTTP Client Integration', function () {
     });
 
     it('works in global mode with withTracing() call (both enabled)', function () {
-        config(['laravel-tracing.http_client.enabled' => true]);
+        // Create a new test with global mode enabled
+        $this->refreshApplication();
+
+        config([
+            'laravel-tracing.enabled' => true,
+            'laravel-tracing.http_client.enabled' => true,  // Enable global mode
+        ]);
+
+        // Force service provider to re-register with new config
+        $this->app->register(JuniorFontenele\LaravelTracing\LaravelTracingServiceProvider::class, force: true);
+
+        // Now fake HTTP after middleware is registered
+        Http::fake();
+
+        // Setup test route
+        Route::middleware('web')->get('/test-http', function () {
+            return response()->json(['ok' => true]);
+        });
 
         // Make a request to populate tracing values
         $this->get('/test-http');
@@ -251,5 +281,5 @@ describe('HTTP Client Integration', function () {
         Http::assertSent(function ($request) use ($correlationId) {
             return $request->hasHeader('X-Correlation-Id', $correlationId);
         });
-    })->skip('Global middleware and withTracing() combination tested separately');
+    });
 });

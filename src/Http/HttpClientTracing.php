@@ -28,8 +28,11 @@ class HttpClientTracing
      * headers using each source's configured header name. Returns the
      * modified request instance for method chaining.
      *
-     * @param  PendingRequest|\Illuminate\Http\Client\Factory  $request
-     * @return PendingRequest|\Illuminate\Http\Client\Factory
+     * Supports both PendingRequest (macro usage) and PSR-7 Request
+     * (global middleware usage) objects.
+     *
+     * @param  PendingRequest|\Illuminate\Http\Client\Factory|\Psr\Http\Message\RequestInterface  $request
+     * @return PendingRequest|\Illuminate\Http\Client\Factory|\Psr\Http\Message\RequestInterface
      */
     public function attachTracings($request)
     {
@@ -50,6 +53,20 @@ class HttpClientTracing
             $headers[$headerName] = $value;
         }
 
-        return $request->withHeaders($headers);
+        // Handle PendingRequest (macro usage with withTracing())
+        if ($request instanceof PendingRequest || $request instanceof \Illuminate\Http\Client\Factory) {
+            return $request->withHeaders($headers);
+        }
+
+        // Handle PSR-7 Request (global middleware usage)
+        if ($request instanceof \Psr\Http\Message\RequestInterface) {
+            foreach ($headers as $name => $value) {
+                $request = $request->withHeader($name, $value);
+            }
+
+            return $request;
+        }
+
+        return $request;
     }
 }
