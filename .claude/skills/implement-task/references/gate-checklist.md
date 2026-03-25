@@ -20,7 +20,7 @@ Executes three tools in sequence:
 
 ### Expected Output
 
-```
+```text
 ✓ Pint: No issues found (or auto-fixed)
 ✓ Rector: No issues found (or auto-fixed)  
 ✓ PHPStan: No errors [OK]
@@ -51,19 +51,24 @@ composer lint
 
 ---
 
-## Gate 2: Tests
+## Gate 2: Tests (MANDATORY)
 
-### Check Task Definition
+> **Standard**: See `docs/engineering/TESTING.md` for full testing guidelines.
 
-First, check if tests are required in the task definition:
+Tests are **always mandatory** when the task creates or modifies code.
+The only exception is when the **user explicitly requests** to skip tests.
 
-```markdown
-**Testing**:
-- [ ] Unit tests for TracingResolver
-- [ ] Feature tests for middleware
+### Step 1: Regression Baseline
+
+Run the full test suite BEFORE implementation:
+
+```bash
+composer test
 ```
 
-### If Tests Are Required
+Record the result. This is the baseline — every test that passes now MUST still pass after implementation.
+
+### Step 2: Generate Tests
 
 **Invoke generate-test skill:**
 
@@ -76,43 +81,41 @@ Or be specific:
 The generate-test skill will:
 1. Analyze implemented code
 2. Determine test type (Unit vs Feature)
-3. Create test file(s)
+3. Create test file(s) covering all three pillars
 4. Run tests
 5. Report pass/fail
 
-### If Tests Are NOT Required
+### Step 3: Three Pillar Verification
 
-Run existing tests to ensure nothing broke:
+After tests pass, verify coverage of all three pillars:
+
+- [ ] ✅ **Happy Path** — expected behavior with valid inputs
+- [ ] ❌ **Unhappy Path** — validation errors, invalid states, edge cases
+- [ ] 🔒 **Security Path** — tenant isolation, RBAC, IDOR, data leakage
+
+> A test file that only covers the happy path is **incomplete**.
+
+### Step 4: Regression Check
+
+Run the full test suite AFTER implementation:
 
 ```bash
 composer test
 ```
 
-### Expected Output (Passing)
+Compare with the baseline. If previously passing tests now fail → task is **BLOCKED**.
 
-```
-PASS  Tests\Unit\ExampleTest
-✓ it works
+### Step 5: Test Integrity
 
-PASS  Tests\Feature\ExampleTest  
-✓ it works
+If an existing test fails after implementation:
 
-Tests:    2 passed
-Duration: 0.15s
-```
+1. **Default**: Fix the **code**, not the test
+2. **Exceptions** (justification required, raise BEFORE modifying):
+   - The test was genuinely wrong (testing incorrect behavior)
+   - The logic was intentionally changed and the old test lost its meaning
+3. Document the justification in the commit message
 
-### When to Write Tests
-
-**Always write tests for:**
-- New public API methods
-- Business logic with conditions
-- Data transformation functions
-- Integration points
-
-**Optional tests for:**
-- Configuration classes
-- Simple value objects
-- Pass-through methods
+> 🚫 **NEVER** weaken or delete tests to make broken code pass.
 
 ### Recovery (Test Failures)
 
@@ -122,8 +125,8 @@ Duration: 0.15s
    ```
 
 2. **Determine cause**:
-   - Is the test wrong? → Fix test logic
-   - Is the code wrong? → Fix implementation
+   - Is the code wrong? → Fix implementation (default)
+   - Is the test genuinely wrong? → Fix test with justification
 
 3. **Run specific failing test**:
    ```bash
@@ -174,7 +177,7 @@ OWASP Top 10 categories:
 
 ### Expected Output
 
-```
+```text
 ✅ Security Analysis: PASS
 
 No security issues found in the analyzed code.
@@ -183,7 +186,7 @@ Task can be marked as DONE.
 
 Or with warnings:
 
-```
+```text
 ✅ Security Analysis: PASS WITH WARNINGS
 
 No blocking issues found. The following recommendations are optional:
@@ -196,7 +199,7 @@ Task can be marked as DONE. Do you want to address these recommendations first?
 
 ### Blocking Issues
 
-```
+```text
 ⚠️ Security Analysis: BLOCKING ISSUES FOUND
 
 Task cannot be marked as DONE until the following issues are resolved:
@@ -220,7 +223,7 @@ Do you want me to show detailed fix recommendations?
 
 Execute gates in this order:
 
-```
+```text
 1. composer lint     (fast, auto-fixes available)
 ↓
 2. composer test     (validates behavior)

@@ -1,0 +1,28 @@
+{
+  "_comment": "MCP Server Configuration Template — Copy to your project and configure",
+  "mcpServers": {
+    "laravel-boost": {
+      "_comment": "Laravel ecosystem tools: database, routes, tinker, logs, docs",
+      "command": "npx",
+      "args": ["-y", "@nicepkg/laravel-boost-mcp"]
+    },
+    "github-mcp-server": {
+      "_comment": "GitHub integration: issues, PRs, repos, code search",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "<your-token>"
+      }
+    },
+    "sequential-thinking": {
+      "_comment": "Structured problem-solving through step-by-step reasoning",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    },
+    "context7": {
+      "_comment": "Up-to-date library documentation (optional)",
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    }
+  }
+}
