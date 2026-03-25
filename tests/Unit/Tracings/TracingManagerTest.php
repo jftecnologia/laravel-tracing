@@ -44,7 +44,7 @@ describe('TracingManager', function () {
         expect($manager->all())->toBe(['trace_key' => 'value-1']);
     });
 
-    it('returns null values via all() before resolveAll() is called', function () {
+    it('excludes unresolved tracing values from all()', function () {
         $source = Mockery::mock(TracingSource::class);
         $source->shouldNotReceive('resolve');
 
@@ -53,7 +53,7 @@ describe('TracingManager', function () {
             $this->storage,
         );
 
-        expect($manager->all())->toBe(['trace_key' => null]);
+        expect($manager->all())->toBe([]);
     });
 
     it('returns specific tracing value via get()', function () {
@@ -199,5 +199,65 @@ describe('TracingManager', function () {
         $manager = new TracingManager(['lazy' => $source], $this->storage);
 
         expect($manager->get('lazy'))->toBeNull();
+    });
+
+    it('skips null values in restore without throwing TypeError', function () {
+        $source = Mockery::mock(TracingSource::class);
+        $source->shouldNotReceive('restoreFromJob');
+
+        $manager = new TracingManager(
+            sources: ['correlation_id' => $source],
+            storage: $this->storage,
+            enabled: true,
+            enabledMap: ['correlation_id' => true],
+        );
+
+        // Simulate a job payload with null tracing value
+        $manager->restore(['correlation_id' => null]);
+
+        // Should not have stored anything
+        expect($this->storage->get('correlation_id'))->toBeNull();
+    });
+
+    it('restores valid string tracing values from job payload', function () {
+        $source = Mockery::mock(TracingSource::class);
+        $source->shouldReceive('restoreFromJob')
+            ->with('abc-123')
+            ->once()
+            ->andReturn('abc-123');
+
+        $manager = new TracingManager(
+            sources: ['correlation_id' => $source],
+            storage: $this->storage,
+            enabled: true,
+            enabledMap: ['correlation_id' => true],
+        );
+
+        $manager->restore(['correlation_id' => 'abc-123']);
+
+        expect($this->storage->get('correlation_id'))->toBe('abc-123');
+    });
+
+    it('all() only includes sources with resolved string values', function () {
+        $source1 = Mockery::mock(TracingSource::class);
+        $source1->shouldReceive('resolve')->once()->andReturn('resolved-value');
+
+        $source2 = Mockery::mock(TracingSource::class);
+        $source2->shouldNotReceive('resolve');
+
+        $manager = new TracingManager(
+            sources: ['resolved' => $source1, 'unresolved' => $source2],
+            storage: $this->storage,
+            enabled: true,
+            enabledMap: ['resolved' => true, 'unresolved' => true],
+        );
+
+        // Only resolve the first source
+        $this->storage->set('resolved', 'resolved-value');
+
+        $result = $manager->all();
+
+        expect($result)->toBe(['resolved' => 'resolved-value'])
+            ->and($result)->not->toHaveKey('unresolved');
     });
 });
