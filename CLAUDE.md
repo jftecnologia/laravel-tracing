@@ -1,6 +1,6 @@
 # Claude Code — Project Guidelines
 
-**Laravel application or package** — AI-assisted development guidelines template.
+**Laravel Tracing** — A Laravel package for distributed tracing. Propagates correlation IDs and request IDs across HTTP requests, queued jobs, and outgoing HTTP client calls, enabling end-to-end request tracking in microservice and multi-application architectures.
 All detailed behavior is loaded from **skills** and **docs/** files.
 
 ---
@@ -58,20 +58,23 @@ Additional skills for development:
 | Skill                       | When to use                                                |
 | --------------------------- | ---------------------------------------------------------- |
 | `init-project`              | First setup, adapt guidelines to project context           |
-| `brainstorming`             | Ideation, spec refinement, layout/UI planning              |
+| `brainstorming`             | Ideation, spec refinement, planning                        |
 | `task-planner`              | Plan + route tasks/features/refactors (no code)            |
-| `frontend-development`      | React + Inertia + Tailwind + Radix UI + Wayfinder          |
-| `generate-test`             | Generating PestPHP tests (unit, feature, browser)          |
-| `developing-with-fortify`   | Auth reference (login, 2FA, password reset)                |
+| `generate-test`             | Generating PestPHP tests (unit, feature)                   |
 | `code-reviewer`             | Code health, quality, test quality, spec compliance review |
 | `security-analyst`          | OWASP Top 10 security review                               |
-| `browser-qa-tester`         | Autonomous UX/UI QA via browser subagent                   |
 | `project-qa-auditor`        | QA audit before PR/deploy                                  |
 | `bug-fixer`                 | Fix bugs needing root cause investigation                  |
+| `skill-creator`             | Creating new skills                                        |
+
+<!-- App-only skills (not applicable to this package):
+| `frontend-development`      | React + Inertia + Tailwind + Radix UI + Wayfinder          |
+| `developing-with-fortify`   | Auth reference (login, 2FA, password reset)                |
+| `browser-qa-tester`         | Autonomous UX/UI QA via browser subagent                   |
 | `i18n-manager`              | i18n audit, fix, and translation sync                      |
 | `generate-persona`          | Generate structured persona profiles                       |
 | `generate-persona-feedback` | Simulate persona behavior, generate feedback               |
-| `skill-creator`             | Creating new skills                                        |
+-->
 
 **Stack Packs** (additive, activated by `init-project` or `/add-stack`):
 
@@ -136,47 +139,51 @@ Other useful tools: `tinker`, `database-schema`, `database-query`, `last-error`,
 
 ---
 
-## 5. Application Structure
+## 5. Package Structure
 
 ```text
-app/
-├── Actions/          # Single-purpose actions (grouped by domain)
-├── Enums/            # PHP enums
-├── Events/           # Domain events
-├── Exceptions/       # Custom exceptions
-├── Extensions/       # Package customizations (non-domain logic)
-├── Http/             # Controllers, Middleware, Requests
-├── Jobs/             # Queued jobs
-├── Listeners/        # Event listeners
-├── Models/           # Eloquent models
-├── Notifications/    # Notification classes
-├── Policies/         # Authorization policies
-├── Providers/        # Service providers
-├── Rules/            # Custom validation rules
-├── Services/         # Orchestration services
-└── Support/          # Helpers (helpers.php)
+src/
+├── Facades/          # LaravelTracing facade
+├── Http/             # HTTP client tracing integration
+├── Jobs/             # Job tracing propagation
+├── Middleware/       # Incoming/outgoing tracing middleware
+├── Storage/          # Request and session storage
+├── Support/          # Helpers (HeaderSanitizer, IdGenerator)
+├── Tracings/         # Core tracing logic
+│   ├── Contracts/    # TracingSource, TracingStorage interfaces
+│   ├── Sources/      # Built-in sources (CorrelationId, RequestId)
+│   └── TracingManager.php
+├── LaravelTracing.php
+└── LaravelTracingServiceProvider.php
+
+config/
+└── laravel-tracing.php   # Package configuration
+
+tests/
+├── Feature/          # Integration tests
+├── Unit/             # Unit tests
+└── Fixtures/         # Test fixtures
+
+workbench/            # Testbench workbench app
 ```
 
 Key conventions:
 
-- **Actions** for single-purpose operations, **Services** for orchestration
-- **Extensions** for package customizations only (not domain logic)
-- **Form Requests** for all validation (never inline in controllers)
-- **Named routes** + Wayfinder for frontend route references — always prefer Wayfinder; hard-coded URLs only as a last resort with explicit justification in comments
-- **Artisan commands first** — Always use `php artisan make:*` and other artisan commands when available. Before manually creating files, check `php artisan list` for available generators. This applies to framework commands and installed package commands alike. Artisan ensures compatibility with the framework and package conventions.
-- **Demo seeders** — Create demo/development seeders in `database/seeders/Demo/` for testing. Run: `php artisan db:seed --class='Database\Seeders\Demo\DemoSeeder'`. Seeders are for demo data only — system data belongs in migrations.
+- **Contracts** for interfaces — `TracingSource`, `TracingStorage`
+- **Sources** for pluggable tracing value providers
+- **Orchestra Testbench** for testing within a Laravel app context
+- **Config file** publishable via `--tag=laravel-tracing-config`
 
 ---
 
 ## 6. Quality Gates
 
-See `docs/engineering/QUALITY_GATES.md` for the full specification. Gates run in order: Lint → Test → i18n → Security.
+See `docs/engineering/QUALITY_GATES.md` for the full specification. Gates run in order: Lint → Test → Security.
 
 Quick reference — before commits:
 
 ```bash
 composer lint                    # PHP: format + rector + analyze
-npm run lint && npm run types    # JS/TS: ESLint + TypeScript
 ```
 
 Before PRs: also run `composer test`. During AI development: `vendor/bin/pint --dirty --format agent`.
