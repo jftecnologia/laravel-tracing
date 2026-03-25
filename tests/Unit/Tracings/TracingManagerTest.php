@@ -240,10 +240,7 @@ describe('TracingManager', function () {
 
     it('all() only includes sources with resolved string values', function () {
         $source1 = Mockery::mock(TracingSource::class);
-        $source1->shouldReceive('resolve')->once()->andReturn('resolved-value');
-
         $source2 = Mockery::mock(TracingSource::class);
-        $source2->shouldNotReceive('resolve');
 
         $manager = new TracingManager(
             sources: ['resolved' => $source1, 'unresolved' => $source2],
@@ -252,7 +249,7 @@ describe('TracingManager', function () {
             enabledMap: ['resolved' => true, 'unresolved' => true],
         );
 
-        // Only resolve the first source
+        // Manually set only one value in storage — simulates partial resolution
         $this->storage->set('resolved', 'resolved-value');
 
         $result = $manager->all();

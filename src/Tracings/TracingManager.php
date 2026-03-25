@@ -61,9 +61,11 @@ class TracingManager
     /**
      * Get all resolved tracing values.
      *
-     * Only returns values for enabled sources.
+     * Only returns values for enabled sources that have been resolved.
+     * Null (unresolved) values are excluded to prevent serialization
+     * of empty tracings into job payloads.
      *
-     * @return array<string, string|null>
+     * @return array<string, string>
      */
     public function all(): array
     {
@@ -74,7 +76,11 @@ class TracingManager
                 continue;
             }
 
-            $result[$key] = $this->storage->get($key);
+            $value = $this->storage->get($key);
+
+            if ($value !== null) {
+                $result[$key] = $value;
+            }
         }
 
         return $result;
@@ -128,7 +134,10 @@ class TracingManager
      * Injects tracing values directly into storage without running resolve().
      * Used by job dispatcher to restore values when processing queued jobs.
      *
-     * @param  array<string, string>  $tracings
+     * Non-string values are silently skipped as defense-in-depth against
+     * payloads from older versions that may contain null entries.
+     *
+     * @param  array<string, mixed>  $tracings
      */
     public function restore(array $tracings): void
     {
@@ -137,6 +146,10 @@ class TracingManager
         }
 
         foreach ($tracings as $key => $value) {
+            if (! is_string($value)) {
+                continue;
+            }
+
             if (! $this->isSourceEnabled($key)) {
                 continue;
             }

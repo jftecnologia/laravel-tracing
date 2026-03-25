@@ -54,7 +54,8 @@ describe('Enable/Disable Toggles', function () {
 
             $manager->resolveAll(Request::create('/'));
 
-            expect($manager->all())->toBe(['correlation_id' => null]);
+            // all() filters null values — unresolved sources are excluded
+            expect($manager->all())->toBe([]);
         });
 
         it('reports enabled status via isEnabled()', function () {
