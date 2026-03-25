@@ -11,6 +11,7 @@
 - **Tests must pass before task completion**
 - **Use PestPHP syntax exclusively**
 - **Prefer tests over verification scripts** — do not create tinker scripts or verification files when tests cover the functionality
+- **Bug fixes follow Red-Green TDD** — write a failing test first (🔴 RED), then fix the code until the test passes (🟢 GREEN), without modifying the test
 
 ---
 

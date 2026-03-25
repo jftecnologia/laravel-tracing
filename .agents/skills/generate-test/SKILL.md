@@ -333,6 +333,17 @@ When invoked from implement-task:
 4. **Run tests**: Must pass before task completion
 5. **Report**: Return test results to implement-task
 
+### Red-Green Mode (Bug Fixes)
+
+When invoked from `bug-fixer` or for a `fix/` branch, generate the test in **Red-Green mode**:
+
+1. **Write the test BEFORE the fix** — the test asserts the expected (correct) behavior
+2. The test MUST **fail** when run against the current (buggy) code
+3. Commit the failing test: `test(<scope>): add failing test for <bug-description>`
+4. After the fix is applied, re-run the test — it MUST **pass** without modification
+
+> The test defines the contract. The fix satisfies it. Never modify the test to accommodate the fix.
+
 ### Communication Format
 
 ```text

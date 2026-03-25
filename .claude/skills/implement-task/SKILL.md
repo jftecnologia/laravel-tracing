@@ -138,6 +138,20 @@ For each acceptance criterion:
 2. **Test** - Run tests if applicable
 3. **Commit** - Semantic commit for the change
 
+### Red-Green Protocol for Bug Fixes
+
+When the task is a **bug fix** (branch type `fix/`), follow the Red-Green TDD protocol **when it makes sense** (i.e., the bug is reproducible via automated tests):
+
+1. 🔴 **RED** — Write a test that reproduces the bug (it MUST fail)
+   - Commit: `test(<scope>): add failing test for <bug-description>`
+2. 🟢 **GREEN** — Fix the code until the test passes, without modifying the test
+   - Commit: `fix(<scope>): <short description>`
+3. Run the full test suite — no regressions
+
+> Skip Red-Green only when the bug cannot be reproduced via automated tests. State: "Red-Green não aplicável: [motivo]."
+>
+> For full details, see the `bug-fixer` skill's Phase 4.
+
 ### Semantic Commits
 
 Follow commit format from WORKFLOW.md:

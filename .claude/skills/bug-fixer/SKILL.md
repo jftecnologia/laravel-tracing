@@ -252,18 +252,53 @@ Phase 3.5 reviews the **plan**; Gate 3 reviews the **code**.
 git checkout -b fix/<bug-description>
 ```
 
-### Development Loop
+### Red-Green Bug Fix Protocol (MANDATORY)
 
-For each action in the fix plan:
+> **Methodology**: Follow **Red-Green TDD** for all bug fixes. This ensures the bug is properly captured as a failing test before any code is changed, preventing regressions and validating the fix.
 
-1. **Implement** — Write the fix following CODE_STANDARDS.md
-2. **Verify** — Check the fix addresses the root cause
-3. **Commit** — Semantic commit for the change
+For each action in the fix plan, follow this sequence **when it makes sense** (i.e., the bug is reproducible via automated tests):
+
+#### Step 1: 🔴 RED — Write a failing test that reproduces the bug
+
+1. Create a test that simulates the exact conditions that trigger the bug
+2. The test MUST assert the **expected (correct)** behavior
+3. Run the test — it MUST **fail** (confirming the bug exists)
+4. Commit: `test(<scope>): add failing test for <bug-description>`
+
+```php
+// Example: bug where restore() crashes on null values
+it('restores tracing values without error when payload contains null', function () {
+    $manager = app(TracingManager::class);
+
+    // This should not throw — but it does (RED)
+    $manager->restore(['correlation_id' => null, 'request_id' => null]);
+
+    expect(true)->toBeTrue(); // Reaches here only if no exception
+});
+```
+
+#### Step 2: 🟢 GREEN — Fix the code until the test passes
+
+1. Implement the minimum fix to make the failing test pass
+2. Do **NOT** modify the test — the test defines the correct behavior
+3. Run the test — it MUST **pass**
+4. Run the full test suite — no regressions
+5. Commit: `fix(<scope>): <short description>`
+
+#### When to skip Red-Green
+
+Skip this protocol ONLY when:
+
+- The bug cannot be reproduced via automated tests (e.g., visual-only, environment-specific)
+- The fix is a configuration change with no testable code path
+
+If skipping, state: "Red-Green não aplicável: [motivo]. Prosseguindo com correção direta."
 
 ### Semantic Commits
 
 ```text
-fix(<scope>): <short description>
+test(<scope>): add failing test for <bug-description>   # RED
+fix(<scope>): <short description>                        # GREEN
 
 [optional body with context]
 
@@ -421,13 +456,12 @@ Report what was found and suggest alternatives:
 Bug fix is complete when:
 
 1. ✅ Root cause identified and documented
-2. ✅ Fix addresses root cause (not just symptom)
-3. ✅ `composer lint` passes
-4. ✅ `npm run lint && npm run types` passes
-5. ✅ `composer test` passes
-6. ✅ Regression test added (if test gap existed)
+2. ✅ 🔴 Failing test written that reproduces the bug (when applicable)
+3. ✅ 🟢 Fix implemented — test passes without test modification
+4. ✅ Fix addresses root cause (not just symptom)
+5. ✅ `composer lint` passes
+6. ✅ `composer test` passes (no regressions)
 7. ✅ Security analysis shows no CRITICAL/HIGH issues
-8. ✅ i18n verification shows no hardcoded user-facing strings
-9. ✅ Semantic commits made
-10. ✅ Documentation updated (if affected)
-11. ✅ User asked about Pull Request
+8. ✅ Semantic commits made (test commit + fix commit)
+9. ✅ Documentation updated (if affected)
+10. ✅ User asked about Pull Request

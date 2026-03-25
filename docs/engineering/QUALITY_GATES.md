@@ -44,6 +44,16 @@ Every feature/endpoint MUST cover all three pillars:
 
 > A test file covering only the happy path is **incomplete**.
 
+### Red-Green Protocol for Bug Fixes
+
+When the change is a **bug fix**, tests MUST follow the Red-Green TDD protocol:
+
+1. 🔴 **RED** — Write a failing test that reproduces the bug → commit
+2. 🟢 **GREEN** — Fix the code (not the test) until the test passes → commit
+3. Run full suite — no regressions
+
+> Skip only when the bug cannot be reproduced via automated tests. See `bug-fixer` skill Phase 4 for details.
+
 ### Commands
 
 | Stack       | Run tests       | Run specific                                                  |
