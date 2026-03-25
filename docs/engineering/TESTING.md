@@ -1,327 +1,408 @@
 # Testing Guidelines
 
-**Purpose**: Define testing philosophy, practices, and execution for this Laravel package.
+**Purpose**: Define testing philosophy, practices, and execution for this Laravel application.
 
 ---
 
 ## Testing Philosophy
 
-### Core Principles
-
-- **Tests are created ONLY when explicitly requested by the user**
-- **When tests exist, they MUST pass before concluding any task**
-- **Test business behavior, not framework internals**
-- **Tests must be maintainable and readable**
+- **Every change must be tested** — write or update tests, then run them
+- **Test business behavior**, not framework internals
+- **Tests must pass before task completion**
+- **Use PestPHP syntax exclusively**
+- **Prefer tests over verification scripts** — do not create tinker scripts or verification files when tests cover the functionality
 
 ---
 
 ## Testing Framework
 
-### PestPHP
-
-This package uses **PestPHP** (version 4.3+) as the testing framework.
-
-- Modern, expressive PHP testing framework
-- Built on top of PHPUnit
-- Elegant syntax with less boilerplate
-- Better readability and developer experience
-
-### Orchestra Testbench
-
-Tests run in **Orchestra Testbench** (version 10.8+):
-
-- Provides a minimal Laravel environment for package testing
-- Simulates a real Laravel application
-- Allows testing service providers, facades, middleware, etc.
+- **PestPHP 4** — expressive, modern PHP testing
+- **Pest Plugin Laravel** — Laravel-specific assertions and helpers
+- **Faker** — test data generation
+- **Mockery** — mocking library
 
 ---
 
 ## Test Structure
 
-```
+```text
 tests/
-├── Pest.php           # Pest configuration
+├── Pest.php           # Pest configuration and shared setup
 ├── TestCase.php       # Base test case class
-├── Feature/           # Feature/integration tests
-│   └── *.php
-└── Unit/              # Unit tests
-    └── *.php
+├── Feature/           # Feature/integration tests (most tests)
+└── Unit/              # Isolated unit tests
 ```
 
-### Feature vs Unit Tests
+### Feature vs Unit
 
-**Feature Tests** (`tests/Feature/`):
-- Test complete features end-to-end
-- May involve multiple classes
-- Can use Laravel's HTTP testing (`get()`, `post()`, etc.)
-- Example: Testing middleware behavior on HTTP requests
-
-**Unit Tests** (`tests/Unit/`):
-- Test individual classes/methods in isolation
-- No HTTP/database dependencies (use mocks if needed)
-- Fast and focused
-- Example: Testing a resolver class logic
+- **Feature tests** (`tests/Feature/`): test complete features through HTTP, database, queue, etc. Most tests should be feature tests.
+- **Unit tests** (`tests/Unit/`): test individual classes/methods in isolation, no Laravel bootstrapping needed.
 
 ---
 
 ## Running Tests
 
-### Execute All Tests
-
 ```bash
+# Run all tests
 composer test
-```
 
-This runs the entire PestPHP test suite.
+# Run with compact output
+php artisan test --compact
 
-### Run Specific Test File
+# Run specific file
+php artisan test --compact tests/Feature/Auth/LoginTest.php
 
-```bash
-./vendor/bin/pest tests/Feature/ExampleTest.php
-```
-
-### Run Specific Test
-
-```bash
-./vendor/bin/pest --filter="test name"
+# Run specific test by name
+php artisan test --compact --filter="can login with valid credentials"
 ```
 
 ---
 
-## When to Run Tests
+## Creating Tests
 
-**Always run tests:**
+Use artisan to create tests:
 
-- ✅ Before committing code
-- ✅ Before opening a pull request
-- ✅ After making significant changes
-- ✅ Before concluding any task (mandatory rule)
+```bash
+# Feature test (default)
+php artisan make:test --pest Auth/LoginTest
 
-**Even if you didn't write the tests**, you must ensure they still pass.
+# Unit test
+php artisan make:test --pest --unit Services/PaymentServiceTest
+```
+
+Or use the **`/generate-test`** skill for AI-assisted test generation.
 
 ---
 
-## Writing Tests (When Requested)
+## Writing Tests
 
-### PestPHP Syntax
+### Naming
+
+Use descriptive `it()` blocks that explain **what** is being tested:
 
 ```php
-use function Pest\Laravel\get;
+// Good
+it('redirects to dashboard after successful login')
+it('returns validation error when email is missing')
+it('sends notification when order is placed')
 
-it('attaches correlation ID to response headers', function () {
-    $response = get('/');
-    
-    $response->assertOk();
-    $response->assertHeader('X-Correlation-Id');
-});
-
-it('persists correlation ID in session', function () {
-    $response = get('/');
-    
-    expect(session()->has('correlation_id'))->toBeTrue();
-});
-```
-
-### Test Naming
-
-- Use descriptive test names that explain **what** is being tested
-- Start with lowercase verb: `it('does something')`
-- Be specific about the scenario
-
-✅ **Good:**
-```php
-it('generates new correlation ID when none exists')
-it('reuses correlation ID from session on subsequent requests')
-it('attaches tracing headers to outgoing HTTP responses')
-```
-
-❌ **Bad:**
-```php
-it('tests correlation ID')
+// Bad
+it('tests login')
 it('works correctly')
-it('test case 1')
+```
+
+### Arrange-Act-Assert
+
+```php
+it('creates a new user with valid data', function () {
+    // Arrange
+    $data = [
+        'name' => 'John Doe',
+        'email' => 'john@example.com',
+        'password' => 'password123',
+    ];
+
+    // Act
+    $response = post('/register', $data);
+
+    // Assert
+    $response->assertRedirect('/dashboard');
+    assertDatabaseHas('users', ['email' => 'john@example.com']);
+});
+```
+
+### Using Factories
+
+Always use factories to create test models — check factory states before manually setting attributes:
+
+```php
+it('shows user profile', function () {
+    $user = User::factory()->create();
+
+    actingAs($user)
+        ->get('/profile')
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('Settings/Profile')
+            ->has('user')
+        );
+});
+```
+
+### Datasets for Multiple Scenarios
+
+```php
+it('validates required fields', function (string $field) {
+    $data = User::factory()->make()->toArray();
+    unset($data[$field]);
+
+    post('/register', $data)
+        ->assertSessionHasErrors($field);
+})->with(['name', 'email', 'password']);
+```
+
+### Faker
+
+Follow existing conventions — use either `$this->faker` or `fake()`:
+
+```php
+it('stores a post', function () {
+    $user = User::factory()->create();
+
+    actingAs($user)->post('/posts', [
+        'title' => fake()->sentence(),
+        'body' => fake()->paragraphs(3, true),
+    ])->assertRedirect();
+});
 ```
 
 ---
 
 ## What to Test
 
-### ✅ DO Test
+### Test
 
-- **Business logic**: Core package functionality
-- **Public APIs**: Facades, helper functions, public methods
-- **Configuration behavior**: Features enabled/disabled via config
-- **Edge cases**: Null values, missing headers, invalid input
-- **Integration points**: Middleware, service providers, HTTP client integration
-- **Custom tracing sources**: If extensibility is used
+- HTTP endpoints (status codes, redirects, response structure)
+- Validation rules (required fields, formats, custom rules)
+- Authorization (policies, gates, middleware)
+- Business logic in Actions and Services
+- Model relationships and scopes
+- Queue jobs and their effects
+- Events and listeners
+- Notifications
+- Inertia page rendering and props
 
-### Happy Path vs Unhappy Path
+### Don't Test
 
-Every feature should be tested for both scenarios:
+- Laravel framework internals (Eloquent, routing engine, etc.)
+- Third-party package behavior
+- Trivial getters/setters
+- Private methods directly — test through public API
 
-**Happy Path** (expected behavior):
-- Valid inputs produce expected outputs
-- Normal flow works correctly
-- Configuration is respected
+### Mandatory Test Coverage: Three Pillars
 
-**Unhappy Path** (failure scenarios):
-- Invalid inputs throw appropriate exceptions
-- Missing required data is handled gracefully
-- Edge cases don't break the system
-- Error messages are meaningful
+Every feature/endpoint MUST cover **all three pillars**:
+
+1. ✅ **Happy Path** — Expected behavior with valid inputs
+2. ❌ **Unhappy Path** — Failures, validation, edge cases, invalid states
+3. 🔒 **Security Path** — Scope, permissions, IDOR, data leakage
+
+> **Rule**: A test file that only covers the happy path is **incomplete**.
+
+#### Happy Path
+
+Test the expected behavior when everything is valid:
 
 ```php
-// ✅ Happy path: valid input
-it('resolves correlation ID from valid header', function () {
-    $response = get('/', ['X-Correlation-Id' => 'valid-123']);
-    
-    expect($response->header('X-Correlation-Id'))->toBe('valid-123');
-});
+it('logs in with valid credentials', function () {
+    $user = User::factory()->create();
 
-// ✅ Unhappy path: missing header
-it('generates new ID when header is missing', function () {
-    $response = get('/');
-    
-    expect($response->header('X-Correlation-Id'))->not->toBeEmpty();
-});
-
-// ✅ Unhappy path: invalid input
-it('throws exception for empty header name', function () {
-    expect(fn () => $resolver->resolve('', 'value'))
-        ->toThrow(InvalidArgumentException::class);
+    post('/login', [
+        'email' => $user->email,
+        'password' => 'password',
+    ])->assertRedirect('/dashboard');
 });
 ```
 
-### ❌ DO NOT Test
+#### Unhappy Path
 
-- **Laravel framework internals**: Don't test Eloquent, routing, sessions, etc.
-- **Third-party packages**: Assume dependencies work
-- **Framework features**: Assume Laravel's HTTP client, queue system, etc. work
-- **Trivial getters/setters**: No value in testing simple property access
+Test failures across these categories:
+
+| Category                 | What to test                                                             |
+| ------------------------ | ------------------------------------------------------------------------ |
+| **Validation**           | Required fields, invalid formats, custom rules                           |
+| **Invalid data**         | Empty strings, null, boundary values, special characters                 |
+| **Invalid state**        | Forbidden state transitions (e.g., cannot approve a Draft vulnerability) |
+| **Dependency failure**   | External service unavailable, timeout, bad response                      |
+| **Authorization denied** | User without permission receives 403/404                                 |
+
+```php
+it('fails login with wrong password', function () {
+    $user = User::factory()->create();
+
+    post('/login', [
+        'email' => $user->email,
+        'password' => 'wrong-password',
+    ])->assertSessionHasErrors();
+});
+
+it('rejects empty email', function () {
+    post('/login', [
+        'email' => '',
+        'password' => 'password',
+    ])->assertSessionHasErrors('email');
+});
+```
+
+#### Security Path
+
+Every endpoint/feature MUST include security tests from the checklist below.
 
 ---
 
-## Test Organization
+### Security Testing Checklist
 
-### Arrange-Act-Assert Pattern
+For each endpoint or feature, evaluate and test the applicable categories:
+
+| Category                     | What to test                                                        | Expected behavior                                                             |
+| ---------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| **Scope / Tenant Isolation** | Access data from another tenant                                     | Returns 0 results or 404 (NEVER 403)                                          |
+| **Permissions (RBAC)**       | Each role has correct access; unpermitted roles are blocked         | 403 or 404 depending on context                                               |
+| **IDOR**                     | Access a resource by ID that belongs to another user/company/tenant | 404 (not 403, to prevent enumeration)                                         |
+| **Data Leakage**             | Response must not contain internal/sensitive fields                 | Pre-validation statuses hidden from clients; no password hashes, tokens, etc. |
+| **Returned Data**            | Response contains ONLY the expected fields for that role/view       | Validate Inertia props; ensure no extra fields                                |
+| **Mass Assignment**          | POST/PUT with non-fillable fields                                   | Non-fillable fields are ignored (e.g., `tenant_id` in body)                   |
+
+> **Reference**: See `docs/architecture/SECURITY.md` for full security architecture.
+
+---
+
+### Security Testing Patterns
+
+Use these patterns as templates for your security tests.
+
+#### Pattern 1: Scope Isolation (e.g., Multi-Tenant)
 
 ```php
-it('resolves correlation ID from request header', function () {
-    // Arrange: Set up test data
-    $correlationId = 'test-correlation-123';
-    
-    // Act: Perform the action
-    $response = get('/', ['X-Correlation-Id' => $correlationId]);
-    
-    // Assert: Verify the result
-    expect($response->header('X-Correlation-Id'))->toBe($correlationId);
+it('does not return data from another organization', function () {
+    $otherOrg = Organization::factory()->create();
+    $otherTeam = Team::factory()->create(['organization_id' => $otherOrg->id]);
+
+    Post::factory()->create([
+        'organization_id' => $otherOrg->id,
+        'team_id' => $otherTeam->id,
+    ]);
+
+    actingAs($this->user)
+        ->get(route('posts.index'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->where('posts.total', 0)
+        );
 });
 ```
 
-### Use Datasets for Multiple Scenarios
+#### Pattern 2: IDOR Prevention
 
 ```php
-it('validates header names', function (string $header) {
-    $response = get('/', [$header => 'test-value']);
-    
-    $response->assertHeader($header);
-})->with([
-    'X-Correlation-Id',
-    'X-Request-Id',
-    'X-Custom-Trace',
-]);
+it('returns 404 when accessing another team resource by ID', function () {
+    $otherTeam = Team::factory()->create();
+    $otherPost = Post::factory()->create([
+        'team_id' => $otherTeam->id,
+    ]);
+
+    actingAs($this->user)
+        ->get(route('posts.show', $otherPost))
+        ->assertNotFound(); // 404, NOT 403
+});
+```
+
+#### Pattern 3: Permission Boundary
+
+```php
+it('denies access to admin routes for member role', function () {
+    $member = User::factory()->create();
+    $organization->users()->attach($member->id, ['role' => 'member']);
+
+    actingAs($member)
+        ->get(route('admin.posts.index'))
+        ->assertForbidden(); // or assertNotFound based on route middleware
+});
+```
+
+#### Pattern 4: Data Leakage Prevention
+
+```php
+it('excludes draft statuses from public listing', function () {
+    Post::factory()->create([
+        'status' => PostStatus::Draft,
+        'team_id' => $this->team->id,
+    ]);
+
+    $visible = Post::factory()->create([
+        'status' => PostStatus::Published,
+        'team_id' => $this->team->id,
+    ]);
+
+    actingAs($this->user)
+        ->get(route('posts.index'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->where('posts.total', 1)
+            ->where('posts.data.0.id', $visible->id)
+        );
+});
+```
+
+---
+
+## Inertia Testing
+
+Test Inertia responses using the `assertInertia` method:
+
+```php
+it('renders the settings page', function () {
+    $user = User::factory()->create();
+
+    actingAs($user)
+        ->get('/settings/profile')
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('Settings/Profile')
+            ->has('user')
+            ->where('user.email', $user->email)
+        );
+});
 ```
 
 ---
 
 ## Mocking and Fakes
 
-### When to Mock
-
-- External HTTP calls (use `Http::fake()`)
-- Queue jobs (use `Queue::fake()`)
-- Time-dependent behavior (use `Carbon::setTestNow()`)
-
-### Example: HTTP Client Mock
+Use Laravel's built-in fakes:
 
 ```php
-use Illuminate\Support\Facades\Http;
+// HTTP
+Http::fake(['api.example.com/*' => Http::response(['data' => 'test'])]);
 
-it('forwards tracing headers on outgoing requests', function () {
-    Http::fake();
-    
-    // Make outgoing request with tracing
-    Http::withHeaders(['X-Correlation-Id' => 'test-123'])
-        ->get('https://api.example.com/data');
-    
-    // Assert header was sent
-    Http::assertSent(function ($request) {
-        return $request->hasHeader('X-Correlation-Id', 'test-123');
-    });
-});
+// Queue
+Queue::fake();
+// ... action ...
+Queue::assertPushed(SendNotification::class);
+
+// Notifications
+Notification::fake();
+// ... action ...
+Notification::assertSentTo($user, OrderConfirmation::class);
+
+// Time
+$this->travel(5)->minutes();
+// or
+Carbon::setTestNow(now()->addHour());
+
+// Events
+Event::fake();
+// ... action ...
+Event::assertDispatched(OrderPlaced::class);
 ```
 
 ---
 
 ## Test Isolation
 
-### Each Test Must Be Independent
-
-- Tests should not depend on execution order
-- Clean up after each test (Pest does this automatically)
-- Don't rely on shared state between tests
-
-### Use `beforeEach()` for Setup
+- Each test must be independent — no shared state between tests
+- Use `RefreshDatabase` trait for database tests (configured in `Pest.php`)
+- Use `beforeEach()` for common setup within a file
 
 ```php
 beforeEach(function () {
-    config(['laravel-tracing.enabled' => true]);
+    $this->user = User::factory()->create();
 });
 
-it('runs with tracing enabled', function () {
-    // Test logic
-});
-```
-
----
-
-## Testing Custom Tracing Sources
-
-When users implement custom tracing sources:
-
-```php
-it('registers and resolves custom tracing source', function () {
-    config([
-        'laravel-tracing.sources.custom' => [
-            'enabled' => true,
-            'header' => 'X-User-Id',
-            'resolver' => CustomUserIdResolver::class,
-        ],
-    ]);
-    
-    $response = get('/', ['X-User-Id' => 'user-123']);
-    
-    expect($response->header('X-User-Id'))->toBe('user-123');
-});
-```
-
----
-
-## Performance Testing
-
-### Not Required, But Consider
-
-For critical paths, consider basic performance checks:
-
-```php
-it('resolves tracing values quickly', function () {
-    $start = microtime(true);
-    
-    get('/');
-    
-    $duration = microtime(true) - $start;
-    
-    expect($duration)->toBeLessThan(0.1); // 100ms threshold
+it('can update profile', function () {
+    actingAs($this->user)
+        ->put('/settings/profile', ['name' => 'New Name'])
+        ->assertRedirect();
 });
 ```
 
@@ -329,154 +410,45 @@ it('resolves tracing values quickly', function () {
 
 ## Test Coverage
 
-### Coverage is NOT a Goal
-
-- **Do not aim for 100% coverage**
-- **Test meaningful behavior**, not lines of code
-- Focus on:
-  - Critical business logic
-  - Public APIs
-  - Edge cases and error handling
+- **Do not aim for 100% coverage** — test meaningful behavior
+- Focus on: critical paths, public APIs, edge cases, error handling, **security boundaries**
+- Every endpoint MUST have at least one security test (scope, permission, or data validation)
+- Use the **`generate-test`** skill for advanced patterns
 
 ---
 
 ## Debugging Tests
 
-### Run Tests with Output
-
 ```bash
-./vendor/bin/pest --verbose
+# Verbose output
+php artisan test --compact -v
+
+# Stop on first failure
+php artisan test --compact --stop-on-failure
 ```
 
-### Debug Specific Test
-
-```php
-it('debugs correlation ID resolution', function () {
-    $response = get('/');
-    
-    dump($response->headers->all()); // Debug output
-    
-    $response->assertHeader('X-Correlation-Id');
-});
-```
-
-### Use `dd()` to Stop Execution
-
-```php
-it('investigates tracing context', function () {
-    $response = get('/');
-    
-    dd(
-        $response->headers->all(),
-        session()->all(),
-        config('laravel-tracing')
-    );
-});
-```
-
----
-
-## Common Testing Patterns
-
-### Testing Middleware
-
-```php
-it('attaches tracing headers via middleware', function () {
-    $response = get('/');
-    
-    $response->assertOk();
-    $response->assertHeader('X-Correlation-Id');
-    $response->assertHeader('X-Request-Id');
-});
-```
-
-### Testing Facades
-
-```php
-use JuniorFontenele\LaravelTracing\Facades\LaravelTracing;
-
-it('retrieves correlation ID via facade', function () {
-    get('/');
-    
-    $correlationId = LaravelTracing::getCorrelationId();
-    
-    expect($correlationId)->toBeString();
-    expect($correlationId)->not->toBeEmpty();
-});
-```
-
-### Testing Configuration
-
-```php
-it('respects enabled configuration', function () {
-    config(['laravel-tracing.enabled' => false]);
-    
-    $response = get('/');
-    
-    $response->assertHeaderMissing('X-Correlation-Id');
-});
-```
-
-### Testing Job Context
-
-```php
-use Illuminate\Support\Facades\Queue;
-
-it('propagates tracing context to queued jobs', function () {
-    Queue::fake();
-    
-    get('/dispatch-job');
-    
-    Queue::assertPushed(ExampleJob::class, function ($job) {
-        return $job->tracingContext['correlation_id'] !== null;
-    });
-});
-```
-
----
-
-## Test Maintenance
-
-### Keep Tests Updated
-
-When changing features:
-
-- ✅ Update affected tests
-- ✅ Add tests for new behavior
-- ✅ Remove tests for removed features
-
-### Avoid Brittle Tests
-
-- Don't test implementation details
-- Test public behavior, not internal structure
-- Use abstractions when testing external dependencies
-
----
-
-## Available Test Scripts
-
-Check `composer.json` for test-related commands:
-
-```bash
-composer test     # Run all tests
-./vendor/bin/pest # Run Pest directly with options
-```
+Within tests, use `dump()` or `dd()` temporarily — **remove before committing**.
 
 ---
 
 ## Pre-Commit Test Checklist
 
-Before committing:
-
 - [ ] All tests pass (`composer test`)
-- [ ] New tests added (if requested)
-- [ ] No `dd()`, `dump()`, or debug code left in tests
+- [ ] New/updated tests cover the change
+- [ ] No `dd()`, `dump()`, or debug code in tests
 - [ ] Test names are descriptive
 - [ ] Tests are isolated and repeatable
+- [ ] Factories used for model creation
+- [ ] Happy path AND unhappy path covered
+- [ ] Security tests included (scope, permissions, IDOR, data leakage)
+- [ ] Cross-tenant isolation verified (if endpoint is tenant-scoped)
+- [ ] Returned data validated (no extra fields exposed to unauthorized roles)
 
 ---
 
-## Remember
+## Related Documentation
 
-**Tests are created ONLY when explicitly requested.**  
-**When tests exist, they MUST pass before task completion.**
+- **[STACK.md](STACK.md)** — Tech stack and dependencies
+- **[CODE_STANDARDS.md](CODE_STANDARDS.md)** — Code quality and conventions
+- **[WORKFLOW.md](WORKFLOW.md)** — Git workflow, commits, PRs
+- Skill: **`generate-test`** — PestPHP test generation and advanced patterns

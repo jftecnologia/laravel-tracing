@@ -1,0 +1,631 @@
+{
+  "version": "1.3.0",
+  "installedAt": "2026-03-25T12:44:55.790Z",
+  "updatedAt": "2026-03-25T12:44:55.791Z",
+  "files": {
+    ".agents/mcp-config.example.json": {
+      "hash": "dd1f23d3844518363c8bd3fcfc1323198d1bbc24fa5daf710910fdaf69c81a16"
+    },
+    ".agents/rules/00-bootstrap.md": {
+      "hash": "2702fc8f7117a8547dfab90ef5e0e6d1bbc7db2bcb7c75450d4a04c537edd35d"
+    },
+    ".agents/rules/01-quality-shield.md": {
+      "hash": "b71f4ad4900a6fc6284f7bea628a0f68306a882e2331bb6d048fbbfe7249588b"
+    },
+    ".agents/rules/02-transparency.md": {
+      "hash": "22e8fa35bd63f7640f1baedb1a103609f72958788c98d8f2b61ee69fe9afe578"
+    },
+    ".agents/rules/03-factual-integrity.md": {
+      "hash": "b30b6c7fce27e20cb6def329d4cb874a9519bbea38c24b953bf21c0bd279ad66"
+    },
+    ".agents/rules/04-professional-conduct.md": {
+      "hash": "3ef1adad0c9fefa481ecb7aa22981b78aaaad8165fb0ee820889ea4ff5bbdc5d"
+    },
+    ".agents/scripts/check-progress.sh": {
+      "hash": "97f872ecd25eb28bf286f9feeafc0c3427956f51ee48407a1db01eb80880fc08"
+    },
+    ".agents/scripts/verify-quality-gates.sh": {
+      "hash": "9783b76b83f62998d6b02f9cbe54d8c8e761afc9f06f020e340e92e9687dff22"
+    },
+    ".agents/skills/api-development/SKILL.md": {
+      "hash": "e6284ab09c7f0adeac1107b648f04fbb5c4ccc01899f2859214815f281d0ca35"
+    },
+    ".agents/skills/brainstorming/SKILL.md": {
+      "hash": "8737af99ae6feff5e22c88edfd193f5974fc7089386770ad4bac1ae2cbbed3e0"
+    },
+    ".agents/skills/brainstorming/references/implementation-plan-template.md": {
+      "hash": "40f3bf9ea8e2cc2ab867a86041ba6a046f1d895f00a959c8fd4c0f06335746e7"
+    },
+    ".agents/skills/brainstorming/references/output-template.md": {
+      "hash": "b9df93a597f77d3f359c5d70fa19b75c271d4ac030f71b330465a3ffe08c6e67"
+    },
+    ".agents/skills/browser-qa-tester/SKILL.md": {
+      "hash": "9dd018f1dc9cf30b861950aaf18f7ae8ea2e7220a8cb27d5c98002f408567fd7"
+    },
+    ".agents/skills/browser-qa-tester/references/heuristics.md": {
+      "hash": "154d44a44ca8d51ad128c19d66507f9f36527ae88f491ef02b74f0c53bb8a1ac"
+    },
+    ".agents/skills/browser-qa-tester/references/report-template.md": {
+      "hash": "bbd8efe6034f3b94cd75106dec97b201798d2186354e51ce22c1c55cf041db78"
+    },
+    ".agents/skills/browser-qa-tester/references/subagent-instructions.md": {
+      "hash": "58a3539a809a640e602ee696eabeca9341ff752c9d02b6e0503f2543b3c52930"
+    },
+    ".agents/skills/bug-fixer/SKILL.md": {
+      "hash": "35261be65f8020c19522804163269daedbca634010bf28df8b184fd311788777"
+    },
+    ".agents/skills/bug-fixer/references/fix-plan-template.md": {
+      "hash": "bbab29925c9ba6b4ee3f8a8cd464d667355b0cbdccf6abc18e4a2962f0e68d2c"
+    },
+    ".agents/skills/bug-fixer/references/gate-checklist.md": {
+      "hash": "9e79e014d8db4878523d7b4dec5f7d0e83c75c3ef11e7e7a41d41a5f8f30a407"
+    },
+    ".agents/skills/bug-fixer/references/investigation-guide.md": {
+      "hash": "fc90275e53386d0896a915e77faf61a6e7f38a2304a17ed092420028574e9f9f"
+    },
+    ".agents/skills/code-reviewer/SKILL.md": {
+      "hash": "353a91c881c91a5054b431610a2f085f1e756d1e0be37dd462b3ab9a3cc1ee4c"
+    },
+    ".agents/skills/code-reviewer/references/analysis-checklists.md": {
+      "hash": "93f8047824576fffedc5c9e438b2ac4c78556634758a6286238084e1e4d47062"
+    },
+    ".agents/skills/code-reviewer/references/report-template.md": {
+      "hash": "bca1807159e0ff3f54672592dfcf821c2c01566f4a22ca3ce22ff926631cdab1"
+    },
+    ".agents/skills/code-reviewer/references/severity-classification.md": {
+      "hash": "1dc3c168bd9f2c6f1df77102379d59c44a7c229117c84e11acb50cdb3ae29ac0"
+    },
+    ".agents/skills/database-migration/SKILL.md": {
+      "hash": "b2a016d7cf0b4109e70e7828de4085a7299b9e3cea02220f65cb8a2c42bce3bc"
+    },
+    ".agents/skills/developing-with-fortify/SKILL.md": {
+      "hash": "3594f7e175896f12f41f2f92e32106e768c6fabaf2562d8d93d1e6d04ff1e5b5"
+    },
+    ".agents/skills/frontend-development/SKILL.md": {
+      "hash": "97f81c70c1f44d3f1c337ca507613aaf0dff9e5d000fccd98d1a5cff73523cd9"
+    },
+    ".agents/skills/frontend-development/references/component-patterns.md": {
+      "hash": "1d37f6bc7f3426def82c7e24738ad3e0e6c3aa78db93a3bc9d434031c53a631f"
+    },
+    ".agents/skills/generate-architecture/SKILL.md": {
+      "hash": "f97a7bce1ee82b89ab36599f33ce56018d167b38531463669c4eeaf3e664ca81"
+    },
+    ".agents/skills/generate-persona/SKILL.md": {
+      "hash": "8a5c26881f16a7692bc0109d400f6b385a7ea71813116b2cbfee9e728143e0bf"
+    },
+    ".agents/skills/generate-persona/references/persona-template.md": {
+      "hash": "6d2eedc27bc20e81161f64707ba5292c6e19b0be4a8320250209d1efa56368fa"
+    },
+    ".agents/skills/generate-persona-feedback/SKILL.md": {
+      "hash": "33211190e7307cae1af68fd739c2baeb9e947e274fbd08561a8b754344c0d8d7"
+    },
+    ".agents/skills/generate-persona-feedback/references/feedback-report-template.md": {
+      "hash": "01092fec5203b4c34fd4fc7bdf55ea0cdf50230b675693e2b75444a025de4cbf"
+    },
+    ".agents/skills/generate-persona-feedback/references/interaction-strategies.md": {
+      "hash": "7d7de7b8d2e7c267e6f7f3683563c260f599a064963cf8394371b2c712454250"
+    },
+    ".agents/skills/generate-prd/SKILL.md": {
+      "hash": "2dcab507811fa5e9d40ec6b52ceb2fb3426d20392711a0ce01bf7975ef71d3c2"
+    },
+    ".agents/skills/generate-task-breakdown/SKILL.md": {
+      "hash": "64dd6242f6d54c9ae1ed3c1b9811842221e1ce6ae6f379afe393bf782ef7617b"
+    },
+    ".agents/skills/generate-test/SKILL.md": {
+      "hash": "07b1441edc2707a793e6a97c3e425dde326307c8580d5752addfcfba7e1d48ec"
+    },
+    ".agents/skills/generate-test/references/pest-patterns.md": {
+      "hash": "e99bfa8feca0c2b2f292702ad2c0794bd22ca93ba4a314b338d507d15107f91f"
+    },
+    ".agents/skills/generate-ui-design/SKILL.md": {
+      "hash": "3edbcfa4823797b6f05b1d09755ea360dc327915200aacb13d389ade76c1ae01"
+    },
+    ".agents/skills/generate-ui-design/references/document-templates.md": {
+      "hash": "874e7f31a07e2bcd7a613614a18072fb4b864fa6cdfa020bdee979d0a4af012c"
+    },
+    ".agents/skills/i18n-manager/SKILL.md": {
+      "hash": "bdf591b6aa3f3f1f1e09d387f0edfd7541f5617d751c323bc937b56ae3493bfb"
+    },
+    ".agents/skills/i18n-manager/references/detection-rules.md": {
+      "hash": "0d5dd003df33afb0fd555e1e3105cd808c71af24087b19ce406965d4387f1194"
+    },
+    ".agents/skills/i18n-manager/references/key-conventions.md": {
+      "hash": "a45008ce98002fb844093754f5bfad5631542ab6c5d624085078245fa56643bd"
+    },
+    ".agents/skills/i18n-manager/references/report-template.md": {
+      "hash": "47f3b256c6da0d248afc063371472cc61006e9d6108f4c5ca6e4b6fd217bddf6"
+    },
+    ".agents/skills/implement-task/SKILL.md": {
+      "hash": "85f13add1da1c0315143cb7d58b582dfacaf22c545a5e29c6c074f2ef794df69"
+    },
+    ".agents/skills/implement-task/references/compliance-checklist.md": {
+      "hash": "806cebfa268ec84065d446eeece3f6c4f548bce079f6df31e6a9b91c1f84da3a"
+    },
+    ".agents/skills/implement-task/references/gate-checklist.md": {
+      "hash": "6a40f09c24568d6803c8f230333153b0ebaa1df025e0173687de236e13183a5a"
+    },
+    ".agents/skills/init-project/SKILL.md": {
+      "hash": "43e0e5c8143e8d00ebcbdc016546ea871c39dd0e0b4200fe8fc609085c8b24cd"
+    },
+    ".agents/skills/init-project/references/questionnaire.md": {
+      "hash": "2e97518f8cc0f25c516771687323c592a6dd80ad4a0e0e6473eb6e70917ff0e4"
+    },
+    ".agents/skills/project-qa-auditor/SKILL.md": {
+      "hash": "a7bc096f520ff7394b9e82660f161457bb6f5c359ceea0d9e1244b46fe606a84"
+    },
+    ".agents/skills/project-qa-auditor/references/browser-flows.md": {
+      "hash": "5e887cc78d842b9e68eded22b1a63467a6b8eb49b998f844e4071bf58b9ef478"
+    },
+    ".agents/skills/project-qa-auditor/references/checklists.md": {
+      "hash": "981adb30dac87fc6a29f80bfd75048050a02980a812363d7b06f7c28788b4f4f"
+    },
+    ".agents/skills/project-qa-auditor/references/report-template.md": {
+      "hash": "2dbbb5455870eb5055736ebbc0f5ba99c856053670696762904fea06e09196c4"
+    },
+    ".agents/skills/security-analyst/SKILL.md": {
+      "hash": "d6ddee2ecf22fab3ba3dc3270ab3f96b08c3a816e7addc6b2bcda543a5c3cf4b"
+    },
+    ".agents/skills/security-analyst/references/laravel-vulnerabilities.md": {
+      "hash": "ea47be2374591e1945c2ab4758340f01b4f3b7f1abab8f3f94fbbf6821b10085"
+    },
+    ".agents/skills/skill-creator/LICENSE.txt": {
+      "hash": "58d1e17ffe5109a7ae296caafcadfdbe6a7d176f0bc4ab01e12a689b0499d8bd"
+    },
+    ".agents/skills/skill-creator/SKILL.md": {
+      "hash": "952ac17ea51a3523c3c5a5b1e0265c514079b45b485f3794b46ddb5760711326"
+    },
+    ".agents/skills/skill-creator/references/output-patterns.md": {
+      "hash": "33664d4ef339ec2b330adbc66543724f7a1fb51cdbb2579d5c7aedd1b7c3625b"
+    },
+    ".agents/skills/skill-creator/references/workflows.md": {
+      "hash": "ef4846877d5dab47511a01a6cf31476ad64f5bc5945635459295794575338980"
+    },
+    ".agents/skills/skill-creator/scripts/init_skill.py": {
+      "hash": "cf12790f1d4958799281920d599f56aea38fb5c26e2812a61dd740bf3d4b6b99"
+    },
+    ".agents/skills/skill-creator/scripts/package_skill.py": {
+      "hash": "b31fbcb3e362d5c5308e99255ff8e83cde3a513e0636953964a648494ca10931"
+    },
+    ".agents/skills/skill-creator/scripts/quick_validate.py": {
+      "hash": "67cf5703402013936c8fb75ad6a1afecd8841d45cc5e606b634eb05825fde365"
+    },
+    ".agents/skills/stack-bash/SKILL.md": {
+      "hash": "088074e045894a423a1e4a9cb6dd8252c55b9cf87ba831ecef4366dd2c236bf5"
+    },
+    ".agents/skills/stack-go/SKILL.md": {
+      "hash": "d8dd9096849add0c9b3d8d61a1efaab4f4b8fd5377d473a684dcd33a42e1df19"
+    },
+    ".agents/skills/stack-go/references/go-patterns.md": {
+      "hash": "70f65de26d52d02828c844c9131c62131a25ccb20dc33190d7b7308c63e938ff"
+    },
+    ".agents/skills/stack-go/references/go-quality-gates.md": {
+      "hash": "7a70cf0a099f61761241f3e6ea6bcadc680ffea745b01a20da8c5cb0d1faafd7"
+    },
+    ".agents/skills/stack-go/references/go-testing.md": {
+      "hash": "6fd0ac1f5953c7c3429cbfb9d20e69b97b1ed3c23a7c9940d494589c5aadeea7"
+    },
+    ".agents/skills/stack-node/SKILL.md": {
+      "hash": "56b743a010ef540c35435da7d4d6d192ecce1c553a9df66dafa417f1161abff8"
+    },
+    ".agents/skills/stack-node/references/node-patterns.md": {
+      "hash": "09d6cb465ffa5e98a979cec6bd1902ce433429e1b828143b994d523943529365"
+    },
+    ".agents/skills/stack-node/references/node-quality-gates.md": {
+      "hash": "ea1e739766c063423192e603b4fe7e08ca58cdc0531c42b3bc0eb25582e5e360"
+    },
+    ".agents/skills/stack-node/references/node-testing.md": {
+      "hash": "8bc787b1039de81a046ce644272fe0af15af0f3617fd8fb43c3da7c2e5f48daf"
+    },
+    ".agents/skills/stack-python/SKILL.md": {
+      "hash": "7f4973fd85575102b9625140107c44cccf6927642481a224c9abe18e94876dbd"
+    },
+    ".agents/skills/stack-python/references/python-patterns.md": {
+      "hash": "22cb0201f01c1832fa85da8faf567a296a5c3c6fb315e747b176504453e70c4d"
+    },
+    ".agents/skills/stack-python/references/python-quality-gates.md": {
+      "hash": "bb7d656e240cbf494e819665500fa066435058d46ebded6d8c996904f9dae0c7"
+    },
+    ".agents/skills/stack-python/references/python-testing.md": {
+      "hash": "8d5827c548d45e1db2a4dd04dd52898d268d4f2428e7f80c3b445453fda2e2a4"
+    },
+    ".agents/skills/task-planner/SKILL.md": {
+      "hash": "1e126936b11113542f8d46874c028e6d9ee908abbd7586fd4d42b8fab8e1b3d6"
+    },
+    ".agents/skills/task-planner/references/gate-checklist.md": {
+      "hash": "77cca97c971ac991e829a93018f4fc6bb07668ba1758f5da0c1159f821fdde17"
+    },
+    ".agents/skills/task-planner/references/plan-template.md": {
+      "hash": "2e10159a6d77eba88a55d8c585653697a1dca5de7593ee1ceade9acccba767b7"
+    },
+    ".agents/workflows/add-stack.md": {
+      "hash": "322ee79f26a1e3fabfb4de0653fb1ce4b5dac14731027839502eedae8f58ee08"
+    },
+    ".agents/workflows/code-review.md": {
+      "hash": "d90579ae068bc5922658c13868a72e9c83413c3fda25b26429248f9897321f0d"
+    },
+    ".agents/workflows/debug.md": {
+      "hash": "b33bc9b24f4966184f19ef3aa8a57ff39d6a6104b97a7482fe8bf73133e98b6b"
+    },
+    ".agents/workflows/deploy.md": {
+      "hash": "d9b4fd90825ad22e3e09677869f95e7d98b049da8e284495d9957b96321a4411"
+    },
+    ".agents/workflows/docs.md": {
+      "hash": "2043eb454e6693c4431a345a7560636fe84de8b2938e5e2f717b72e37616058f"
+    },
+    ".agents/workflows/full-pipeline.md": {
+      "hash": "f920d2850c38a05ba52a1abb37ac8cd151f6708a6e3677c5bad4c82ec3a21310"
+    },
+    ".agents/workflows/generate-commit-message.md": {
+      "hash": "607ad76b0f041391d482cdd3cd91fd94d2b229b601fee0adaeb3676f8b4195ab"
+    },
+    ".agents/workflows/helpme.md": {
+      "hash": "8f525424d97861868860dca653fe36290449285fe9316e27aa2ad2a46cee7fbe"
+    },
+    ".agents/workflows/i18n.md": {
+      "hash": "d3884634820a05320dee7160ed6e21309abb5c7e12b446071623d84e29890d73"
+    },
+    ".agents/workflows/improve-ui.md": {
+      "hash": "f9dad8ca66759c2481d073e5ec2ed47dd778037f1688dc08436422b3bbdca00b"
+    },
+    ".agents/workflows/pre-pr.md": {
+      "hash": "5c97db755149fc0da4067f818aaf24bd0b97c7c28f5e4d84d5ad8cf15adb119e"
+    },
+    ".agents/workflows/preview.md": {
+      "hash": "6de4ab9a809f1024e88ed83565be35886e992463bc17be603ed3ba6475cd34e2"
+    },
+    ".agents/workflows/refactor.md": {
+      "hash": "00a5f163a2de23230a05dbefd8a1ec1ba4f818c07eea63b2f7fa795d579d8717"
+    },
+    ".agents/workflows/status.md": {
+      "hash": "2e42be7b2bcf9f2a7a395de883de8b4cba38e6474a91ba2d0d49abd2dd124698"
+    },
+    ".agents/workflows/test.md": {
+      "hash": "70bb3b771c5706e8260fc487d9e835c3aa729a04e8d02d92f4e13d99befddd78"
+    },
+    ".claude/rules/00-bootstrap.md": {
+      "hash": "52a7099d628ff9a6869df00faa9b69c0fd31711a97575b7f0a1c2a34a0a00f84"
+    },
+    ".claude/rules/01-quality-shield.md": {
+      "hash": "b71f4ad4900a6fc6284f7bea628a0f68306a882e2331bb6d048fbbfe7249588b"
+    },
+    ".claude/rules/02-transparency.md": {
+      "hash": "7d83094f217ff94560d00668c695b9c6cc9ee0f9c89308774abc392f59c9f171"
+    },
+    ".claude/skills/api-development/SKILL.md": {
+      "hash": "e6284ab09c7f0adeac1107b648f04fbb5c4ccc01899f2859214815f281d0ca35"
+    },
+    ".claude/skills/brainstorming/SKILL.md": {
+      "hash": "8737af99ae6feff5e22c88edfd193f5974fc7089386770ad4bac1ae2cbbed3e0"
+    },
+    ".claude/skills/brainstorming/references/implementation-plan-template.md": {
+      "hash": "40f3bf9ea8e2cc2ab867a86041ba6a046f1d895f00a959c8fd4c0f06335746e7"
+    },
+    ".claude/skills/brainstorming/references/output-template.md": {
+      "hash": "b9df93a597f77d3f359c5d70fa19b75c271d4ac030f71b330465a3ffe08c6e67"
+    },
+    ".claude/skills/browser-qa-tester/SKILL.md": {
+      "hash": "9dd018f1dc9cf30b861950aaf18f7ae8ea2e7220a8cb27d5c98002f408567fd7"
+    },
+    ".claude/skills/browser-qa-tester/references/heuristics.md": {
+      "hash": "154d44a44ca8d51ad128c19d66507f9f36527ae88f491ef02b74f0c53bb8a1ac"
+    },
+    ".claude/skills/browser-qa-tester/references/report-template.md": {
+      "hash": "bbd8efe6034f3b94cd75106dec97b201798d2186354e51ce22c1c55cf041db78"
+    },
+    ".claude/skills/browser-qa-tester/references/subagent-instructions.md": {
+      "hash": "58a3539a809a640e602ee696eabeca9341ff752c9d02b6e0503f2543b3c52930"
+    },
+    ".claude/skills/bug-fixer/SKILL.md": {
+      "hash": "35261be65f8020c19522804163269daedbca634010bf28df8b184fd311788777"
+    },
+    ".claude/skills/bug-fixer/references/fix-plan-template.md": {
+      "hash": "bbab29925c9ba6b4ee3f8a8cd464d667355b0cbdccf6abc18e4a2962f0e68d2c"
+    },
+    ".claude/skills/bug-fixer/references/gate-checklist.md": {
+      "hash": "161ff5ddfac6faf447bf7a7af5513723191fb7c082543f9c8046c8bdb4b5b002"
+    },
+    ".claude/skills/bug-fixer/references/investigation-guide.md": {
+      "hash": "fc90275e53386d0896a915e77faf61a6e7f38a2304a17ed092420028574e9f9f"
+    },
+    ".claude/skills/code-reviewer/SKILL.md": {
+      "hash": "353a91c881c91a5054b431610a2f085f1e756d1e0be37dd462b3ab9a3cc1ee4c"
+    },
+    ".claude/skills/code-reviewer/references/analysis-checklists.md": {
+      "hash": "93f8047824576fffedc5c9e438b2ac4c78556634758a6286238084e1e4d47062"
+    },
+    ".claude/skills/code-reviewer/references/report-template.md": {
+      "hash": "bca1807159e0ff3f54672592dfcf821c2c01566f4a22ca3ce22ff926631cdab1"
+    },
+    ".claude/skills/code-reviewer/references/severity-classification.md": {
+      "hash": "1dc3c168bd9f2c6f1df77102379d59c44a7c229117c84e11acb50cdb3ae29ac0"
+    },
+    ".claude/skills/database-migration/SKILL.md": {
+      "hash": "b2a016d7cf0b4109e70e7828de4085a7299b9e3cea02220f65cb8a2c42bce3bc"
+    },
+    ".claude/skills/developing-with-fortify/SKILL.md": {
+      "hash": "3594f7e175896f12f41f2f92e32106e768c6fabaf2562d8d93d1e6d04ff1e5b5"
+    },
+    ".claude/skills/frontend-development/SKILL.md": {
+      "hash": "97f81c70c1f44d3f1c337ca507613aaf0dff9e5d000fccd98d1a5cff73523cd9"
+    },
+    ".claude/skills/frontend-development/references/component-patterns.md": {
+      "hash": "1d37f6bc7f3426def82c7e24738ad3e0e6c3aa78db93a3bc9d434031c53a631f"
+    },
+    ".claude/skills/generate-architecture/SKILL.md": {
+      "hash": "f97a7bce1ee82b89ab36599f33ce56018d167b38531463669c4eeaf3e664ca81"
+    },
+    ".claude/skills/generate-persona/SKILL.md": {
+      "hash": "8a5c26881f16a7692bc0109d400f6b385a7ea71813116b2cbfee9e728143e0bf"
+    },
+    ".claude/skills/generate-persona/references/persona-template.md": {
+      "hash": "6d2eedc27bc20e81161f64707ba5292c6e19b0be4a8320250209d1efa56368fa"
+    },
+    ".claude/skills/generate-persona-feedback/SKILL.md": {
+      "hash": "33211190e7307cae1af68fd739c2baeb9e947e274fbd08561a8b754344c0d8d7"
+    },
+    ".claude/skills/generate-persona-feedback/references/feedback-report-template.md": {
+      "hash": "01092fec5203b4c34fd4fc7bdf55ea0cdf50230b675693e2b75444a025de4cbf"
+    },
+    ".claude/skills/generate-persona-feedback/references/interaction-strategies.md": {
+      "hash": "7d7de7b8d2e7c267e6f7f3683563c260f599a064963cf8394371b2c712454250"
+    },
+    ".claude/skills/generate-prd/SKILL.md": {
+      "hash": "2dcab507811fa5e9d40ec6b52ceb2fb3426d20392711a0ce01bf7975ef71d3c2"
+    },
+    ".claude/skills/generate-task-breakdown/SKILL.md": {
+      "hash": "64dd6242f6d54c9ae1ed3c1b9811842221e1ce6ae6f379afe393bf782ef7617b"
+    },
+    ".claude/skills/generate-test/SKILL.md": {
+      "hash": "07b1441edc2707a793e6a97c3e425dde326307c8580d5752addfcfba7e1d48ec"
+    },
+    ".claude/skills/generate-test/references/pest-patterns.md": {
+      "hash": "e99bfa8feca0c2b2f292702ad2c0794bd22ca93ba4a314b338d507d15107f91f"
+    },
+    ".claude/skills/generate-ui-design/SKILL.md": {
+      "hash": "3edbcfa4823797b6f05b1d09755ea360dc327915200aacb13d389ade76c1ae01"
+    },
+    ".claude/skills/generate-ui-design/references/document-templates.md": {
+      "hash": "874e7f31a07e2bcd7a613614a18072fb4b864fa6cdfa020bdee979d0a4af012c"
+    },
+    ".claude/skills/i18n-manager/SKILL.md": {
+      "hash": "bdf591b6aa3f3f1f1e09d387f0edfd7541f5617d751c323bc937b56ae3493bfb"
+    },
+    ".claude/skills/i18n-manager/references/detection-rules.md": {
+      "hash": "0d5dd003df33afb0fd555e1e3105cd808c71af24087b19ce406965d4387f1194"
+    },
+    ".claude/skills/i18n-manager/references/key-conventions.md": {
+      "hash": "a45008ce98002fb844093754f5bfad5631542ab6c5d624085078245fa56643bd"
+    },
+    ".claude/skills/i18n-manager/references/report-template.md": {
+      "hash": "47f3b256c6da0d248afc063371472cc61006e9d6108f4c5ca6e4b6fd217bddf6"
+    },
+    ".claude/skills/implement-task/SKILL.md": {
+      "hash": "85f13add1da1c0315143cb7d58b582dfacaf22c545a5e29c6c074f2ef794df69"
+    },
+    ".claude/skills/implement-task/references/gate-checklist.md": {
+      "hash": "9567c58595dc65836e5d2a620430838f6334879ec923947875f423cce5511213"
+    },
+    ".claude/skills/init-project/SKILL.md": {
+      "hash": "43e0e5c8143e8d00ebcbdc016546ea871c39dd0e0b4200fe8fc609085c8b24cd"
+    },
+    ".claude/skills/init-project/references/questionnaire.md": {
+      "hash": "2e97518f8cc0f25c516771687323c592a6dd80ad4a0e0e6473eb6e70917ff0e4"
+    },
+    ".claude/skills/project-qa-auditor/SKILL.md": {
+      "hash": "a7bc096f520ff7394b9e82660f161457bb6f5c359ceea0d9e1244b46fe606a84"
+    },
+    ".claude/skills/project-qa-auditor/references/browser-flows.md": {
+      "hash": "5e887cc78d842b9e68eded22b1a63467a6b8eb49b998f844e4071bf58b9ef478"
+    },
+    ".claude/skills/project-qa-auditor/references/checklists.md": {
+      "hash": "981adb30dac87fc6a29f80bfd75048050a02980a812363d7b06f7c28788b4f4f"
+    },
+    ".claude/skills/project-qa-auditor/references/report-template.md": {
+      "hash": "2dbbb5455870eb5055736ebbc0f5ba99c856053670696762904fea06e09196c4"
+    },
+    ".claude/skills/security-analyst/SKILL.md": {
+      "hash": "d6ddee2ecf22fab3ba3dc3270ab3f96b08c3a816e7addc6b2bcda543a5c3cf4b"
+    },
+    ".claude/skills/security-analyst/references/laravel-vulnerabilities.md": {
+      "hash": "ea47be2374591e1945c2ab4758340f01b4f3b7f1abab8f3f94fbbf6821b10085"
+    },
+    ".claude/skills/skill-creator/LICENSE.txt": {
+      "hash": "58d1e17ffe5109a7ae296caafcadfdbe6a7d176f0bc4ab01e12a689b0499d8bd"
+    },
+    ".claude/skills/skill-creator/SKILL.md": {
+      "hash": "952ac17ea51a3523c3c5a5b1e0265c514079b45b485f3794b46ddb5760711326"
+    },
+    ".claude/skills/skill-creator/references/output-patterns.md": {
+      "hash": "33664d4ef339ec2b330adbc66543724f7a1fb51cdbb2579d5c7aedd1b7c3625b"
+    },
+    ".claude/skills/skill-creator/references/workflows.md": {
+      "hash": "ef4846877d5dab47511a01a6cf31476ad64f5bc5945635459295794575338980"
+    },
+    ".claude/skills/skill-creator/scripts/init_skill.py": {
+      "hash": "cf12790f1d4958799281920d599f56aea38fb5c26e2812a61dd740bf3d4b6b99"
+    },
+    ".claude/skills/skill-creator/scripts/package_skill.py": {
+      "hash": "b31fbcb3e362d5c5308e99255ff8e83cde3a513e0636953964a648494ca10931"
+    },
+    ".claude/skills/skill-creator/scripts/quick_validate.py": {
+      "hash": "67cf5703402013936c8fb75ad6a1afecd8841d45cc5e606b634eb05825fde365"
+    },
+    ".claude/skills/stack-bash/SKILL.md": {
+      "hash": "088074e045894a423a1e4a9cb6dd8252c55b9cf87ba831ecef4366dd2c236bf5"
+    },
+    ".claude/skills/stack-go/SKILL.md": {
+      "hash": "d8dd9096849add0c9b3d8d61a1efaab4f4b8fd5377d473a684dcd33a42e1df19"
+    },
+    ".claude/skills/stack-go/references/go-patterns.md": {
+      "hash": "70f65de26d52d02828c844c9131c62131a25ccb20dc33190d7b7308c63e938ff"
+    },
+    ".claude/skills/stack-go/references/go-quality-gates.md": {
+      "hash": "7a70cf0a099f61761241f3e6ea6bcadc680ffea745b01a20da8c5cb0d1faafd7"
+    },
+    ".claude/skills/stack-go/references/go-testing.md": {
+      "hash": "6fd0ac1f5953c7c3429cbfb9d20e69b97b1ed3c23a7c9940d494589c5aadeea7"
+    },
+    ".claude/skills/stack-node/SKILL.md": {
+      "hash": "56b743a010ef540c35435da7d4d6d192ecce1c553a9df66dafa417f1161abff8"
+    },
+    ".claude/skills/stack-node/references/node-patterns.md": {
+      "hash": "09d6cb465ffa5e98a979cec6bd1902ce433429e1b828143b994d523943529365"
+    },
+    ".claude/skills/stack-node/references/node-quality-gates.md": {
+      "hash": "ea1e739766c063423192e603b4fe7e08ca58cdc0531c42b3bc0eb25582e5e360"
+    },
+    ".claude/skills/stack-node/references/node-testing.md": {
+      "hash": "8bc787b1039de81a046ce644272fe0af15af0f3617fd8fb43c3da7c2e5f48daf"
+    },
+    ".claude/skills/stack-python/SKILL.md": {
+      "hash": "7f4973fd85575102b9625140107c44cccf6927642481a224c9abe18e94876dbd"
+    },
+    ".claude/skills/stack-python/references/python-patterns.md": {
+      "hash": "22cb0201f01c1832fa85da8faf567a296a5c3c6fb315e747b176504453e70c4d"
+    },
+    ".claude/skills/stack-python/references/python-quality-gates.md": {
+      "hash": "bb7d656e240cbf494e819665500fa066435058d46ebded6d8c996904f9dae0c7"
+    },
+    ".claude/skills/stack-python/references/python-testing.md": {
+      "hash": "8d5827c548d45e1db2a4dd04dd52898d268d4f2428e7f80c3b445453fda2e2a4"
+    },
+    ".claude/skills/task-planner/SKILL.md": {
+      "hash": "1e126936b11113542f8d46874c028e6d9ee908abbd7586fd4d42b8fab8e1b3d6"
+    },
+    ".claude/skills/task-planner/references/gate-checklist.md": {
+      "hash": "77cca97c971ac991e829a93018f4fc6bb07668ba1758f5da0c1159f821fdde17"
+    },
+    ".claude/skills/task-planner/references/plan-template.md": {
+      "hash": "2e10159a6d77eba88a55d8c585653697a1dca5de7593ee1ceade9acccba767b7"
+    },
+    ".claude/workflows/add-stack.md": {
+      "hash": "322ee79f26a1e3fabfb4de0653fb1ce4b5dac14731027839502eedae8f58ee08"
+    },
+    ".claude/workflows/code-review.md": {
+      "hash": "d90579ae068bc5922658c13868a72e9c83413c3fda25b26429248f9897321f0d"
+    },
+    ".claude/workflows/debug.md": {
+      "hash": "b33bc9b24f4966184f19ef3aa8a57ff39d6a6104b97a7482fe8bf73133e98b6b"
+    },
+    ".claude/workflows/deploy.md": {
+      "hash": "d9b4fd90825ad22e3e09677869f95e7d98b049da8e284495d9957b96321a4411"
+    },
+    ".claude/workflows/docs.md": {
+      "hash": "2043eb454e6693c4431a345a7560636fe84de8b2938e5e2f717b72e37616058f"
+    },
+    ".claude/workflows/full-pipeline.md": {
+      "hash": "f920d2850c38a05ba52a1abb37ac8cd151f6708a6e3677c5bad4c82ec3a21310"
+    },
+    ".claude/workflows/generate-commit-message.md": {
+      "hash": "607ad76b0f041391d482cdd3cd91fd94d2b229b601fee0adaeb3676f8b4195ab"
+    },
+    ".claude/workflows/helpme.md": {
+      "hash": "8f525424d97861868860dca653fe36290449285fe9316e27aa2ad2a46cee7fbe"
+    },
+    ".claude/workflows/i18n.md": {
+      "hash": "d3884634820a05320dee7160ed6e21309abb5c7e12b446071623d84e29890d73"
+    },
+    ".claude/workflows/improve-ui.md": {
+      "hash": "f9dad8ca66759c2481d073e5ec2ed47dd778037f1688dc08436422b3bbdca00b"
+    },
+    ".claude/workflows/preview.md": {
+      "hash": "6de4ab9a809f1024e88ed83565be35886e992463bc17be603ed3ba6475cd34e2"
+    },
+    ".claude/workflows/refactor.md": {
+      "hash": "00a5f163a2de23230a05dbefd8a1ec1ba4f818c07eea63b2f7fa795d579d8717"
+    },
+    ".claude/workflows/status.md": {
+      "hash": "2e42be7b2bcf9f2a7a395de883de8b4cba38e6474a91ba2d0d49abd2dd124698"
+    },
+    ".claude/workflows/test.md": {
+      "hash": "70bb3b771c5706e8260fc487d9e835c3aa729a04e8d02d92f4e13d99befddd78"
+    },
+    "docs/.npmignore": {
+      "hash": "902a513dd9774bf8ea61865a3ab734fb16bafa5dcaa958cd45773a8c291dffe4"
+    },
+    "docs/AGENT_FLOW.md": {
+      "hash": "ebf54f4e26ccb4fa4f70d3d6c2cfbe965ba4d85738f1ccafd6c40fc8c1eea246"
+    },
+    "docs/PRD.md": {
+      "hash": "8c162051e4b282af41fa9516f8cef1983a3a9d3149a99467a3ae8c53c6a1b125"
+    },
+    "docs/RBAC_GUIDE.md": {
+      "hash": "f984c406630002778754f93047d6bf0985dccfa75fdcb5565c1ae3af0a2cd9dd"
+    },
+    "docs/architecture/.gitkeep": {
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/architecture/README.md": {
+      "hash": "ec73b7312d25b5adb69b3ec71c7372733944040249006d0debd2c4c1d2d62c5e"
+    },
+    "docs/brainstorming/.gitkeep": {
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/design/.gitkeep": {
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/design/README.md": {
+      "hash": "33a2d733aa10d1ef2f395432052e20a388048fc4bf28f974f3c5fb8ef90816b6"
+    },
+    "docs/engineering/CODE_STANDARDS.md": {
+      "hash": "f655f773d9cb68b0700f76adc1bf3881ae85e0a8dfdd36b5a13a26c4a7781959"
+    },
+    "docs/engineering/DATABASE_PATTERNS.md": {
+      "hash": "73d69a891cd73559e858c2b8597335d19505bec5705ff76ea9560391e91a98f8"
+    },
+    "docs/engineering/DEPLOY.md": {
+      "hash": "a6820304d763ae2cd5384e48d0f6dd85dd9f64efe393354abdba9bad4c6396af"
+    },
+    "docs/engineering/QUALITY_GATES.md": {
+      "hash": "141adc30cb81aadcffadf92e5ecb8d7873c43ea4c8c0fc87c3a59ec1629f6a7c"
+    },
+    "docs/engineering/STACK.md": {
+      "hash": "d6208f9825a1cc862d8ff0f313d6e17ef3222870a23d6b1042b0062d551f33b7"
+    },
+    "docs/engineering/TESTING.md": {
+      "hash": "e2cfb1c15c5c2883c15d496fdb8c4534d83265f2868b6a483ee28c29f6da15a2"
+    },
+    "docs/engineering/WORKFLOW.md": {
+      "hash": "a51dbd0499ac1acaa7b0df0a40cf2e92d31c5dc9bd4e419d533ca8279d21fe19"
+    },
+    "docs/feedbacks/.gitkeep": {
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/personas/.gitkeep": {
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/plans/.gitkeep": {
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/prd/.gitkeep": {
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/progress/.gitkeep": {
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/progress/README.md": {
+      "hash": "9049e804e31133427d8ce20a6789dea3cb73df4f34ccbe5ebce7c61f9340c247"
+    },
+    "docs/qa/.gitkeep": {
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/qa-browser/.gitkeep": {
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/reviews/.gitkeep": {
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/tasks/.gitkeep": {
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "docs/tasks/README.md": {
+      "hash": "728c15394e2af852bc26a1ee789fc557c690073fb1fff1c9dab351087d869713"
+    },
+    "docs/use-cases/.gitkeep": {
+      "hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "CLAUDE.md": {
+      "hash": "9bd75c036fea4898ddefd751a7e8ab4f849f8d24f6abc44c3ff756e22e55c778"
+    }
+  }
+}

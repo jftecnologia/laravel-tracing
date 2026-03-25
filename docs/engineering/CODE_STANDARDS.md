@@ -1,6 +1,6 @@
-# Code Standards & Development Philosophy
+# Code Standards & Conventions
 
-**Purpose**: Define code quality standards, architectural principles, and development philosophy for this Laravel package.
+**Purpose**: Define code quality standards, conventions, and development philosophy for the Laravel Tracing package.
 
 ---
 
@@ -8,231 +8,158 @@
 
 ### Core Principles
 
-- **No DDD** (no aggregates, no repositories, no over-engineering)
+- **No DDD** — no aggregates, repositories, or domain layers
 - **Low bureaucracy, high clarity**
 - **Simplicity and explicitness over abstraction**
-- **Configuration over hard-coding**
-- **Plug-and-play mindset** (features should be easy to enable/disable)
+- **Configuration over hard-coding** — use `config()` instead of magic numbers and inline constants
+- **Plug-and-play mindset** — features should be easy to enable/disable
 
 ### Architecture Goals
 
-Code must be:
+Code must be: **Extensible**, **Pluggable**, **Testable**, **Maintainable**.
 
-- ✅ **Extensible** – easy to add new features
-- ✅ **Pluggable** – features can be enabled/disabled
-- ✅ **Testable** – business logic is unit-testable
-- ✅ **Maintainable** – readable and clear for future developers
-
----
-
-## SOLID Principles (Pragmatic Application)
-
-Follow SOLID, but pragmatically:
-
-- **Single Responsibility**: Each class has one clear purpose
-- **Open/Closed**: Extend via interfaces/configuration, not modification
-- **Liskov Substitution**: Subtypes must be interchangeable
-- **Interface Segregation**: Small, focused interfaces
-- **Dependency Inversion**: Depend on abstractions, not concretions
-
-**Important**: Apply SOLID to improve clarity and extensibility, not to create unnecessary layers.
-
----
-
-## Code Style & Quality Tools
-
-### PSR Standards
-
-- **PSR-12**: Code style standard
-- **PSR-4**: Autoloading standard
-
-### Quality Tools
-
-**All tools are configured and must pass before commits:**
-
-1. **Pint** (Laravel's opinionated PHP-CS-Fixer)
-   - Config: `pint.json`
-   - Enforces PSR-12 + Laravel conventions
-   - Auto-fixes code style
-
-2. **PHPStan** (via Larastan)
-   - Level: **5** (strict but pragmatic)
-   - Analyzes code for type safety and potential bugs
-   - Config: `phpstan.neon`
-
-3. **Rector** (PHP automated refactoring)
-   - Enforces modern PHP patterns
-   - Auto-upgrades deprecated code
-   - Config: `rector.php`
-
-### Running Quality Checks
-
-**Single command to run all checks:**
-
-```bash
-composer lint
-```
-
-This runs:
-1. `composer format` (Pint)
-2. `composer rector` (Rector)
-3. `composer analyze` (PHPStan/Larastan)
-
-**All checks must pass before committing.**
+SOLID applied pragmatically — improve clarity, not add layers.
 
 ---
 
 ## Code Organization
 
-### Class Responsibilities
+### Where Things Go
 
-- **Keep classes small and focused**
-- **Clear, single responsibility per class**
-- **Avoid "god objects" or classes that do too much**
-
-### Fluent APIs
-
-Prefer fluent, expressive APIs:
-
-```php
-// ✅ Good: Fluent and readable
-LaravelTracing::correlation()
-    ->fromHeader('X-Correlation-Id')
-    ->persistInSession()
-    ->attachToResponse();
-
-// ❌ Bad: Configuration array soup
-$tracing->configure([
-    'correlation' => [
-        'header' => 'X-Correlation-Id',
-        'session' => true,
-        'response' => true,
-    ],
-]);
-```
-
-### Configuration
-
-- **Never hard-code values** that might change
-- **Use config files** (`config/laravel-tracing.php`)
-- **Allow environment variable overrides**
-- **Provide sensible defaults** (zero-config when possible)
+| What                          | Where                      | Example                                    |
+| ----------------------------- | -------------------------- | ------------------------------------------ |
+| **Contracts** (interfaces)    | `src/Tracings/Contracts/`  | `TracingSource`, `TracingStorage`           |
+| **Sources** (tracing sources) | `src/Tracings/Sources/`    | `CorrelationIdSource`, `RequestIdSource`    |
+| **Manager** (core logic)      | `src/Tracings/`            | `TracingManager`                           |
+| **Middleware**                 | `src/Middleware/`           | `IncomingTracingMiddleware`                |
+| **HTTP integration**          | `src/Http/`                | `HttpClientTracing`                        |
+| **Jobs** (queue integration)  | `src/Jobs/`                | `TracingJobDispatcher`                     |
+| **Storage**                   | `src/Storage/`             | `RequestStorage`, `SessionStorage`         |
+| **Support** (helpers)         | `src/Support/`             | `HeaderSanitizer`, `IdGenerator`           |
+| **Facades**                   | `src/Facades/`             | `LaravelTracing`                           |
+| **Service Provider**          | `src/`                     | `LaravelTracingServiceProvider`            |
+| **Config**                    | `config/`                  | `laravel-tracing.php`                      |
 
 ---
 
-## Static Analysis Rules
+## PHP Standards
 
-### Keep Code Analyzable
+### Code Style
 
-- Avoid excessive magic methods (`__call`, `__get`, etc.)
-- Avoid runtime reflection abuse
-- Use explicit types whenever possible
-- Prefer dependency injection over service locators
+- **PSR-12** code style (enforced by Pint)
+- **PSR-4** autoloading
+- Always use curly braces for control structures, even single-line bodies
+- Use PHP 8 constructor property promotion
 
 ### Type Declarations
 
-```php
-// ✅ Good: Explicit types
-public function resolve(Request $request): string
-{
-    return $request->header('X-Correlation-Id') ?? Str::uuid()->toString();
-}
+Always use explicit types for parameters, return types, and properties:
 
-// ❌ Bad: No types
-public function resolve($request)
+```php
+protected function isAccessible(User $user, ?string $path = null): bool
 {
-    return $request->header('X-Correlation-Id') ?? Str::uuid()->toString();
+    // ...
 }
+```
+
+### Enums
+
+- Keys in **TitleCase**: `FavoritePerson`, `Monthly`, `Active`
+- Use backed enums (`string` or `int`) when persisting to database
+
+### Naming Conventions
+
+| Element   | Style             | Example                        |
+| --------- | ----------------- | ------------------------------ |
+| Classes   | PascalCase        | `CorrelationIdSource`          |
+| Methods   | camelCase         | `resolveFromRequest()`         |
+| Variables | camelCase         | `$correlationId`               |
+| Booleans  | is/has/can/should | `$isActive`, `hasPermission()` |
+| Constants | UPPER_SNAKE       | `MAX_RETRIES`                  |
+
+### PHPDoc
+
+- Prefer PHPDoc blocks over inline comments
+- Add array shape type definitions when appropriate
+- Never use inline comments unless logic is exceptionally complex
+
+### Fluent APIs
+
+Prefer fluent, expressive interfaces when designing classes:
+
+```php
+$manager->extend('custom_id', new CustomIdSource())
+    ->resolveAll($request);
 ```
 
 ---
 
-## Naming Conventions
+## Laravel Package Conventions
 
-### Classes
+### Service Provider
 
-- **PascalCase**: `CorrelationIdResolver`
-- **Descriptive and specific**: Avoid generic names like `Manager`, `Handler`, `Service`
+- Register bindings in `register()`, bootstrapping in `boot()`
+- Use singleton bindings for stateful services (TracingManager, Storage)
+- Merge config in `register()`, publish config in `boot()`
 
-### Methods
+### Configuration
 
-- **camelCase**: `resolveFromRequest()`
-- **Verb-first for actions**: `get`, `set`, `resolve`, `attach`, `persist`
-- **Boolean methods**: prefix with `is`, `has`, `can`, `should`
+- **Never use `env()` outside config files** — always `config('key')`
+- Use environment variables only in `config/laravel-tracing.php`
+- All features should be toggleable via config
 
-### Variables
+### Testing with Testbench
 
-- **camelCase**: `$correlationId`
-- **Descriptive**: Avoid single-letter variables except in loops
+- Use `orchestra/testbench` for testing within a Laravel app context
+- Test base class extends `Orchestra\Testbench\TestCase`
+- Register the service provider in `getPackageProviders()`
+- Workbench app in `workbench/` for manual testing
+
+---
+
+## Quality Tools
+
+### Running Quality Checks
+
+> For the complete list of quality scripts, see [STACK.md](STACK.md#available-scripts).
+>
+> During AI-assisted development: `vendor/bin/pint --dirty --format agent`
+
+All checks must pass before committing.
+
+### Static Analysis
+
+- Larastan — strict but pragmatic
+- Avoid magic methods (`__call`, `__get`) that break analysis
+- Use explicit types everywhere
+- Prefer dependency injection over service locators
 
 ---
 
 ## Refactoring Rules
 
-### When to Refactor
-
-✅ **Do refactor:**
-- When implementing a related feature
-- When fixing a bug in the same area
-- When explicitly requested
-
-❌ **Don't refactor:**
-- Unrelated code while implementing a feature
-- Code that works and is clear (refactoring for refactoring's sake)
-- Without explicit scope and intention
-
-### Scope Rule
-
-**Refactoring must be scoped and intentional.**  
-Always ask before performing structural refactors.
+- Refactor only when implementing a related feature, fixing a bug in the area, or when explicitly requested
+- Never refactor unrelated code or code that works and is clear
+- Refactoring must be scoped and intentional — ask before structural changes
 
 ---
 
-## Existing Code First Rule
+## Consistency Rules
 
-**Before implementing anything new:**
+Before implementing anything new:
 
-1. ✅ Inspect existing code
-2. ✅ Reuse existing patterns
-3. ✅ Prefer consistency over novelty
-4. ✅ Do not introduce a new pattern if a similar one already exists
+1. Check sibling files for structure, approach, and naming
+2. Check for existing components to reuse before writing new ones
+3. Reuse existing patterns — prefer consistency over novelty
+4. Do not introduce a new pattern if a similar one exists
+5. Use descriptive names: `resolveFromRequest()`, not `resolve()`
 
 **Consistency beats cleverness.**
 
 ---
 
-## Uncertainty Handling
+## Related Documentation
 
-If information is missing or ambiguous:
-
-- ❌ Do not guess
-- ❌ Do not invent APIs or behavior
-- ✅ Ask **one clear and objective question** before proceeding
-
----
-
-## Autonomy Boundaries
-
-**Claude Code must NOT:**
-
-- Introduce new architectural layers without asking
-- Change existing folder structures without confirmation
-- Add new dependencies unless explicitly requested
-- Introduce design patterns by default
-
-**When in doubt, ASK before implementing.**
-
----
-
-## Available Quality Scripts
-
-Check `composer.json` for all available scripts:
-
-```bash
-composer format   # Run Pint (code style)
-composer analyze  # Run PHPStan/Larastan (static analysis)
-composer rector   # Run Rector (automated refactoring)
-composer lint     # Run all quality checks (format + rector + analyze)
-```
-
-**Mandatory before commits**: `composer lint`
+- **[STACK.md](STACK.md)** — Complete tech stack and dependencies
+- **[WORKFLOW.md](WORKFLOW.md)** — Git workflow, commits, PRs
+- **[TESTING.md](TESTING.md)** — Testing guidelines
