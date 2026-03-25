@@ -1,7 +1,7 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
     "name": "jftecnologia/laravel-tracing",
-    "description": "A Laravel package by Junior Fontenele",
+    "description": "Distributed tracing for Laravel — propagates correlation IDs and request IDs across HTTP requests, queued jobs, and outgoing HTTP client calls.",
     "homepage": "https://github.com/jftecnologia/laravel-tracing",
     "type": "library",
     "license": "MIT",

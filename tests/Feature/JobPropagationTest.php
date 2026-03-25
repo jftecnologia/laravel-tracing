@@ -182,16 +182,9 @@ describe('Job Propagation', function () {
         $payload = $method->invoke($queue, $job, 'default');
         $decodedPayload = json_decode($payload, true);
 
-        // When values are null, tracings array will still be present but with null values
-        // The hook returns empty array when all values are null
-        if (isset($decodedPayload['tracings'])) {
-            $tracings = $decodedPayload['tracings'];
-            expect($tracings)->toBeArray()
-                ->and(array_filter($tracings))->toBeEmpty();
-        } else {
-            // Or no tracings key at all (depending on implementation)
-            expect($decodedPayload)->not->toHaveKey('tracings');
-        }
+        // When no values are resolved, all() returns empty array,
+        // so the hook returns [] and no tracings key is added to payload
+        expect($decodedPayload)->not->toHaveKey('tracings');
     });
 
     it('handles job payload without tracings gracefully', function () {
@@ -202,11 +195,8 @@ describe('Job Propagation', function () {
         // Handle job processing (should not throw exception)
         $this->dispatcher->handleJobProcessing($event);
 
-        // Verify no tracings in manager (empty)
-        expect($this->manager->all())->toBe([
-            'correlation_id' => null,
-            'request_id' => null,
-        ]);
+        // Verify no tracings in manager — all() returns empty for unresolved sources
+        expect($this->manager->all())->toBe([]);
     });
 
     it('shares same correlation ID across multiple jobs dispatched from same request', function () {

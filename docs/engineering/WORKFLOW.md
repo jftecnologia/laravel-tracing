@@ -1,46 +1,65 @@
 # Development Workflow
 
-**Purpose**: Define the complete development workflow from starting work to opening pull requests.
+**Purpose**: Define the development workflow from starting work to opening pull requests.
 
 ---
 
-## Package Development Environment
+## Development Environment
 
-This is a **Laravel package** (library), not a standalone application.
-
-### Development Testing Environment
-
-Use **Orchestra Testbench Workbench** for development and manual testing:
+### Starting the Dev Server
 
 ```bash
-composer serve
+composer dev
 ```
 
-This starts a minimal Laravel application at `http://localhost:8000` with the package loaded.
+This starts **all services concurrently**: Laravel server, queue worker, Pail (log tailing), and Vite (frontend HMR).
+
+Access at: `http://localhost:8000`
+
+For SSR mode: `composer dev:ssr`
+
+If frontend changes are not reflected in the UI, run `npm run build` or restart `npm run dev`.
+
+### First-Time Setup
+
+```bash
+composer setup
+```
+
+This runs: `composer install` → copy `.env` → `key:generate` → `migrate` → `npm install` → `npm run build`.
+
+### Demo Data (optional)
+
+If the project has demo seeders for development data:
+
+```bash
+php artisan db:seed --class='Database\Seeders\Demo\DemoSeeder'
+```
+
+Create demo seeders in `database/seeders/Demo/` for development testing data. Document credentials and test scenarios inline or in a project-specific `docs/DEMO_DATA.md`.
 
 ---
 
 ## Pre-Commit Checklist
 
-**Before ANY commit, you MUST:**
+Before **any** commit:
 
-1. ✅ Run all quality checks:
-   ```bash
-   composer lint
-   ```
+```bash
+# PHP quality (MANDATORY)
+composer lint
 
-2. ✅ Ensure tests pass (if tests exist):
-   ```bash
-   composer test
-   ```
+# Frontend quality
+npm run lint
+npm run types
+```
 
-3. ✅ Verify code follows standards:
-   - PSR-12 code style
-   - PSR-4 autoloading
-   - No PHPStan errors
-   - No Rector violations
+If tests exist for the changed area:
 
-**No commits are allowed without passing `composer lint`.**
+```bash
+composer test
+```
+
+No commits are allowed without passing `composer lint`.
 
 ---
 
@@ -48,34 +67,29 @@ This starts a minimal Laravel application at `http://localhost:8000` with the pa
 
 ### Branch Strategy
 
-**Always create a new branch for new work.**
+- Always create a new branch — never commit directly to `master`
+- Branch from `master` unless working on an existing feature branch
 
-Never commit directly to `master`.
+### Branch Naming
 
-### Branch Naming Convention
-
-Use **semantic branch names**:
-
-```
+```text
 <type>/<short-description>
 
 Types:
-- feat/      → New feature
-- fix/       → Bug fix
-- refactor/  → Code refactoring (no behavior change)
-- chore/     → Tooling, dependencies, config
-- docs/      → Documentation only
-- test/      → Test additions or fixes
+- feat/       → New feature
+- fix/        → Bug fix
+- refactor/   → Code refactoring (no behavior change)
+- chore/      → Tooling, dependencies, config
+- docs/       → Documentation only
+- test/       → Test additions or fixes
 ```
 
-**Examples:**
+Examples:
 
 ```bash
-git checkout -b feat/correlation-id-persistence
-git checkout -b fix/queue-context-restore
-git checkout -b refactor/tracing-resolver
-git checkout -b chore/update-dependencies
-git checkout -b docs/add-custom-tracing-guide
+git checkout -b feat/user-notifications
+git checkout -b fix/login-redirect
+git checkout -b refactor/payment-service
 ```
 
 ---
@@ -84,66 +98,33 @@ git checkout -b docs/add-custom-tracing-guide
 
 ### Semantic Commits
 
-Use **semantic commit messages**:
-
-```
+```text
 <type>(<scope>): <short description>
 
 [optional body explaining what and why]
-
-Types:
-- feat:     New feature
-- fix:      Bug fix
-- refactor: Code refactoring
-- chore:    Tooling, config, dependencies
-- docs:     Documentation
-- test:     Test additions or changes
-- style:    Code style (formatting, no logic change)
-- perf:     Performance improvement
 ```
 
-**Examples:**
+Types: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `style`, `perf`
 
-```
-feat(tracing): add correlation ID session persistence
+Examples:
 
-Implemented session-level persistence for correlation IDs to maintain
-context across multiple requests from the same user session.
+```text
+feat(auth): add two-factor authentication setup page
 
-Resolves requirement FR-02 from docs/PRD.md
-```
-
-```
-fix(jobs): preserve original request ID in queued jobs
-
-Previously, a new request ID was generated when jobs executed.
-Now the original dispatching request's ID is preserved.
+Implemented the 2FA configuration page using Fortify's TOTP support
+with QR code display and recovery code management.
 ```
 
-```
-chore(deps): update Orchestra Testbench to ^10.8
-```
-
-### Commit Scope Rules
-
-**Commit by functional activity, not by file.**
-
-✅ **Good:**
-```
-feat(middleware): add tracing header extraction
+```text
+fix(notifications): prevent duplicate email on password reset
 ```
 
-❌ **Bad:**
-```
-update TracingMiddleware.php and config file
-```
+### Commit Rules
 
-### What Makes a Good Commit
-
-- **Atomic**: One logical change per commit
-- **Complete**: The commit doesn't break the application
-- **Descriptive**: Clear what was changed and why
-- **Tested**: Tests pass (if applicable)
+- **Atomic**: one logical change per commit
+- **Complete**: the commit doesn't break the application
+- **Descriptive**: clear what was changed and why
+- **By activity, not by file**: `feat(auth): add login flow` not `update LoginController.php`
 
 ---
 
@@ -155,159 +136,106 @@ update TracingMiddleware.php and config file
 
 > "Deseja que eu abra um Pull Request?"
 
-**Only open PRs when the user confirms.**
+Only open PRs when confirmed.
 
-### PR Guidelines
-
-Pull requests must:
-
-1. ✅ **Be created for functional blocks**, not single commits
-2. ✅ **Have semantic and detailed titles**
-3. ✅ **Include a clear description** explaining:
-   - **What** was done
-   - **Why** it was done
-   - **Technical decisions** made
-   - **Requirements** addressed (reference PRD if applicable)
-
-### PR Title Format
-
-```
-<type>: <short description>
-
-Examples:
-feat: Add correlation ID session persistence
-fix: Preserve request ID in queued jobs
-refactor: Extract tracing resolution logic
-chore: Update testing dependencies
-```
-
-### PR Description Template
-
-```markdown
-## What
-
-Brief description of the changes.
-
-## Why
-
-Explain the motivation and context.
-Reference any issues, requirements, or PRD sections.
-
-## How
-
-Explain technical approach and key decisions.
-
-## Requirements Addressed
-
-- [ ] FR-02: Correlation ID session persistence
-- [ ] FR-06: Tracing values in queued jobs
-
-## Checklist
-
-- [ ] `composer lint` passes
-- [ ] Tests pass (if applicable)
-- [ ] Documentation updated (if needed)
-- [ ] No breaking changes (or documented if necessary)
-```
-
----
-
-## Working with Tests
-
-### When to Run Tests
-
-- ✅ Before committing
-- ✅ Before opening a PR
-- ✅ After making significant changes
-- ✅ Before concluding any task
-
-### Running Tests
-
-```bash
-composer test
-```
-
-**All tests must pass before committing.**
-
-See [TESTING.md](TESTING.md) for detailed testing guidelines.
-
----
-
-## Code Review Preparation
+### PR Checklist
 
 Before requesting review:
 
-1. ✅ Self-review your changes
-2. ✅ Ensure `composer lint` passes
-3. ✅ Ensure `composer test` passes
-4. ✅ Remove debug code, `dd()`, `dump()`, commented code
-5. ✅ Update documentation if needed
-6. ✅ Check for:
-   - Unused imports
-   - Console logs
-   - TODOs without tickets
-   - Hardcoded values that should be configurable
+1. `composer lint` passes
+2. `composer test` passes
+3. `npm run lint` passes
+4. `npm run types` passes
+5. No `dd()`, `dump()`, `console.log()`, or debug code
+6. No unused imports or TODOs without tickets
+7. Documentation updated if needed
+
+### PR Format
+
+**Title**: `<type>: <short description>` (under 70 characters)
+
+**Body**:
+
+```markdown
+## Summary
+
+- What was done and why (2-3 bullet points)
+
+## Test Plan
+
+- [ ] How to verify the changes work
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+```
+
+---
+
+## AI-Assisted Development Workflow
+
+For the complete AI-assisted development pipeline, skill routing table, available skills, quality gates, and cross-cutting concerns, see `docs/AGENT_FLOW.md`.
+
+### Using Laravel Boost (MCP)
+
+Laravel Boost provides tools for AI-assisted development:
+
+- `search-docs` — Search version-specific documentation (always use before coding)
+- `list-artisan-commands` — Check available artisan commands and parameters before running them
+- `tinker` — Execute PHP in application context (prefer tests over tinker for verification)
+- `database-schema` — Inspect table structure before writing migrations or models
+- `database-query` — Run read-only SQL queries
+- `last-error` — Get last backend error/exception
+- `browser-logs` — Read recent frontend console logs (old logs are stale)
+- `list-routes` — List application routes
+- `get-absolute-url` — Get correct URLs when sharing with user
+
+#### search-docs Query Syntax
+
+Use multiple broad queries: `['rate limiting', 'routing rate limiting']`. Do not add package names to queries. Pass a `packages` array to filter results when targeting specific packages.
+
+- Simple words with auto-stemming: `authentication` finds `authenticate` and `auth`
+- Multiple words (AND): `rate limit` finds entries with both terms
+- Quoted phrases: `"infinite scroll"` matches exact adjacent words
+- Mixed: `middleware "rate limit"` combines AND + exact phrase
+- Multiple queries: `["authentication", "middleware"]` matches ANY term
 
 ---
 
 ## Available Scripts
 
-Check `composer.json` for all available commands:
-
-```bash
-# Quality & Linting
-composer format   # Run Pint (code formatting)
-composer analyze  # Run PHPStan (static analysis)
-composer rector   # Run Rector (automated refactoring)
-composer lint     # Run all quality checks (MANDATORY before commits)
-
-# Testing
-composer test     # Run PestPHP test suite
-
-# Development
-composer serve    # Start Testbench development server
-```
+> For the complete list of PHP and JavaScript scripts, see [STACK.md](STACK.md#available-scripts).
 
 ---
 
 ## Workflow Summary
 
-### Daily Development Cycle
-
 ```bash
 # 1. Create feature branch
 git checkout -b feat/my-feature
 
-# 2. Make changes
-# ... edit code ...
+# 2. Start development server
+composer dev
 
-# 3. Run quality checks
-composer lint
+# 3. Make changes (backend + frontend)
 
-# 4. Run tests
+# 4. Run quality checks
+composer lint && npm run lint && npm run types
+
+# 5. Run tests
 composer test
 
-# 5. Commit changes
-git add .
+# 6. Commit changes
+git add <files>
 git commit -m "feat(scope): description"
 
-# 6. Push branch
+# 7. Push and ask about PR
 git push origin feat/my-feature
-
-# 7. Ask user before opening PR
 # "Deseja que eu abra um Pull Request?"
 ```
 
 ---
 
-## Final Checklist Before Task Completion
+## Related Documentation
 
-Before declaring a task finished:
-
-- [ ] Code follows PSR-12 / PSR-4
-- [ ] `composer lint` executed and passes
-- [ ] Tests executed and pass (if applicable)
-- [ ] No unnecessary abstractions added
-- [ ] Code is extensible and readable
-- [ ] Documentation updated (if needed)
-- [ ] Ready to ask: **"Deseja que eu abra um Pull Request?"**
+- **[STACK.md](STACK.md)** — Tech stack and dependencies
+- **[CODE_STANDARDS.md](CODE_STANDARDS.md)** — Code quality and conventions
+- **[TESTING.md](TESTING.md)** — Testing guidelines
